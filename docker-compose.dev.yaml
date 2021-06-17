@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  db: 
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports: 
+      - "1433:1433"
+    env_file: 
+      - db/sqlserver.env
+      - db/sapassword.env
+    volumes:
+      - sqlsystem:/var/opt/mssql/
+      - sqldata:/var/opt/sqlserver/data
+      - sqllog:/var/opt/sqlserver/log
+      - sqlbackup:/var/opt/sqlserver/backup
+
+volumes:
+  ecdev-metabase:
+  sqlsystem:
+  sqldata:
+  sqllog:
+  sqlbackup:
+
+#networks:
+#  default:
+#    external:
+#      name: data-net

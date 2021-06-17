@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  db: 
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    env_file: 
+      - db/sqlserver.env
+      - db/sapassword.env
+    volumes:
+      - sqlsystem:/var/opt/mssql/
+      - sqldata:/var/opt/sqlserver/data
+      - sqllog:/var/opt/sqlserver/log
+      - sqlbackup:/var/opt/sqlserver/backup
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on: 
+      - "db"
+    ports:
+      - 3127:3000
+    volumes:
+      - ./database/:/home/node/app/dist/db/
+    #command: ["./wait-for", "db:1433", "--", "node", "./dist/index.js"]
+
+  #metabase:
+  #  image: metabase/metabase
+  #  volumes:
+  #    - ./database:/opt/sqlite/
+  #    - ecdev-metabase:/metabase-data
+  #  environment:
+  #    - MB_DB_FILE=/metabase-data/metabase.db
+  #  ports:
+  #    - 8155:3000
+
+volumes:
+  ecdev-metabase:
+  sqlsystem:
+  sqldata:
+  sqllog:
+  sqlbackup:
+
+networks:
+  default:
+    external:
+      name: data-net
