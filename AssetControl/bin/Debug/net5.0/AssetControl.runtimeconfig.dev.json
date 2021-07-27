@@ -1,0 +1,10 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\skpond\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\skpond\\.nuget\\packages",
+      "C:\\Program Files (x86)\\Progress\\ToolboxNugetPackages",
+      "C:\\Microsoft\\Xamarin\\NuGet"
+    ]
+  }
+}
