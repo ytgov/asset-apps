@@ -1,41 +1,30 @@
 <template>
   <div class="home">
-    <h1>Dashboard</h1>
+    <h1>Asset Management Home</h1>
 
-    <v-card class="mt-5" color="#fff2d5">
-      <v-card-title>Card with info</v-card-title>
-      <v-card-text>This is the body of the text</v-card-text>
-    </v-card>
-
-    <div class="row mt-5">
+    <div class="row">
       <div class="col-md-6">
-        <v-card class="mt-5" color="#fff2d5" to="/yukon-business-relief-program-1">
-          <v-card-title>Yukon Business Relief Program : Phase 1</v-card-title>
-          <v-card-text>This is the body of the text</v-card-text>
+        <v-card class="mt-5 default">
+          <v-card-title>I want to transfer an Asset</v-card-title>
+          <v-card-text>
+            <asset-transfer-form></asset-transfer-form>
+          </v-card-text>
         </v-card>
       </div>
       <div class="col-md-6">
-        <v-card class="mt-5" color="#fff2d5" to="/yukon-business-relief-program-2">
-          <v-card-title>Yukon Business Relief Program : Phase 2</v-card-title>
-          <v-card-text>This is the body of the text</v-card-text>
+        <v-card class="mt-5 default">
+          <v-card-title>Asset Tag Lookup</v-card-title>
+          <v-card-text>
+            <asset-lookup-form></asset-lookup-form
+          ></v-card-text>
         </v-card>
       </div>
       <div class="col-md-6">
-        <v-card class="mt-5" color="#fff2d5" to="/paid-sick-leave/phase-1">
-          <v-card-title>Paid Sick Leave</v-card-title>
-          <v-card-text>This is the body of the text</v-card-text>
-        </v-card>
-      </div>
-      <div class="col-md-6">
-        <v-card class="mt-5" color="#fff2d5" to="/essential-workers-income-support/phase-1">
-          <v-card-title>Essential Workers Income Support Program</v-card-title>
-          <v-card-text>This is the body of the text</v-card-text>
-        </v-card>
-      </div>
-      <div class="col-md-6">
-        <v-card class="mt-5" color="#fff2d5" to="/temporary-support-for-canceled-events">
-          <v-card-title>Temporary Support for Canceled Events</v-card-title>
-          <v-card-text>This is the body of the text</v-card-text>
+        <v-card class="mt-5 default">
+          <v-card-title>Request an Asset Tag</v-card-title>
+          <v-card-text>
+            <asset-register-form></asset-register-form
+          ></v-card-text>
         </v-card>
       </div>
     </div>
@@ -45,6 +34,6 @@
 <script>
 export default {
   name: "Home",
-  data: () => ({})
+  data: () => ({}),
 };
 </script>

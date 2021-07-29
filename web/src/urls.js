@@ -7,4 +7,4 @@ export const LOGOUT_URL = `${config.apiBaseUrl}/api/auth/logout`;
 export const PROFILE_URL = `${config.apiBaseUrl}/api/user/me`;
 export const USER_URL = `${config.apiBaseUrl}/api/user`;
 
-export const VENDOR_URL = `${config.apiBaseUrl}/api/vendor`;
+export const TAG_URL = `${config.apiBaseUrl}/api/asset-tag`;

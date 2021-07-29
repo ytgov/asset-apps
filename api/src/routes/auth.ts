@@ -35,9 +35,12 @@ export function configureAuthentication(app: Express) {
         if (req.oidc.isAuthenticated()) {
             let oidcUser = AuthUser.fromOpenId(req.oidc.user);
             (req.session as any).user = oidcUser;
+            req.user = oidcUser;
 
-            let dbUser = await db.getByEmail(oidcUser.email);
-            req.user = await db.makeDTO(Object.assign(oidcUser, dbUser));
+            console.log("USE/",oidcUser)
+
+            //let dbUser = await db.getByEmail(oidcUser.email);
+            //req.user = await db.makeDTO(Object.assign(oidcUser, dbUser));
         }
 
         next();
@@ -48,11 +51,12 @@ export function configureAuthentication(app: Express) {
             let user = AuthUser.fromOpenId(req.oidc.user) as AuthUser;
             req.user = user;
 
-            let dbUser = await db.getByEmail(req.user.email);
+            console.log("GET/", user)
+            /* let dbUser = await db.getByEmail(req.user.email);
 
             if (!dbUser) {
                 await db.create(user.email, user.first_name, user.last_name, "Active", "");
-            }
+            } */
 
             res.redirect(AUTH_REDIRECT);
         }
@@ -65,6 +69,9 @@ export function configureAuthentication(app: Express) {
 
     app.get("/api/auth/isAuthenticated", async (req: Request, res: Response) => {
         if (req.oidc.isAuthenticated()) {
+
+            console.log(req.user)
+
             let person = req.user;
             //let me = await db.getByEmail(person.email);
             return res.json({ data: person });

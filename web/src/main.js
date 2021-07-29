@@ -9,12 +9,20 @@ import VueCurrencyInput from 'vue-currency-input'
 import Notifications from "./components/Notifications";
 import UserEditor from "./components/UserEditor";
 
+import AssetRegisterForm from "./components/AssetRegisterForm";
+import AssetTransferForm from "./components/AssetTransferForm";
+import AssetLookupForm from "./components/AssetLookupForm";
+
 Vue.config.productionTip = false;
 
 axios.defaults.withCredentials = true;
 
 Vue.component("notifications", Notifications);
 Vue.component("user-editor", UserEditor);
+
+Vue.component("asset-register-form", AssetRegisterForm);
+Vue.component("asset-transfer-form", AssetTransferForm);
+Vue.component("asset-lookup-form", AssetLookupForm);
 
 Vue.use(VueCurrencyInput, { globalOptions: { currency: 'USD', locale: 'en' } });
 
