@@ -6,38 +6,54 @@
       label="Asset identifier"
       background-color="white"
       placeholder="Start typing to Search"
-      item-text= "id"
+      item-text="id"
       :items="items"
       :loading="isLoading"
       :search-input.sync="search"
+      v-model="selectedItem"
+      @change="selectedChanged"
+      :no-data-text="selectedHint"
     ></v-autocomplete>
+    <div v-if="selected.id">
+      <hr />
+      <h2 class="mt-4">
+        {{ selected.id }} : <small>Water pump - small</small>
+      </h2>
+
+      <p>
+        <strong>Owner:</strong> Community Services - Wildfire Management<br />
+        <strong>Mail code:</strong> C19 - 91790 AKA HWY<br />
+        <strong>Category:</strong> Tools<br />
+        <strong>Purchased:</strong> January 20, 2020
+      </p>
+      <v-btn small color="secondary" class="my-0 mr-5">More info </v-btn>
+      <v-btn small color="secondary" class="my-0">Transfer </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
-import _ from "lodash";
 import axios from "axios";
 import { TAG_URL } from "../urls";
 
 export default {
   name: "UserEditor",
-  computed: {},
-  props: ["onSave"],
   data: () => ({
     search: null,
     isLoading: null,
     count: 0,
     items: [],
+    selected: {},
   }),
   created() {},
   watch: {
     search(val) {
+      val = val || "";
       if (val.trim().length == 0) {
         this.items = [];
         return;
       }
 
-      console.log(val);
       // Items have already been requested
       if (this.isLoading) return;
 
@@ -48,7 +64,6 @@ export default {
         .post(`${TAG_URL}/search`, { keyword: val.trim() })
         .then((resp) => {
           this.items = resp.data.data;
-          console.log("ITEMS", this.items)
         })
         .catch((err) => {
           console.log(err);
@@ -56,14 +71,19 @@ export default {
         .finally(() => (this.isLoading = false));
     },
   },
-  methods: {
-    show(item) {
-      this.payment = _.clone(item);
-      this.drawer = true;
+
+  computed: {
+    selectedHint: function () {
+      if (this.search == null || this.search == "")
+        return "Enter your search criteria";
+      else return "No matches found";
     },
-    hide() {
-      this.payment = {};
-      this.drawer = false;
+  },
+
+  methods: {
+    selectedChanged(item) {
+      this.selected = this.items.filter((i) => i.id == item)[0];
+      this.search = "";
     },
   },
 };

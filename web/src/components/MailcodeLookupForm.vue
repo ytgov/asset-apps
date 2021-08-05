@@ -13,7 +13,6 @@
       :search-input.sync="search"
       v-model="selectedItem"
       @change="selectedChanged"
-      persistent-hint
       :no-data-text="selectedHint"
     ></v-autocomplete>
 
@@ -74,6 +73,7 @@ export default {
         .finally(() => (this.isLoading = false));
     },
   },
+
   computed: {
     selectedHint: function () {
       if (this.search == null || this.search == "")
@@ -85,7 +85,6 @@ export default {
   methods: {
     selectedChanged(item) {
       this.selected = this.items.filter((i) => i.mailcode == item)[0];
-      console.log("SCHANGE", item);
       this.search = "";
     },
   },
