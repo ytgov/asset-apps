@@ -5,3 +5,4 @@ export * from "./auth-user";
 export * from "./migrator";
 
 export const db = knex.knex(DB_CONFIG);
+export const mailcodeData = require("./mailcodes.json");

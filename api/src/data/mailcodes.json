@@ -1,0 +1,1592 @@
+[
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H21",
+      "description": "Birch Lodge",
+      "location": "6189-6th Ave"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H23",
+      "description": "Territorial Health Investment Fund",
+      "location": "210-305 Main"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H4",
+      "description": "Social Services",
+      "location": "3168 3rd Ave 1st Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H3A",
+      "description": "Finance and Admin",
+      "location": "4114 4th Ave 3rd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H3",
+      "description": "Community Support Program",
+      "location": "204 Black St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H211",
+      "description": "Regional Services",
+      "location": "211 Hawkins St 2nd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H20",
+      "description": "Intergrated Support for Youth",
+      "location": "2090A 2nd Ave left"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H26",
+      "description": "Mental Wellness & Substance Use",
+      "location": "2090A 2nd Ave Right"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "HP305",
+      "description": "Health Promotions",
+      "location": "305 Jarvis 2nd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H10A",
+      "description": "Child Youth and Family Treatment Team",
+      "location": "211 Hawkins St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H25",
+      "description": "WHSE Emergency Shelter",
+      "location": "405 Alexander St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H1H",
+      "description": "Human Resources",
+      "location": "1 Hospital Rd 1st Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H1-103",
+      "description": "Systems",
+      "location": "1 Hospital Rd 1st Flr left"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H1",
+      "description": "Finance and Admin",
+      "location": "1 Hospital Rd 2nd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "5HRD",
+      "description": "Hospital Corporation",
+      "location": "5 Hospital Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H19",
+      "description": "Thompson Centre",
+      "location": "6 Hospital Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "4HRD",
+      "description": "Communicable desease",
+      "location": "4 Hospital Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "2HRD",
+      "description": "Community Nursing/Environmental Health and Social Services",
+      "location": "2 Hospital Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H202",
+      "description": "Safety And Clinical Excellence",
+      "location": "202 4103 4th Ave"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H9A",
+      "description": "Youth Probation",
+      "location": "305 Lambert St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H9",
+      "description": "Young Offenders Facilities",
+      "location": "728 Range Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H109",
+      "description": "Care & Community",
+      "location": "109 Copper Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H4B",
+      "description": "Home Care",
+      "location": "109 Copper Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H24",
+      "description": "Whistle Bend",
+      "location": "90 Olive May Way"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H10M",
+      "description": "2nd location Family and Childrens Services",
+      "location": "107 O'Brien Place"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H10",
+      "description": "Family and Childs Services/ Regional Services",
+      "location": "4114 4th Ave 1st Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H18",
+      "description": "Copper Ridge Place",
+      "location": "60 Lazulite Dr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H52",
+      "description": "Group Home",
+      "location": "52 Liard Cres"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H13",
+      "description": "Group Home",
+      "location": "16 Klondike"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H2",
+      "description": "Health information VS",
+      "location": "400 204 Lambert 4th flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H2F",
+      "description": "Finance & Informatics",
+      "location": "400 204 Lambert 3rd flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H11B",
+      "description": "Support for Children with Disabilities",
+      "location": "49B  Waterfront Pl"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H2D",
+      "description": "Health Centre",
+      "location": "9010 Quartz Rd 1st Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H12",
+      "description": "Healthy Families",
+      "location": "9010 Quartz Rd 1st Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "HD1",
+      "description": "Dental Health and Social Services",
+      "location": "9010 Quartz Rd 1st Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H5",
+      "description": "Speech and Hearing",
+      "location": "4114 4th Ave 2nd  Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H7",
+      "description": "MWSU",
+      "location": "609 Steele St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H15",
+      "description": "Boys Receiving Home",
+      "location": "504 Hanson St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H14",
+      "description": "Girls Receiving Home",
+      "location": "5030 5th Ave"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H4A",
+      "description": "St Elias Adult Centre",
+      "location": "509 Hoge St"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "CHP4",
+      "description": "Immunization-Panorama",
+      "location": "4 Hospital Rd 2nd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H27",
+      "description": "1Health Yukon",
+      "location": "300 - 204 Lambert 3rd floor"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H28",
+      "description": "MWSU Community Leadership",
+      "location": "4114 4th Ave 3rd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H4C",
+      "description": "Housing First",
+      "location": "5131 5th Ave"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H22W",
+      "description": "Nts'äw Chua Group Home",
+      "location": "22 Wann Rd"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H7B",
+      "description": "MWSU",
+      "location": "302 4114 4th ave."
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H29",
+      "description": "Covid Response Unit",
+      "location": "203 1191 Front Street"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H30",
+      "description": "MWSU Forensic Complex Care Team",
+      "location": "3168 3rd 2nd floor"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H3B",
+      "description": "Senior Service and Adult Protection",
+      "location": "3168 3rd 2nd floor"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "H31",
+      "description": "Population and Public Health Evidence & Evaluation",
+      "location": "204 Lambert 2nd Flr"
+    },
+    {
+      "department": "Health and Social Services",
+      "mailcode": "HCVT",
+      "description": "Covid Testing Centre",
+      "location": "49A Waterfront"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E-IL",
+      "description": "Individual Learning Centre",
+      "location": "500-4201 4th Ave"
+    },
+    {
+      "department": "Education",
+      "mailcode": "AVS",
+      "description": "Aurora Virtual School",
+      "location": "500-4201 4th Ave"
+    },
+    {
+      "department": "Education",
+      "mailcode": "GHE",
+      "description": "Golden Horn Elementary",
+      "location": "209 Duncan Dr"
+    },
+    {
+      "department": "Education",
+      "mailcode": "WSC",
+      "description": "Wood St Centre",
+      "location": "411 Wood St"
+    },
+    {
+      "department": "Education",
+      "mailcode": "YTA",
+      "description": "Yukon Teachers Association",
+      "location": "20664 2nd Ave"
+    },
+    {
+      "department": "Education",
+      "mailcode": "GSR",
+      "description": "Gadzoosdaa Residence",
+      "location": "12 Selkirk St"
+    },
+    {
+      "department": "Education",
+      "mailcode": "TES",
+      "description": "Takhini Elementary",
+      "location": "526 Range Rd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E-CSFY",
+      "description": "French School Board",
+      "location": "478 Range Rd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "PCS",
+      "description": "Porter Creek Secondary",
+      "location": "1405 Hickory St"
+    },
+    {
+      "department": "Education",
+      "mailcode": "JHE",
+      "description": "Jack Hulland Elementary",
+      "location": "1304 Fir St"
+    },
+    {
+      "department": "Education",
+      "mailcode": "HFE",
+      "description": "Holy Family Elementary",
+      "location": "55 Wann Rd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "HVS",
+      "description": "Hidden Valley Elementary",
+      "location": "5 MacPherson Rd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "ESE",
+      "description": "Elijah Smith Elementary",
+      "location": "1399 Hamilton Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "EET",
+      "description": "Ecole Emily Tremblay",
+      "location": "20 Falcon Dr"
+    },
+    {
+      "department": "Education",
+      "mailcode": "FHC",
+      "description": "FH Collins",
+      "location": "1001 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "SES",
+      "description": "Selkirk Elementary",
+      "location": "3 Selkirk St"
+    },
+    {
+      "department": "Education",
+      "mailcode": "CKE",
+      "description": "Christ the King Elementary",
+      "location": "20 Nisutlin Dr"
+    },
+    {
+      "department": "Education",
+      "mailcode": "VCS",
+      "description": "Vanier Catholic Secondary",
+      "location": "16 Duke St"
+    },
+    {
+      "department": "Education",
+      "mailcode": "GME",
+      "description": "Grey Mountain Elementary",
+      "location": "186 Alsek Rd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "WES",
+      "description": "Whitehorse Elementary",
+      "location": "4181 4th Ave"
+    },
+    {
+      "department": "Education",
+      "mailcode": "MER",
+      "description": "CSSC Mercier",
+      "location": "1009 Lewes Boulevard"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E1",
+      "description": "Education DM office",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E2",
+      "description": "Resource Centre",
+      "location": "1000 Lewes Blvd back"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E3",
+      "description": "Communications",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E4",
+      "description": "Yukon University",
+      "location": "500 University Drive"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E5",
+      "description": "Human Resources",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E6",
+      "description": "Finance",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E7",
+      "description": "ADM's Office - Schools and Student Services",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E8",
+      "description": "Native Language Centre",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E9",
+      "description": "Schools K-12 & Program Delivery - Superintendents",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E10",
+      "description": "Teen Parent Centre",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E11",
+      "description": "Facilities and Transportation",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E12",
+      "description": "Student Support Services",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E13",
+      "description": "Training Programs",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E14",
+      "description": "ADM's Office - Policy & Partnerships",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E15",
+      "description": "Strategic Support",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E16",
+      "description": "Curriculum & Assessment",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E17",
+      "description": "Information Tech Support Services",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E18",
+      "description": "Post-Secondary and Labour Market",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E19",
+      "description": "Performance & Analytics",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E20",
+      "description": "French Programs",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E21",
+      "description": "First Nations Initiatives",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Education",
+      "mailcode": "E23",
+      "description": "Early Learning and Child Care",
+      "location": "1000 Lewes Blvd"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C23",
+      "description": "Library",
+      "location": "1171 1st Ave"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C8",
+      "description": "Building safety",
+      "location": "2251 2nd Ave Site B"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C2",
+      "description": "Human Resources",
+      "location": "220 305 Main St"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C11",
+      "description": "Assistant Deputy Minister",
+      "location": "308 Steele 4th floor"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C12",
+      "description": "Community Opperations",
+      "location": "308 Steele 4th floor"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C3",
+      "description": "Finance",
+      "location": "308 Steele 3rd floor"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C13",
+      "description": "Infrastructure",
+      "location": "308 Steele 2nd floor"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C9",
+      "description": "Property Assessment & Taxation",
+      "location": "308 Steele 1st floor"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C6",
+      "description": "Corporate Affairs",
+      "location": "307 Black St 1st Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C5",
+      "description": "Consumer Services",
+      "location": "307 Black St 1st Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C18",
+      "description": "Medical Council",
+      "location": "307 Black St 1st Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C7",
+      "description": "Employment Standards and Residential Tenancies",
+      "location": "307 Black St 1st Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C1",
+      "description": "Deputy Minister",
+      "location": "307 Black St 2nd  Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C14",
+      "description": "Land Development",
+      "location": "307 Black St 2nd  Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C5A",
+      "description": "Assistant Deputy Minister",
+      "location": "307 Black St 2nd  Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C4",
+      "description": "corporate Policy",
+      "location": "307 Black St 2nd  Flr"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C19",
+      "description": "Wildfire Management",
+      "location": "91790 AKA HWY"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C20",
+      "description": "Fire Marshall",
+      "location": "91790 AKA HWY"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "EMS",
+      "description": "Emergency Medical Services",
+      "location": "91788 AKA HWY"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C25",
+      "description": "Assistant Deputy Minister",
+      "location": "91788 AKA HWY"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "OCC",
+      "description": "Op Centre",
+      "location": "91788 AKA HWY"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "EMO",
+      "description": "Emergency Measures Organization",
+      "location": "60 Norseman Rd"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C24",
+      "description": "Protective Services",
+      "location": "60 Norseman Rd"
+    },
+    {
+      "department": "Community Services",
+      "mailcode": "C10",
+      "description": "Sport & Recreation",
+      "location": "4061 4th Ave"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W5A",
+      "description": "Capital Planning",
+      "location": "9010 Quartz rd 2nd Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W17",
+      "description": "Transport Services",
+      "location": "2251 2nd Ave Site A"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W22",
+      "description": "Motor Vehicles",
+      "location": "2251 2nd Ave Site A"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W23",
+      "description": "Transport Services",
+      "location": "2251 2nd Ave Site A"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W19",
+      "description": "Geomatics",
+      "location": "3059 3rd Ave"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W3i",
+      "description": "Information Management",
+      "location": "1098 Front St"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W3C",
+      "description": "Procurement Support Centre",
+      "location": "104 Elliot 1st Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W25",
+      "description": "HPW Policy",
+      "location": "1098 Front St"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W13",
+      "description": "Transportation Engineering",
+      "location": "461 Range Rd"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W13B",
+      "description": "Transportation Engineering",
+      "location": "461 Range Rd"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W11",
+      "description": "Records Centre",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W16",
+      "description": "Airport",
+      "location": "Airport"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W14",
+      "description": "Aviation & Marine",
+      "location": "Airport"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W18",
+      "description": "Weigh Scales & National safety Code",
+      "location": "91444 AKA HWY"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W2",
+      "description": "Human Resources",
+      "location": "400 204 Lambert 4th flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W1",
+      "description": "Deputy Ministers office",
+      "location": "9010 Quartz rd 2nd Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W1A",
+      "description": "Policy & Communications",
+      "location": "9010 Quartz rd 2nd Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W5/W3F",
+      "description": "Finance",
+      "location": "9010 Quartz rd 2nd Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W3P",
+      "description": "Policy",
+      "location": "9010 Quartz rd 2nd Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W5B",
+      "description": "Realty",
+      "location": "9010 Quartz rd 2nd Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W6",
+      "description": "Facilities Management",
+      "location": "113 Industrial Rd"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W4",
+      "description": "Supply Services",
+      "location": "9029 Quartz Rd bldg 277"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W4A",
+      "description": "Assets Warehouse",
+      "location": ""
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W12",
+      "description": "Central Workshop",
+      "location": "9029 Quartz Rd bldg 275"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W12ST",
+      "description": "Safety Training",
+      "location": "9029 Quartz Rd bldg 275"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W24",
+      "description": "Grader Station",
+      "location": "9024 Quartz Rd"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W26",
+      "description": "Transportation planning",
+      "location": "102 85 Ogilvie ST"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W28",
+      "description": "ADM  Transportation Planning",
+      "location": "102 85 Ogilvie ST"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W27",
+      "description": "Business Modernization initoatove",
+      "location": "102 1191 front ST"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "W10",
+      "description": "ATIPP / Information Management",
+      "location": "MAB 1st Flr"
+    },
+    {
+      "department": "Highways and Public Works",
+      "mailcode": "IMS",
+      "description": "Information Mngt Services",
+      "location": "101 Elliot ST"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V419",
+      "description": "Water Lab",
+      "location": "419 Range Rd 2nd Flr"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V310",
+      "description": "Water Resources",
+      "location": "419 Range Rd 2nd Flr"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V FIN",
+      "description": "Finance",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V1",
+      "description": "Environment office",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V5N",
+      "description": "Conservation Data Centre",
+      "location": "419 Range Rd 2nd Flr"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V5",
+      "description": "Sustainability Fish and Wildlife",
+      "location": "419 Range Rd 2nd Flr"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V4",
+      "description": "Parks",
+      "location": "9029 Quartz Rd Bldg 271"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V18",
+      "description": "Environmental Sustainability",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V3A",
+      "description": "Corporate Climate Change",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V7",
+      "description": "Animal Health Unit",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V205",
+      "description": "Climate Change Secretariat",
+      "location": "10 Burns Rd"
+    },
+    {
+      "department": "Environment",
+      "mailcode": "V4B",
+      "description": "Parks, second location.",
+      "location": "419 Range Rd 2nd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K8",
+      "description": "Finance",
+      "location": "211 Main 4th Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K9",
+      "description": "Forestry/Mineral",
+      "location": "211 Main 4th Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K11",
+      "description": "Oil and Gas Resources",
+      "location": "211 Main 4th Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K12",
+      "description": "Stratigic Initiatives",
+      "location": "211 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K320",
+      "description": "Land Management",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K320A",
+      "description": "Agriculture",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K320LP",
+      "description": "Land Planning",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K315",
+      "description": "Sustainable Resources",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K325",
+      "description": "Compliance Monitoring and Inspection",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K345",
+      "description": "Corporate Services",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K335",
+      "description": "Library",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K235",
+      "description": "Energy Corporate Policy and Planing",
+      "location": "300 Main 2nd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K6",
+      "description": "Energy Corporate Policy and Planing",
+      "location": "300 Main 2nd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K340",
+      "description": "Policy and Planning",
+      "location": "300 Main 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K240",
+      "description": "Deputy Ministers office",
+      "location": "300 Main 2nd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K102",
+      "description": "Mining Lands office",
+      "location": "300 Main 1st Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K10",
+      "description": "Geological Survey",
+      "location": "300 Main 1st Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "KWD",
+      "description": "Whse Fire District",
+      "location": "Mile 918 AKA HWY left"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K918",
+      "description": "Forestry",
+      "location": "Mile 918 AKA HWY Right"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K14",
+      "description": "Geological Services bostock library/Yukon Geo Survey",
+      "location": "Mile 918 AKA HWY"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K426",
+      "description": "Lab -Compliance Monitoring and Inspection",
+      "location": "426 Range Rd"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "EMR206",
+      "description": "Energy Solutions Centre",
+      "location": "206A Lowe St"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K230",
+      "description": "Human Resources",
+      "location": "4114 4th Ave 3rd Flr"
+    },
+    {
+      "department": "Energy, Mines and Resources",
+      "mailcode": "K419",
+      "description": "Assessment and Abandoned Mines",
+      "location": "4114 4th Ave 2nd Flr"
+    },
+    {
+      "department": "Finance",
+      "mailcode": "B1",
+      "description": "Finance Operations",
+      "location": "MAB 3rd Flr"
+    },
+    {
+      "department": "Finance",
+      "mailcode": "B2",
+      "description": "DM Office, Corporate Services,Management Board Secretariat",
+      "location": "MAB 3rd Flr"
+    },
+    {
+      "department": "Finance",
+      "mailcode": "B3",
+      "description": "Economics, Fiscal Policy and Statistics",
+      "location": "MAB 3rd Flr"
+    },
+    {
+      "department": "Finance",
+      "mailcode": "B4",
+      "description": "Bureau of Statistics",
+      "location": "3106 3rd Ave"
+    },
+    {
+      "department": "Finance",
+      "mailcode": "B5",
+      "description": "Tax Administration",
+      "location": "MAB 3rd Flr"
+    },
+    {
+      "department": "Finance",
+      "mailcode": "B6",
+      "description": "Computroller/Finance Accounting",
+      "location": "MAB 3rd Flr"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z1 ODB",
+      "description": "Organizational Development Branch",
+      "location": "230 305 Main 2nd Flr"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z211",
+      "description": "Work Place Harassment Prevention",
+      "location": "211 Hawkins St"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z3",
+      "description": "H&S Disability Management",
+      "location": "104 Elliot 2nd Flr"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z1",
+      "description": "Public Service Commission",
+      "location": ""
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z2",
+      "description": "Human Resources & Diversity Services",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z4",
+      "description": "Human Resources Service Centre",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z5",
+      "description": "PSC Comp/Class and Payroll",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Public Service Commission",
+      "mailcode": "Z-HRBP",
+      "description": "psc Human Resource Business Partners",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L1",
+      "description": "Tourism and Culture",
+      "location": "100 Hanson"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L3",
+      "description": "Arts",
+      "location": "100 Hanson"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L5",
+      "description": "Beringia",
+      "location": "km 1423 Alaska HWY"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L8",
+      "description": "Human Resources",
+      "location": "100 Hanson"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L7",
+      "description": "Photography",
+      "location": "100 Hanson"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L6",
+      "description": "Achives",
+      "location": "400 University Drive"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L2",
+      "description": "Heritage Sites",
+      "location": "400 - 204 Lambert St 2nd flr"
+    },
+    {
+      "department": "Tourism and Culture",
+      "mailcode": "L2A",
+      "description": "Heritage",
+      "location": "120 Industrial Rd"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J2C",
+      "description": "Legal Aid",
+      "location": "2131 2nd Ave"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J3A",
+      "description": "Native Court Workers",
+      "location": "2131 2nd Ave"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J3E",
+      "description": "Judges Cambers",
+      "location": "2134 2nd Ave 4th Flr South"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J3",
+      "description": "Court Services",
+      "location": "2134 2nd Ave 1st Flr South"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J3D",
+      "description": "Sheriff",
+      "location": "2134 2nd Ave 1st Flr South"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J3C",
+      "description": "Law Library",
+      "location": "2134 2nd Ave 1st Flr South"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J2A",
+      "description": "Land Titles",
+      "location": "2134 2nd Ave 1st Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J2B",
+      "description": "Public Guardian & Trustee",
+      "location": "2134 2nd Ave 1st Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J2",
+      "description": "Legal Services",
+      "location": "2134 2nd Ave 2nd Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J2D",
+      "description": "Legislative Council",
+      "location": "2134 2nd Ave 2nd Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J2E",
+      "description": "Aboriginal Law",
+      "location": "2134 2nd Ave 2nd Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J1B",
+      "description": "Finance and Admin",
+      "location": "2134 2nd Ave 3rd Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J1C",
+      "description": "Systems",
+      "location": "2134 2nd Ave 3rd Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J1",
+      "description": "Deputy Minister",
+      "location": "2134 2nd Ave 4th Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J1A",
+      "description": "Policy And Planning",
+      "location": "2134 2nd Ave 4th Flr North"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J5",
+      "description": "Adult Probation Services",
+      "location": "301 Jarvice 1st Flr"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J7",
+      "description": "Family Violence",
+      "location": "301 Jarvice 2nd Flr"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J10",
+      "description": "Victom and Community Service",
+      "location": "301 Jarvice 2nd Flr"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J3M",
+      "description": "Maintenance Enforcement",
+      "location": "301 Jarvice 1st Flr"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J5A",
+      "description": "Court and Regulatory Services",
+      "location": "4141 C 4th Ave"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J4",
+      "description": "Correctional Centre",
+      "location": "25 College Drive"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J10A",
+      "description": "Coroners Services",
+      "location": "206A Lowe St 2nd Flr"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J10B",
+      "description": "Investigations and Standards Office",
+      "location": "206A Lowe St 2nd Flr"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "CEMA",
+      "description": "CEMA Investigations Unit - (CIU)",
+      "location": "204 1191 front St"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "JWC",
+      "description": "Justice Wellness Centre",
+      "location": "4141 C 4th Ave"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J1H",
+      "description": "Human Resources",
+      "location": "305 Lambert St"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J5R",
+      "description": "Restorative Justice",
+      "location": "305 Lambert St"
+    },
+    {
+      "department": "Justice",
+      "mailcode": "J12",
+      "description": "Justice / Negotiations, Collaborations & Partnerships",
+      "location": "2134 2nd Ave 1st Flr South"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A8A",
+      "description": "Audit Services",
+      "location": "204 Main St"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A8Y",
+      "description": "Youth Directorate",
+      "location": "204 Main St"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A14",
+      "description": "Aboriginal Relations",
+      "location": "204 Main St"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A419",
+      "description": "Water Board Secretariat",
+      "location": "419 Range Rd 1st Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A11",
+      "description": "Yukon Party",
+      "location": "MAB 1st Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A10",
+      "description": "NDP",
+      "location": "MAB 1st Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A9",
+      "description": "Speaker / Legislative Assembly",
+      "location": "MAB 1st Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A8 / A8B",
+      "description": "Executive Council Office",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A21A",
+      "description": "Inquiry Desk",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "CM1",
+      "description": "Premier",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "CM2-7/ A15",
+      "description": "Liberal Party",
+      "location": "MAB 2nd Flr"
+    },
+    {
+      "department": "Executive Council Office",
+      "mailcode": "A20",
+      "description": "Yukon Commissioner's office",
+      "location": "412 Main St"
+    },
+    {
+      "department": "Yukon Liquor Corporation",
+      "mailcode": "F1",
+      "description": "Regional Economic Development",
+      "location": "303 Alexander 1st Flr"
+    },
+    {
+      "department": "Yukon Liquor Corporation",
+      "mailcode": "F3",
+      "description": "Media Development",
+      "location": "303 Alexander 1st Flr"
+    },
+    {
+      "department": "Yukon Liquor Corporation",
+      "mailcode": "XYL",
+      "description": "Yukon Lotteries",
+      "location": "205 Hawkins"
+    },
+    {
+      "department": "Yukon Liquor Corporation",
+      "mailcode": "X1",
+      "description": "Liquor Corp",
+      "location": "9031 Quartz Rd"
+    },
+    {
+      "department": "Yukon Liquor Corporation",
+      "mailcode": "X1(Store)",
+      "description": "Liquor Store",
+      "location": "2190 2nd Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "City of Whitehorse",
+      "description": "City Hall",
+      "location": "2121 2nd Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "YEU",
+      "description": "Union Hall",
+      "location": "202 2285 2nd Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "CYFN",
+      "description": "Council of Yukon First Nations",
+      "location": "2166 2nd Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "D1",
+      "description": "Yukon Development Corporation",
+      "location": "234 2180 2nd Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "Q2",
+      "description": "Child and Youth Advocate",
+      "location": "19 2070 2nd Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "O1",
+      "description": "Ombudsman's office",
+      "location": "3162 3rd AVE"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "D2",
+      "description": "Yukon Energy Corporation",
+      "location": "2 Miles Canyon Rd"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "M1",
+      "description": "French Language Service",
+      "location": "305 Jarvis 3rd Flr"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "Y1/Y2/ WHA",
+      "description": "Yukon/Whse Housing",
+      "location": "410H Jarvis St"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "Q1",
+      "description": "Workers Advocate",
+      "location": "206A Lowe St 2nd Flr"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "YWCH&SB/P1",
+      "description": "Workers Compensation/ Appeals",
+      "location": "401 Strickland St"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "RCMP",
+      "description": "RCMP",
+      "location": "4100 4th Ave"
+    },
+    {
+      "department": "External / Other",
+      "mailcode": "WD1",
+      "description": "Womens Directorate",
+      "location": "1a 404 Hanson St"
+    }
+  ]

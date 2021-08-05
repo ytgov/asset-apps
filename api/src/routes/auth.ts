@@ -51,7 +51,6 @@ export function configureAuthentication(app: Express) {
             let user = AuthUser.fromOpenId(req.oidc.user) as AuthUser;
             req.user = user;
 
-            console.log("GET/", user)
             /* let dbUser = await db.getByEmail(req.user.email);
 
             if (!dbUser) {
@@ -69,9 +68,6 @@ export function configureAuthentication(app: Express) {
 
     app.get("/api/auth/isAuthenticated", async (req: Request, res: Response) => {
         if (req.oidc.isAuthenticated()) {
-
-            console.log(req.user)
-
             let person = req.user;
             //let me = await db.getByEmail(person.email);
             return res.json({ data: person });

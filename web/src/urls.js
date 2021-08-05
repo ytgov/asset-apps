@@ -8,3 +8,4 @@ export const PROFILE_URL = `${config.apiBaseUrl}/api/user/me`;
 export const USER_URL = `${config.apiBaseUrl}/api/user`;
 
 export const TAG_URL = `${config.apiBaseUrl}/api/asset-tag`;
+export const MAILCODE_URL = `${config.apiBaseUrl}/api/mailcode`;
