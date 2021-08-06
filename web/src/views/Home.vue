@@ -15,7 +15,7 @@
 
 <script>
 import * as config from "../config";
-//import router from "../router";
+import router from "../router";
 import store from "../store";
 
 export default {
@@ -25,6 +25,7 @@ export default {
   }),
   async created() {
     await store.dispatch("checkAuthentication");
+    router.push("/dashboard")
     //var isAuth = store.getters.isAuthenticated;
 
     //if (isAuth) router.push("/dashboard");
