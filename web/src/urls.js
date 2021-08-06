@@ -9,3 +9,4 @@ export const USER_URL = `${config.apiBaseUrl}/api/user`;
 
 export const TAG_URL = `${config.apiBaseUrl}/api/asset-tag`;
 export const MAILCODE_URL = `${config.apiBaseUrl}/api/mailcode`;
+export const SCAN_URL = `${config.apiBaseUrl}/api/scan`;
