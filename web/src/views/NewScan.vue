@@ -1,8 +1,8 @@
 <template>
   <div class="barcode">
     <StreamBarcodeReader
-      @decode="(a, b, c) => onDecode(a, b, c)"
-      @loaded="() => onLoaded()"
+      @decode="onDecode"
+      @loaded="onLoaded"
     ></StreamBarcodeReader>
     <v-list subheader>
       <v-subheader>Scanned Codes</v-subheader>
@@ -17,34 +17,40 @@
         </v-list-item-icon>
       </v-list-item>
     </v-list>
-    <v-btn color="success" class="mr-4" @click="submit" > Submit </v-btn>
+    <v-btn color="success" class="mr-4" @click="activeSound"> Submit </v-btn>
+
+    <notifications ref="notifier"></notifications>
   </div>
 </template>
 
 <script>
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import { useSound } from "@vueuse/sound";
+import dingMP3 from "../assets/sounds/ding.mp3";
 
 export default {
-  name: "HelloWorld",
+  name: "NewScan",
   components: {
     StreamBarcodeReader,
   },
   data() {
     return {
-      text: "",
       entries: [],
       id: null,
     };
   },
-  props: {
-    msg: String,
+  setup() {
+    // Sounds
+    const dingSound = useSound(dingMP3);
+    return { dingSound };
   },
   methods: {
-    onDecode(a, b, c) {
-      console.log(a, b, c);
-      this.entries.indexOf(a) === -1
-        ? this.entries.push(a)
-        : console.log("Already present");
+    onDecode(a) {
+      if (this.entries.indexOf(a) === -1) {
+        this.dingSound.play();
+        this.entries.unshift(a);
+        this.$refs.notifier.showSuccess("Barcode scanned");
+      }
     },
     onLoaded() {
       console.log("load");
@@ -58,5 +64,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>
