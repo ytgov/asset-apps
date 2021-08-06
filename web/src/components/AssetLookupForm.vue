@@ -26,8 +26,10 @@
         <strong>Category:</strong> Tools<br />
         <strong>Purchased:</strong> January 20, 2020
       </p>
-      <v-btn small color="secondary" class="my-0 mr-5">More info </v-btn>
-      <v-btn small color="secondary" class="my-0">Transfer </v-btn>
+      <div v-if="showActions != 'false'">
+        <v-btn small color="secondary" class="my-0 mr-5">More info</v-btn>
+        <v-btn small color="secondary" class="my-0">Transfer or dispose</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -38,12 +40,14 @@ import { TAG_URL } from "../urls";
 
 export default {
   name: "UserEditor",
+  props: ["showActions", "doItemSelected"],
   data: () => ({
     search: null,
     isLoading: null,
     count: 0,
     items: [],
     selected: {},
+    selectedItem: {},
   }),
   created() {},
   watch: {
@@ -84,6 +88,8 @@ export default {
     selectedChanged(item) {
       this.selected = this.items.filter((i) => i.id == item)[0];
       this.search = "";
+
+      if (this.doItemSelected) this.doItemSelected(this.selected);
     },
   },
 };

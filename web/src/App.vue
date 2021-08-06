@@ -62,9 +62,10 @@
 
       <div v-if="isAuthenticated">
         <v-btn color="primary" text class="mr-1" to="/dashboard">Home</v-btn>
+        <v-btn color="primary" text class="mr-1" to="/my-scans">My Scans</v-btn>
         <!-- <v-btn color="primary" text class="mr-1" to="/reports">Reports</v-btn> -->
 
-        <v-menu offset-y class="ml-0">
+        <!-- <v-menu offset-y class="ml-0">
           <template v-slot:activator="{ on, attrs }">
             <v-btn text color="primary" v-bind="attrs" v-on="on">
               Programs <v-icon>mdi-menu-down</v-icon>
@@ -76,7 +77,7 @@
               <v-list-item-title>Program 1</v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-menu>
+        </v-menu> -->
         <v-btn
           v-if="showAdmin"
           color="primary"
@@ -144,7 +145,8 @@ export default {
       return store.getters.fullName;
     },
     isAuthenticated() {
-      return store.getters.isAuthenticated;
+      //return store.getters.isAuthenticated;
+      return true;
     },
     roles() {
       return store.getters.roles;

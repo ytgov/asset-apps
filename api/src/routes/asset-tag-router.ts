@@ -13,7 +13,7 @@ assetTagRouter.post("/search",
     [body("keyword").notEmpty().isString()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
 
-        let data = [{ id: "Y1234", type: "tt" }, { id: "Y3223", type: "Desk" }];
+        let data = [{ id: "Y1234", type: "tt", display_name: "Y1234 : Water pump - small" }, { id: "Y3223", type: "Desk", display_name: "Y3223 : Desk" }];
 
         return res.json({ data });
     });

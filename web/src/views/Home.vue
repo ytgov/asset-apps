@@ -15,7 +15,7 @@
 
 <script>
 import * as config from "../config";
-import router from "../router";
+//import router from "../router";
 import store from "../store";
 
 export default {
@@ -25,10 +25,10 @@ export default {
   }),
   async created() {
     await store.dispatch("checkAuthentication");
-    var isAuth = store.getters.isAuthenticated;
+    //var isAuth = store.getters.isAuthenticated;
 
-    if (isAuth) router.push("/dashboard");
-    else router.push("/sign-in");
+    //if (isAuth) router.push("/dashboard");
+    //else router.push("/sign-in");
   },
   methods: {},
 };

@@ -6,22 +6,14 @@ import NotFound from "../views/NotFound.vue";
 import Login from "../views/Login";
 import LoginComplete from "../views/LoginComplete";
 import Profile from "../views/Profile";
-
 import Administration from "../views/Administration";
 
-
-import VendorList from "../views/VendorList";
-import VendorDetail from "../views/VendorDetail";
+import MyScans from "../views/MyScans.vue";
+import MyTags from "../views/MyTags.vue";
+import NewScan from "../views/NewScan.vue";
 
 Vue.use(VueRouter);
 
-const p1_children = [
-  {
-    name: "Child Nav 1",
-    url: "/nav-1",
-    icon: "mdi-calendar-check"
-  },
-]
 const routes = [
   {
     path: "/",
@@ -37,6 +29,33 @@ const routes = [
     }
   },
   {
+    path: "/my-scans",
+    name: "MyScans",
+    component: MyScans,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/asset-tags/recent",
+    name: "MyTags",
+    component: MyTags,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/scan",
+    name: "NewScan",
+    component: NewScan,
+    meta: {
+      requiresAuth: true
+    }
+  },
+
+
+
+  {
     path: "/sign-in",
     name: "Login",
     component: Login
@@ -50,23 +69,6 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: "/vendors",
-    name: "Vendors",
-    component: VendorList,
-    meta: {
-      requiresAuth: true,
-      chilren: p1_children
-    }
-  },
-  {
-    path: "/vendors/:id",
-    name: "VendorDetail",
-    component: VendorDetail,
     meta: {
       requiresAuth: true
     }
@@ -93,23 +95,23 @@ const router = new VueRouter({
   routes
 });
 
-import store from "../store";
+//import store from "../store";
 
 router.beforeEach(async (to, from, next) => {
-  var requiresAuth = to.meta.requiresAuth || false;
-
-  if (!requiresAuth) {
-    return next();
-  }
-
-  await store.dispatch("checkAuthentication");
-  var isAuthenticated = store.getters.isAuthenticated;
-
-  if (requiresAuth && !isAuthenticated) {
-    console.log("You aren't authenticatd, redirecting to sign-in")
-    next("/sign-in");
-    return;
-  }
+  /* var requiresAuth = to.meta.requiresAuth || false;
+ 
+    if (!requiresAuth) {
+     return next();
+   }
+ 
+   await store.dispatch("checkAuthentication");
+   var isAuthenticated = store.getters.isAuthenticated;
+ 
+   if (requiresAuth && !isAuthenticated) {
+     console.log("You aren't authenticatd, redirecting to sign-in")
+     next("/sign-in");
+     return;
+   } */
 
   return next();
 });
