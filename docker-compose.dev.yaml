@@ -15,7 +15,6 @@ services:
       - sqlbackup:/var/opt/sqlserver/backup
 
 volumes:
-  ecdev-metabase:
   sqlsystem:
   sqldata:
   sqllog:
