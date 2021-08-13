@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { param, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { ReturnValidationErrors } from "../middleware";
 import { UserService } from "../services";
 import _ from "lodash";
@@ -42,6 +42,24 @@ userRouter.put("/:email", EnsureAuthenticated,
         await db.update(email, user);
 
         return res.json({ messages: [{ variant: "success", text: "User saved" }] });
+    });
+
+userRouter.put("/:email/mailcode", EnsureAuthenticated,
+    [param("email").notEmpty().isString(), body("mailcode").notEmpty()], ReturnValidationErrors,
+    async (req: Request, res: Response) => {
+        let { email } = req.params;
+        let { mailcode } = req.body;
+        let db = req.store.userService as UserService;
+
+        let user = await db.getByEmail(email);
+
+        if (user) {
+            user.mailcode = mailcode;
+            await db.update(email, user);
+            return res.json({ messages: [{ variant: "success", text: "Mail code saved" }] });
+        }
+
+        res.status(404).send();
     });
 
 userRouter.delete("/:id", EnsureAuthenticated,

@@ -30,7 +30,7 @@
 
       <v-stepper-content step="1">
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-4 pt-4">
             <v-text-field
               label="How many tags do you need?"
               dense
@@ -38,42 +38,37 @@
               type="number"
               min="1"
               max="50"
-              class="mt-1"
               v-model="tagCount"
             ></v-text-field>
           </div>
 
-          <div class="col-sm-8">
+          <div class="col-sm-8 pt-4">
             <v-menu
-              ref="menu"
               v-model="menu"
               :close-on-content-click="false"
-              :return-value.sync="date"
               transition="scale-transition"
+              left
+              nudge-top="26"
               offset-y
               min-width="auto"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="date"
-                  label="Date of purchase"
-                  prepend-icon="mdi-calendar"
+                  label="Purchase date"
+                  append-icon="mdi-calendar"
                   readonly
                   outlined
                   dense
+                  background-color="white"
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="date" no-title scrollable>
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="menu = false">
-                  Cancel
-                </v-btn>
-                <v-btn text color="primary" @click="$refs.menu.save(date)">
-                  OK
-                </v-btn>
-              </v-date-picker>
+              <v-date-picker
+                v-model="date"
+                @input="menu = false"
+              ></v-date-picker>
             </v-menu>
           </div>
         </div>
@@ -82,8 +77,11 @@
           dense
           outlined
           hide-details
-          :items="['W10 - MAB 1st Flr', 'W12 - 9029 Quartz Rd bldg 275']"
+          :items="mailcodes"
           label="What mail code do we send them to?"
+          v-model="sendMailcode"
+          item-text="display_name"
+          item-value="mailcode"
         ></v-select>
 
         <v-btn small color="primary" class="mb-0" @click="step1Click()"
@@ -131,10 +129,15 @@
 
 <script>
 import router from "../router";
+import { mapState } from "vuex";
+import axios from "axios";
+import { MAILCODE_URL } from "../urls";
 
 export default {
   name: "UserEditor",
-  computed: {},
+  computed: {
+    ...mapState("profile", ["mailcode"]),
+  },
   props: ["onSave"],
   data: () => ({
     step: 1,
@@ -149,8 +152,23 @@ export default {
     assetToTransfer: null,
     transferReason: "",
     descriptions: [{ quantity: 1 }],
+
+    mailcodes: [],
+
+    menu: null,
+    date: null,
+    purchased: null,
+    sendMailcode: "",
   }),
-  created() {},
+  created() {
+    this.sendMailcode = this.mailcode;
+
+    axios.get(`${MAILCODE_URL}`).then((resp) => {
+      this.mailcodes = resp.data.data;
+    });
+
+    this.date = new Date().toISOString().slice(0, 10)
+  },
   methods: {
     step1Click() {
       this.descriptions = new Array();

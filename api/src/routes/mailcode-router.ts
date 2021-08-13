@@ -7,7 +7,10 @@ export const mailcodeRouter = express.Router();
 
 mailcodeRouter.get("/",
     async (req: Request, res: Response) => {
-        return res.json({ mailcodeData });
+        let list = mailcodeData.sort((a:any, b:any) => { return a.mailcode.localeCompare(b.mailcode) });
+        list.map((r: any) => { return Object.assign(r, { display_name: `${r.mailcode} : ${r.description} (${r.department}) - ${r.location}` }) });
+
+        return res.json({ data: list });
     });
 
 mailcodeRouter.post("/search",

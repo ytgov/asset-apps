@@ -52,7 +52,7 @@ export default {
   computed: {},
   props: ["onSave"],
   data: () => ({
-    roleOptions: ["Admin", "PSL", "YEWIS", "TSFCE", "YBRP"],
+    roleOptions: ["Admin", "Warehouse"],
     search: null,
     isLoading: null,
     count: 0,

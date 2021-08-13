@@ -8,13 +8,17 @@
       style="border: 1px #9e9e9e solid"
     >
       <v-stepper-step editable step="1" :complete="step > 1">
-        Does the item have an asset identifier?
+        Does the item have a Yukon Government asset tag?
         <small>{{ hasIdentifier }}</small>
       </v-stepper-step>
 
       <v-stepper-content step="1">
-        <v-btn small color="primary" class="my-0" @click="idYesClick()">Yes</v-btn>
-        <v-btn small color="secondary" class="my-0 ml-3" @click="idNoClick()"> No </v-btn>
+        <v-btn small color="primary" class="my-0" @click="idYesClick()"
+          >Yes</v-btn
+        >
+        <v-btn small color="secondary" class="my-0 ml-3" @click="idNoClick()">
+          No
+        </v-btn>
       </v-stepper-content>
 
       <v-stepper-step step="2">{{ step2Name }}</v-stepper-step>
@@ -45,17 +49,17 @@
 
         <div v-if="hasIdentifier != 'Yes'" class="py-2">
           <div class="row" v-for="(desc, i) of descriptions" :key="i">
-            <div class="col-sm-8">
+            <div class="col-sm-6">
               <v-select
                 dense
                 outlined
                 :items="['Desk', 'Chair']"
-                label="Describe the asset"
+                label="Type of item"
                 hide-details
                 v-model="desc.type"
               ></v-select>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <v-text-field
                 dense
                 outlined
@@ -66,17 +70,34 @@
                 min="1"
               ></v-text-field>
             </div>
+            <div class="col-sm-3">
+              <v-select
+                dense
+                outlined
+                label="Condition"
+                hide-details
+                v-model="desc.condition"
+                :items="conditionOptions"
+              ></v-select>
+            </div>
           </div>
-
-          <v-btn color="primary" class="mb-0" small @click="step = 3"> Continue </v-btn>
           <v-btn
             small
             title="Add another item"
             color="secondary"
-            class="ml-2 mb-0"
-            @click="descriptions.push({ quantity: 1 })"
-            >Add more</v-btn
+            class="mb-0"
+            @click="descriptions.push({ quantity: 1, condition: 'Good' })"
+            ><v-icon>mdi-plus</v-icon> Add</v-btn
           >
+
+          <v-btn
+            color="primary"
+            class="mb-0 float-right"
+            small
+            @click="step = 3"
+          >
+            Continue
+          </v-btn>
         </div>
       </v-stepper-content>
 
@@ -87,22 +108,27 @@
           class="mt-2"
           dense
           outlined
-          :items="['W10 - MAB 1st Flr', 'W12 - 9029 Quartz Rd bldg 275']"
+          :items="mailcodes"
           label="What's your mail code?"
+          item-text="display_name"
+          item-value="mailcode"
         ></v-select>
 
         <v-select
+          v-if="hasIdentifier == 'Yes'"
           class="mt-2"
           rows="2"
           v-model="transferReason"
           dense
-          :items="['No good', 'Good']"
+          :items="conditionOptions"
           outlined
           label="What condition is this item in?"
           persistent-hint
         ></v-select>
 
-        <v-btn small class="mb-0" color="primary" @click="doComplete()">Complete</v-btn>
+        <v-btn small class="mb-0" color="primary" @click="doComplete()"
+          >Complete</v-btn
+        >
       </v-stepper-content>
     </v-stepper>
 
@@ -111,6 +137,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { MAILCODE_URL } from "../urls";
+
 export default {
   name: "UserEditor",
   computed: {},
@@ -124,9 +153,15 @@ export default {
     step2Name: "Tell us about the item(s)",
     assetToTransfer: null,
     transferReason: "",
-    descriptions: [{ quantity: 1 }],
+    descriptions: [{ quantity: 1, condition: "Good" }],
+    mailcodes: [],
+    conditionOptions: ["Good", "Medium", "Bets"],
   }),
-  created() {},
+  created() {
+    axios.get(`${MAILCODE_URL}`).then((resp) => {
+      this.mailcodes = resp.data.data;
+    });
+  },
   methods: {
     idYesClick() {
       this.hasIdentifier = "Yes";

@@ -78,14 +78,6 @@
             </v-list-item>
           </v-list>
         </v-menu> -->
-        <v-btn
-          v-if="showAdmin"
-          color="primary"
-          text
-          class="mr-5"
-          to="/administration"
-          >Administration</v-btn
-        >
         <v-divider class="mr-5" vertical inset></v-divider>
         <span>{{ username }}</span>
         <v-menu offset-y class="ml-0">
@@ -101,6 +93,12 @@
                 <v-icon>mdi-account</v-icon>
               </v-list-item-icon>
               <v-list-item-title>My profile</v-list-item-title>
+            </v-list-item>
+            <v-list-item to="/administration">
+              <v-list-item-icon>
+                <v-icon>mdi-cogs</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Administration</v-list-item-title>
             </v-list-item>
             <v-divider />
             <v-list-item @click="signOut">

@@ -95,23 +95,23 @@ const router = new VueRouter({
   routes
 });
 
-//import store from "../store";
+import store from "../store";
 
 router.beforeEach(async (to, from, next) => {
-  /* var requiresAuth = to.meta.requiresAuth || false;
- 
-    if (!requiresAuth) {
-     return next();
-   }
- 
-   await store.dispatch("checkAuthentication");
-   var isAuthenticated = store.getters.isAuthenticated;
- 
-   if (requiresAuth && !isAuthenticated) {
-     console.log("You aren't authenticatd, redirecting to sign-in")
-     next("/sign-in");
-     return;
-   } */
+  var requiresAuth = to.meta.requiresAuth || false;
+
+  if (!requiresAuth) {
+    return next();
+  }
+
+  await store.dispatch("checkAuthentication");
+  var isAuthenticated = store.getters.isAuthenticated;
+
+  if (requiresAuth && !isAuthenticated) {
+    console.log("You aren't authenticatd, redirecting to sign-in")
+    next("/sign-in");
+    return;
+  }
 
   return next();
 });
