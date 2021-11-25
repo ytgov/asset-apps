@@ -34,6 +34,27 @@
         :items="['Active', 'Inactive']"
         v-model="user.status"
       ></v-select>
+      <v-text-field
+        dense
+        outlined
+        label="Mail code"
+        v-model="user.mailcode"
+      ></v-text-field>
+
+      <v-autocomplete
+        v-if="isAssetManager"
+        dense
+        outlined
+        background-color="white"
+        label="Mail code(s) to manage"
+        v-model="user.manage_mailcodes"
+        :items="mailcodeOptions"
+        item-text="display_name"
+        item-value="mailcode"
+        multiple
+        clearable
+      >
+      </v-autocomplete>
 
       <v-btn @click="saveUser" color="primary" class="float-right"
         >Save</v-btn
@@ -45,14 +66,24 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
+import store from "../store";
 import { USER_URL } from "../urls";
 
 export default {
   name: "UserEditor",
-  computed: {},
+  computed: {
+    isAssetManager: function () {
+      if (this.user.roles && this.user.roles.indexOf("Asset Manager") >= 0)
+        return true;
+      return false;
+    },
+    mailcodeOptions: function () {
+      return store.getters.mailcodeOptions;
+    },
+  },
   props: ["onSave"],
   data: () => ({
-    roleOptions: ["Admin", "Warehouse"],
+    roleOptions: ["Admin", "Asset Manager"],
     search: null,
     isLoading: null,
     count: 0,
@@ -85,6 +116,9 @@ export default {
       this.drawer = false;
     },
     saveUser() {
+      if (!(this.user.roles && this.user.roles.indexOf("Asset Manager") >= 0))
+        this.user.manage_mailcodes = [];
+
       axios
         .put(`${USER_URL}/${this.user.email}`, this.user)
         .then((resp) => {

@@ -8,6 +8,7 @@ services:
     env_file: 
       - db/sqlserver.env
       - db/sapassword.env
+    user: root
     volumes:
       - sqlsystem:/var/opt/mssql/
       - sqldata:/var/opt/sqlserver/data

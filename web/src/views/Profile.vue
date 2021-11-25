@@ -1,10 +1,12 @@
 <template>
   <div>
     <h1>My Profile</h1>
-    <p>** This information is all read-only</p>
+    <p>
+      ** This information is all read-only with the exception of your Mail code
+    </p>
 
     <div class="row">
-      <div class="col-md-6 mb-3">
+      <div class="col-md-6">
         <v-text-field
           v-model="firstName"
           dense
@@ -12,9 +14,10 @@
           label="First name"
           readonly
           hide-details
+          append-icon="mdi-lock"
         ></v-text-field>
       </div>
-      <div class="col-md-6 mb-3">
+      <div class="col-md-6">
         <v-text-field
           v-model="lastName"
           dense
@@ -22,10 +25,11 @@
           label="Last name"
           readonly
           hide-details
+          append-icon="mdi-lock"
         ></v-text-field>
       </div>
 
-      <div class="col-md-6 mb-3">
+      <div class="col-md-6">
         <v-text-field
           v-model="email"
           dense
@@ -33,9 +37,34 @@
           label="Email"
           readonly
           hide-details
+          append-icon="mdi-lock"
         ></v-text-field>
       </div>
-      <div class="col-md-6 mb-3">
+      <div class="col-md-6">
+        <v-text-field
+          dense
+          outlined
+          label="Roles"
+          v-model="myRoles"
+          readonly
+          append-icon="mdi-lock"
+          hide-details
+        >
+        </v-text-field>
+      </div>
+      <div class="col-md-12" v-if="myManaged">
+        <v-text-field
+          dense
+          outlined
+          label="Asset manager for mail codes"
+          v-model="myManaged"
+          readonly
+          append-icon="mdi-lock"
+          hide-details
+        >
+        </v-text-field>
+      </div>
+      <div class="col-md-12">
         <mailcode-select
           :model="mailcode"
           :change="mailcodeChange"
@@ -62,12 +91,24 @@ export default {
       "email",
       "teams",
       "mailcode",
+      "roles",
+      "manage_mailcodes",
     ]),
+    myManaged: function () {
+      if (this.roles && this.roles.length > 0)
+        return this.manage_mailcodes.join(", ");
+
+      return "";
+    },
+    myRoles: function () {
+      if (this.roles && this.roles.length > 0) return this.roles.join(", ");
+
+      return "";
+    },
   },
   data: () => ({}),
   async created() {
     await store.dispatch("profile/loadProfile");
-    console.log("current = ", this.mailcode)
   },
   methods: {
     mailcodeChange(newValue) {

@@ -52,6 +52,7 @@ export function configureAuthentication(app: Express) {
             let dbUser = await db.getByEmail(req.user.email);
 
             if (!dbUser) {
+                console.log("CREATING USER")
                 await db.create(user.email, user.first_name, user.last_name, "Active", "");
             }
 

@@ -168,6 +168,8 @@ export default {
   }),
   created: async function () {
     await store.dispatch("checkAuthentication");
+    store.dispatch("initialize");
+    store.dispatch("profile/loadProfile");
   },
   watch: {
     $route(to) {

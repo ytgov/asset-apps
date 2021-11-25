@@ -41,7 +41,6 @@ app.use(cors({
 }));
 
 CreateMigrationRoutes(app);
-
 configureAuthentication(app);
 
 app.use("/", RequiresData);

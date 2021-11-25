@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { body, param, validationResult } from "express-validator";
+import { body, param } from "express-validator";
 import { ReturnValidationErrors } from "../middleware";
 import { UserService } from "../services";
 import _ from "lodash";
@@ -16,7 +16,7 @@ userRouter.get("/me", EnsureAuthenticated,
         return res.json({ data: await db.makeDTO(Object.assign(req.user, me)) });
     });
 
-userRouter.get("/",
+userRouter.get("/", EnsureAuthenticated,
     async (req: Request, res: Response) => {
         let db = req.store.userService as UserService;
         let list = await db.getAll();
@@ -33,10 +33,13 @@ userRouter.put("/:email", EnsureAuthenticated,
     async (req: Request, res: Response) => {
         let db = req.store.userService as UserService;
         let { email } = req.params;
-        let { roles, status } = req.body;
+        let { roles, status, mailcode, manage_mailcodes } = req.body;
+
         let user = {
             roles: _.join(roles, ","),
-            status
+            status,
+            mailcode,
+            manage_mailcodes: _.join(manage_mailcodes, ","),
         };
 
         await db.update(email, user);
@@ -63,16 +66,8 @@ userRouter.put("/:email/mailcode", EnsureAuthenticated,
     });
 
 userRouter.delete("/:id", EnsureAuthenticated,
-    [
-        param("id").notEmpty().isMongoId()
-    ],
+    [param("id").notEmpty()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
         let db = req.store.Programs as UserService;
         let { id } = req.params;
 

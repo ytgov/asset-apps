@@ -7,7 +7,9 @@ const state = {
     email: "",
     id: "",
     username: "",
-    mailcode: ""
+    mailcode: "",
+    roles: "",
+    manage_mailcodes: "",
 };
 const getters = {
     firstName: state => state.firstName,
@@ -16,6 +18,8 @@ const getters = {
     id: state => state.id,
     username: state => state.username,
     mailcode: state => state.mailcode,
+    roles: state => state.roles,
+    manage_mailcodes: state => state.manage_mailcodes,
 };
 const actions = {
     async loadProfile({ commit }) {
@@ -34,6 +38,8 @@ const mutations = {
         state.email = profile.email;
         state.status = profile.status;
         state.mailcode = profile.mailcode;
+        state.roles = profile.roles;
+        state.manage_mailcodes = profile.manage_mailcodes;
     },
 };
 

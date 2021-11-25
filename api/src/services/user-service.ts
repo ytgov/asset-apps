@@ -38,10 +38,10 @@ export class UserService {
         let dto = userRaw;
         dto.display_name = `${userRaw.first_name} ${userRaw.last_name}`;
         dto.roles = _.split(userRaw.roles, ",").filter((r: string) => r.length > 0);
+        dto.manage_mailcodes = _.split(userRaw.manage_mailcodes, ",").filter((r: string) => r.length > 0);
         //dto.access = await db.getAccessFor(userRaw.email);
         //dto.display_access = _.join(dto.access.map((a: any) => a.level), ", ")
 
         return dto;
     }
-
 }

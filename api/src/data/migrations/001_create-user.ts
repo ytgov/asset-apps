@@ -9,6 +9,7 @@ exports.up = function (knex: knex.Knex, Promise: any) {
         t.string("roles", 1000).nullable();
         t.string("status", 20).notNullable();
         t.string("mailcode", 20).nullable();
+        t.text("manage_mailcodes").nullable();
     });
 };
 

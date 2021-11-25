@@ -1,9 +1,10 @@
 <template>
   <div class="home">
-    <h1>Administration</h1>
+    <h1>Administration Home</h1>
 
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-9">
+        <h2>Users</h2>
         <v-card class="mt-5 default">
           <v-card-text>
             <v-text-field
@@ -22,13 +23,16 @@
                 { text: 'Name', value: 'display_name' },
                 { text: 'Email', value: 'email' },
                 { text: 'Roles', value: 'roles' },
-                { text: 'Status', value: 'status' },
+                { text: 'Mail Code', value: 'mailcode' },
+                { text: 'Mail Code', value: 'manage_mailcodes' },
               ]"
               @click:row="rowClick"
+              class="row-clickable"
             ></v-data-table>
           </v-card-text>
         </v-card>
       </div>
+      <div class="col-md-3">Testing</div>
     </div>
 
     <user-editor ref="userEditor" :onSave="saveComplete"></user-editor>
@@ -38,7 +42,7 @@
 
 <script>
 import axios from "axios";
-import { USER_URL } from "../urls";
+import { USER_URL } from "../../urls";
 export default {
   name: "Home",
   data: () => ({

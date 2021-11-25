@@ -6,7 +6,7 @@ import NotFound from "../views/NotFound.vue";
 import Login from "../views/Login";
 import LoginComplete from "../views/LoginComplete";
 import Profile from "../views/Profile";
-import Administration from "../views/Administration";
+import AdministrationHome from "../views/Administration/Home";
 
 import MyScans from "../views/MyScans.vue";
 import MyTags from "../views/MyTags.vue";
@@ -76,10 +76,10 @@ const routes = [
 
   {
     path: "/administration",
-    name: "Administration",
-    component: Administration,
+    name: "AdministrationHome",
+    component: AdministrationHome,
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   },
   {
