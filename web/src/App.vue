@@ -94,7 +94,7 @@
               </v-list-item-icon>
               <v-list-item-title>My profile</v-list-item-title>
             </v-list-item>
-            <v-list-item to="/administration">
+            <v-list-item to="/administration" v-if="showAdmin">
               <v-list-item-icon>
                 <v-icon>mdi-cogs</v-icon>
               </v-list-item-icon>
@@ -143,8 +143,7 @@ export default {
       return store.getters.fullName;
     },
     isAuthenticated() {
-      //return store.getters.isAuthenticated;
-      return true;
+      return store.getters.isAuthenticated;
     },
     roles() {
       return store.getters.roles;

@@ -6,7 +6,10 @@ import NotFound from "../views/NotFound.vue";
 import Login from "../views/Login";
 import LoginComplete from "../views/LoginComplete";
 import Profile from "../views/Profile";
+
 import AdministrationHome from "../views/Administration/Home";
+import AdministrationUsers from "../views/Administration/Users";
+import AdministrationOwners from "../views/Administration/Owners";
 
 import MyScans from "../views/MyScans.vue";
 import MyTags from "../views/MyTags.vue";
@@ -80,8 +83,27 @@ const routes = [
     component: AdministrationHome,
     meta: {
       requiresAuth: true
-    }
+    },
+  }, 
+  {
+    path: "/administration/users",
+    name: "AdminUsers",
+    component: AdministrationUsers,
+    meta: {
+      requiresAuth: true
+    },
   },
+  {
+    path: "/administration/owners",
+    name: "AdministrationOwners",
+    component: AdministrationOwners,
+    meta: {
+      requiresAuth: true
+    },
+  },
+
+
+
   {
     path: "*",
     name: "Not Found",

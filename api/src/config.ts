@@ -25,7 +25,7 @@ export const DB_USER = process.env.DB_USER || "sa";
 export const DB_PASS = process.env.DB_PASS || "Testing1122";
 export const DB_HOST = process.env.DB_HOST || "localhost";
 export const DB_PORT = parseInt(process.env.DB_PORT || "") || 1433;
-export const DB_NAME = process.env.DB_NAME || "master";
+export const DB_NAME = process.env.DB_NAME || "AssetControl";
 export const DB_CLIENT = process.env.DB_CLIENT || "mssql";
 
 export const API_GATEWAY_KEY = process.env.API_GATEWAY_KEY || "";

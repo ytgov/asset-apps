@@ -7,6 +7,7 @@ export const LOGOUT_URL = `${config.apiBaseUrl}/api/auth/logout`;
 export const PROFILE_URL = `${config.apiBaseUrl}/api/user/me`;
 export const USER_URL = `${config.apiBaseUrl}/api/user`;
 
-export const TAG_URL = `${config.apiBaseUrl}/api/asset-tag`;
+export const TAG_URL = `${config.apiBaseUrl}/api/asset-item`;
 export const MAILCODE_URL = `${config.apiBaseUrl}/api/mailcode`;
 export const SCAN_URL = `${config.apiBaseUrl}/api/scan`;
+export const OWNER_URL = `${config.apiBaseUrl}/api/asset-owner`;
