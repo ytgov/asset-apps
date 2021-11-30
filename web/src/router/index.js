@@ -10,6 +10,8 @@ import Profile from "../views/Profile";
 import AdministrationHome from "../views/Administration/Home";
 import AdministrationUsers from "../views/Administration/Users";
 import AdministrationOwners from "../views/Administration/Owners";
+import AdministrationTransfers from "../views/Administration/Transfers";
+import AdministrationAssets from "../views/Administration/Assets";
 
 import MyScans from "../views/MyScans.vue";
 import MyTags from "../views/MyTags.vue";
@@ -84,7 +86,7 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-  }, 
+  },
   {
     path: "/administration/users",
     name: "AdminUsers",
@@ -97,6 +99,22 @@ const routes = [
     path: "/administration/owners",
     name: "AdministrationOwners",
     component: AdministrationOwners,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: "/administration/transfers",
+    name: "AdministrationTransfers",
+    component: AdministrationTransfers,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: "/administration/assets",
+    name: "AdministrationAssets",
+    component: AdministrationAssets,
     meta: {
       requiresAuth: true
     },

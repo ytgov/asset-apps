@@ -11,6 +11,14 @@
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item>
 
+        <v-list-item to="/administration/assets" exact>
+          <v-list-item-title>Assets</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item to="/administration/transfers" exact>
+          <v-list-item-title>Transfers</v-list-item-title>
+        </v-list-item>
+
         <v-list-item to="/administration/users" exact>
           <v-list-item-title>Manage Users</v-list-item-title>
         </v-list-item>

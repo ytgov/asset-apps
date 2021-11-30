@@ -4,7 +4,7 @@ import path from "path";
 import helmet from "helmet";
 import { API_PORT, FRONTEND_URL } from './config';
 import { doHealthCheck } from "./utils/healthCheck";
-import { assetOwnerRouter, assetTagRouter, mailcodeRouter, scanRouter, userRouter } from "./routes";
+import { assetOwnerRouter, assetTagRouter, mailcodeRouter, scanRouter, transferRouter, userRouter } from "./routes";
 import { RequiresData } from "./middleware";
 import { CreateMigrationRoutes } from "./data";
 
@@ -52,6 +52,7 @@ app.get("/api/healthCheck", (req: Request, res: Response) => {
 app.use("/api/user", userRouter);
 app.use("/api/asset-item", assetTagRouter);
 app.use("/api/asset-owner", assetOwnerRouter);
+app.use("/api/asset-transfer", transferRouter);
 app.use("/api/mailcode", mailcodeRouter);
 app.use("/api/scan", scanRouter);
 

@@ -9,7 +9,27 @@ import { db } from "../data";
 
 assetOwnerRouter.get("/",
     async (req: Request, res: Response) => {
-        let list = await db("asset_owner");
+        let list = await db("asset_owner").orderBy("mailcode").orderBy("name");
+
+        for (let item of list) {
+            item.display_name = `(${item.mailcode}) ${item.name}`
+        }
+
+        return res.json({ data: list });
+    });
+
+assetOwnerRouter.get("/:id", [param("id").notEmpty().isInt()], ReturnValidationErrors,
+    async (req: Request, res: Response) => {
+        let { id } = req.params;
+        let list = await db("asset_owner").where({ id }).first();
+
+        if (list) {
+            let count = await db("asset_item").where({ asset_owner_id: id, status: "Active" }).count("* as counter").first();
+            list.asset_count = (count as any).counter;
+
+            let transfers = await db("asset_transfer").where({ from_owner_id: id }).orWhere({ to_owner_id: id }).count("* as counter").first();
+            list.transfer_count = (transfers as any).counter;
+        }
         return res.json({ data: list });
     });
 

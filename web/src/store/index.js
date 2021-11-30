@@ -18,7 +18,6 @@ export default new Vuex.Store({
   mutations: {
     SET_MAILCODEOPTIONS(state, value) {
       state.mailcodeOptions = value;
-      console.log("Mailcodes loaded", value.length)
     }
   },
   actions: {

@@ -54,6 +54,7 @@
           label="Branch"
           :items="['Active', 'Inactive']"
           v-model="user.branch"
+          hide-details
         ></v-text-field>
 
         <v-btn
@@ -69,6 +70,17 @@
           :disabled="!isValid"
           >Save</v-btn
         >
+
+        <hr class="my-3" />
+
+        <p>This unit owns <router-link :to="`/administration/assets?owner=${user.id}`">{{assetCount}} assets</router-link> 
+        and <router-link :to="`/administration/transfers?owner=${user.id}`">{{transferCount}} transfers</router-link>.</p>
+        <p>This unit is currently managed by:
+        <ul>
+          <li>Russell Wilson</li>
+          <li>Tom Brady</li>
+        </ul>
+        </p>
       </v-form>
     </v-sheet>
   </v-navigation-drawer>
@@ -97,18 +109,28 @@ export default {
     user: {},
     requiredRule: [(v) => !!v || "This is required"],
     isValid: false,
+    assetCount: 0,
+    transferCount: 0,
   }),
 
-  created() {},
+  created() {
+  },
 
   methods: {
     show(item) {
       this.user = _.clone(item);
       this.drawer = true;
+      this.loadExtraInfo();
     },
     hide() {
       this.user = {};
       this.drawer = false;
+    },
+    loadExtraInfo() {
+      axios.get(`${OWNER_URL}/${this.user.id}`).then((resp) => {
+        this.assetCount = resp.data.data.asset_count;
+        this.transferCount = resp.data.data.transfer_count;
+      });
     },
     saveUser() {
       if (this.user.id) {
