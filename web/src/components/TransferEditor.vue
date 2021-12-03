@@ -138,6 +138,8 @@ export default {
   props: ["onSave"],
   data: () => ({
     disposalOptions: ["Recycle", "Sale", "To be sold", "CFS"],
+    conditionOptions: ['Aogo'],
+    ownerOptions: [],
 
     drawer: null,
     item: {},

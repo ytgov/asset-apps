@@ -44,6 +44,8 @@
             item-text="display_name"
             item-value="id"
             hide-details
+            append-outer-icon="mdi-warehouse"
+            @click:append-outer="goToOwner"
           ></v-autocomplete>
         </v-col>
         <v-col cols="12">
@@ -99,6 +101,7 @@
             v-model="item.purchase_price"
             label="Purchase price"
             hide-details
+            v-currency
           ></v-text-field
         ></v-col>
         <v-col cols="6">
@@ -141,10 +144,15 @@
         </v-col>
       </v-row>
 
+      <div v-if="isTransfer" class="text-error">
+        * Saving will generate an {{ isTransferDirection }} transfer
+      </div>
+
       <v-btn @click="save" color="primary" class="float-left">Save</v-btn>
       <v-btn @click="save" color="warning" class="float-right ml-3"
         >Dispose</v-btn
       >
+
       <v-btn @click="save" color="secondary" class="float-right"
         >Transfer</v-btn
       >
@@ -156,7 +164,8 @@
 import axios from "axios";
 import _ from "lodash";
 import store from "../store";
-import { OWNER_URL, USER_URL } from "../urls";
+import { OWNER_URL, ASSET_URL } from "../urls";
+import { formatDollar } from "../utils/formatters";
 
 export default {
   computed: {
@@ -171,9 +180,30 @@ export default {
       if (this.transferDirection) return "Inbound transfer";
       return "Outbound transfer";
     },
+    isTransfer: function () {
+      if (this.oldOwner != this.item.asset_owner_id) {
+        if (this.item.asset_owner_id == this.ASSET_WAREHOUSE_ID) {
+          //moving it to the warehouse
+          //if (this.item.status == "Active") this.item.status = "Redistribute";
+        }
+
+        return true;
+      }
+      if (this.oldStatus != this.item.status) {
+        if (this.asset_owner_id) return true;
+      }
+
+      return false;
+    },
+    isTransferDirection: function () {
+      if (this.item.asset_owner_id == this.ASSET_WAREHOUSE_ID)
+        return "incoming";
+      return "outgoing";
+    },
   },
   props: ["onSave"],
   data: () => ({
+    ASSET_WAREHOUSE_ID: 704,
     disposalOptions: ["Recycle", "Sale", "To be sold", "CFS"],
     ownerOptions: [],
     statusOptions: [
@@ -194,7 +224,6 @@ export default {
 
     oldOwner: -1,
     oldStatus: -1,
-
   }),
   created() {
     this.loadList();
@@ -205,6 +234,7 @@ export default {
       this.hasTag = this.item.asset_item_id;
       this.oldOwner = this.item.asset_owner_id;
       this.oldStatus = this.item.status;
+      this.item.purchase_price = formatDollar(this.item.purchase_price);
       this.drawer = true;
     },
     showInbound(item) {
@@ -230,6 +260,9 @@ export default {
       this.item = {};
       this.drawer = false;
     },
+    goToOwner() {
+      this.$router.push(`/administration/owners#${this.item.asset_owner_id}`);
+    },
     loadList() {
       this.is_loading = true;
       axios
@@ -244,8 +277,13 @@ export default {
         });
     },
     save() {
+      if (this.item.asset_owner_id != this.oldOwner) {
+        console.log("OWNER CHANGED");
+        return;
+      }
+
       axios
-        .put(`${USER_URL}/${this.item.id}`, this.item)
+        .put(`${ASSET_URL}/${this.item.id}`, this.item)
         .then((resp) => {
           if (this.onSave) {
             this.onSave(resp);

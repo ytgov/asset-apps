@@ -16,19 +16,34 @@
                   background-color="white"
                   label="Search"
                   prepend-icon="mdi-magnify"
+                  @change="loadList(true)"
                 ></v-text-field>
                 <v-autocomplete
                   dense
                   outlined
                   background-color="white"
-                  label="Mail code(s) to manage"
-                  v-model="mailcodes"
-                  :items="mailcodeOptions"
+                  label="From"
+                  v-model="fromOwners"
+                  :items="ownerOptions"
                   item-text="display_name"
-                  item-value="mailcode"
+                  item-value="id"
                   multiple
                   clearable
-                  @change="loadList"
+                  @change="loadList(true)"
+                >
+                </v-autocomplete>
+                <v-autocomplete
+                  dense
+                  outlined
+                  background-color="white"
+                  label="To"
+                  v-model="toOwners"
+                  :items="ownerOptions"
+                  item-text="display_name"
+                  item-value="id"
+                  multiple
+                  clearable
+                  @change="loadList(true)"
                 >
                 </v-autocomplete>
               </v-col>
@@ -71,9 +86,10 @@
               :loading="loading"
               :headers="[
                 { text: 'Tag', value: 'asset.tag' },
-                { text: 'From', value: 'from_owner.mailcode' },
-                { text: 'To', value: 'to_owner.mailcode' },
-                {text: 'Date', value: 'transfer_date'},
+                { text: 'Description', value: 'asset.description' },
+                { text: 'From', value: 'from_owner.display_name' },
+                { text: 'To', value: 'to_owner.display_name' },
+                { text: 'Date', value: 'transfer_date' },
               ]"
               @click:row="rowClick"
               class="row-clickable"
@@ -91,9 +107,8 @@
 
 <script>
 import axios from "axios";
-import { TRANSFER_URL } from "../../urls";
+import { TRANSFER_URL, OWNER_URL } from "../../urls";
 import _ from "lodash";
-import store from "../../store";
 
 export default {
   name: "Home",
@@ -104,32 +119,59 @@ export default {
     items: [],
     options: {},
     ownerOptions: [],
-    mailcodes: [],
+    fromOwners: [],
+    toOwners: [],
   }),
   created() {
-    //this.loadList();
+    this.loadOwners();
+
+    let fp = this.$route.query.owner;
+
+    if (fp && fp.length > 0) {
+      console.log("PF", fp);
+      this.fromOwners.push(parseInt(fp));
+    }
   },
-  computed: {
-    mailcodeOptions: function () {
-      return store.getters.mailcodeOptions;
-    },
-  },
+  computed: {},
   watch: {
     options: {
       handler() {
-        this.loadList();
+        this.loadList(false);
       },
       deep: true,
     },
   },
   methods: {
-    loadList() {
+    loadList(resetPage) {
       this.loading = true;
+
+      if (resetPage) this.options.page = 1;
+
       let body = _.clone(this.options);
-      body.query = [
-        { field: "name", operator: "contains", value: this.search },
-        { field: "locationDesc", operator: "contains", value: this.search },
-      ];
+
+      body.query = [];
+
+      if (this.search.trim().length > 0)
+        body.query.push({
+          field: "asset_item.tag",
+          operator: "contains",
+          value: this.search,
+        });
+
+      if (this.fromOwners.length > 0) {
+        body.query.push({
+          field: "from_owner_id",
+          operator: "in",
+          value: this.fromOwners.join(","),
+        });
+      }
+      if (this.toOwners.length > 0) {
+        body.query.push({
+          field: "to_owner_id",
+          operator: "in",
+          value: this.toOwners.join(","),
+        });
+      }
 
       axios
         .post(TRANSFER_URL, body)
@@ -146,15 +188,22 @@ export default {
 
     saveComplete(resp) {
       this.$refs.notifier.showAPIMessages(resp.data);
-      this.loadList();
+      this.loadList(false);
     },
 
     rowClick(item) {
       this.$refs.transferEditor.show(item);
     },
 
-    mailcodeChange(newValue) {
-      console.log("MC SET", newValue);
+    loadOwners() {
+      axios
+        .get(OWNER_URL)
+        .then((resp) => {
+          this.ownerOptions = resp.data.data;
+        })
+        .catch((error) => {
+          console.log("ERROR", error);
+        });
     },
 
     addInbound() {

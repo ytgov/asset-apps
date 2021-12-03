@@ -33,7 +33,7 @@
             <v-data-table
               :items="items"
               :search="search"
-              dense
+              
               :headers="[
                 { text: 'Mail Code', value: 'mailcode' },
                 { text: 'Name', value: 'name' },
@@ -63,11 +63,20 @@ export default {
   data: () => ({
     search: "",
     is_loading: false,
+
     items: [],
     editItem: null,
+    toLoad: null,
   }),
   created() {
     this.loadList();
+
+    let sel = this.$route.hash || "";
+    sel = sel.replace("#", "");
+
+    if (sel.length > 0) {
+      this.toLoad = sel;
+    }
   },
   methods: {
     loadList() {
@@ -77,6 +86,16 @@ export default {
         .then((resp) => {
           this.items = resp.data.data;
           this.is_loading = false;
+
+          if (this.toLoad) {
+            let items = this.items.filter((i) => i.id == parseInt(this.toLoad));
+
+            if (items.length == 1) {
+              console.log("ITEM", items[0]);
+              this.toLoad = null;
+              this.rowClick(items[0]);
+            }
+          }
         })
         .catch((error) => {
           console.log("ERROR", error);
@@ -85,7 +104,7 @@ export default {
     },
 
     addOwner() {
-      this.$refs.editor.show({name: "New owner"});
+      this.$refs.editor.show({ name: "New owner" });
     },
 
     saveComplete(resp) {

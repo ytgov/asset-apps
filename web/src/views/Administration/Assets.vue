@@ -14,7 +14,7 @@
               background-color="white"
               label="Search"
               prepend-icon="mdi-magnify"
-              @change="loadList"
+              @change="loadList(true)"
               hint="Enter a tag, make, model, serial or description and press Enter"
             ></v-text-field>
 
@@ -31,7 +31,7 @@
                   item-value="id"
                   multiple
                   clearable
-                  @change="loadList"
+                  @change="loadList(true)"
                 >
                 </v-autocomplete>
               </v-col>
@@ -45,7 +45,7 @@
                   :items="statusOptions"
                   v-model="statusFilter"
                   clearable
-                  @change="loadList"
+                  @change="loadList(true)"
                 ></v-select>
               </v-col>
               <v-col></v-col>
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <asset-editor ref="editor"></asset-editor>
+    <asset-editor ref="editor" :onSave="saveComplete"></asset-editor>
     <notifications ref="notifier"></notifications>
   </div>
 </template>
@@ -119,14 +119,17 @@ export default {
   watch: {
     options: {
       handler() {
-        this.loadList();
+        this.loadList(false);
       },
       deep: true,
     },
   },
   methods: {
-    loadList() {
+    loadList(resetPage) {
       this.loading = true;
+
+      if (resetPage) this.options.page = 1;
+
       let body = _.clone(this.options);
       body.query = [];
 

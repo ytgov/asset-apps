@@ -1,6 +1,7 @@
 
 export * from "./asset-service";
 export * from "./email-service";
+export * from "./transfer-service";
 export * from "./user-service";
 
 export interface QueryStatement {

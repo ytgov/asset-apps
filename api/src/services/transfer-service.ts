@@ -2,8 +2,9 @@ import { Knex } from "knex";
 import _ from "lodash";
 import moment from "moment";
 import { QueryStatement, SortStatement } from ".";
+import { mailcodeData } from "../data";
 
-export class AssetService {
+export class TransferService {
 
     readonly db: Knex;
 
@@ -13,7 +14,7 @@ export class AssetService {
 
     async doSearch(query: Array<QueryStatement>, sort: Array<SortStatement>, page: number, page_size: number, skip: number, take: number): Promise<any> {
         return new Promise(async (resolve, reject) => {
-            let selectStmt = this.db("asset_item");
+            let selectStmt = this.db("asset_transfer").select("asset_transfer.*").leftJoin("asset_item", "asset_transfer.asset_item_id", "asset_item.id");
 
             if (query && query.length > 0) {
                 query.forEach((stmt: any) => {
@@ -79,7 +80,7 @@ export class AssetService {
                 })
             }
             else {
-                selectStmt.orderBy("tag");
+                selectStmt.orderBy("asset_transfer.id");
             }
 
             //console.log(selectStmt.toSQL().toNative())
@@ -91,19 +92,72 @@ export class AssetService {
 
             let data = await selectStmt.offset(skip).limit(take);
 
-            for (let row of data) {
-                row.owner = await this.db("asset_owner").where({ id: row.asset_owner_id }).first();
+            for (let item of data) {
+                item.transfer_date = moment(item.transfer_date).utc(false).format("YYYY-MM-DD")
 
-                if (row.purchase_date)
-                    row.purchase_date = moment(row.purchase_date).utc(false).format("YYYY-MM-DD");
+                if (item.asset_item_id)
+                    item.asset = await this.db("asset_item").where({ id: item.asset_item_id }).first();
 
-                if (row.entry_date)
-                    row.entry_date = moment(row.entry_date).utc(false).format("YYYY-MM-DD");
+                if (item.from_owner_id) {
+                    item.from_owner = await this.db("asset_owner").where({ id: item.from_owner_id }).first();
+                    if (item.from_owner_id == -1)
+                        item.from_owner.display_name = 'Unknown : ' + item.from_owner_mailcode;
+                    else
+                        item.from_owner.display_name = `(${item.from_owner.mailcode}) ${item.from_owner.name}`;
+                }
+
+                if (item.to_owner_id) {
+                    item.to_owner = await this.db("asset_owner").where({ id: item.to_owner_id }).first();
+
+                    if (item.to_owner_id == -1)
+                        item.to_owner.display_name = 'Unknown : ' + item.to_owner_mailcode;
+                    else
+                        item.to_owner.display_name = `(${item.to_owner.mailcode}) ${item.to_owner.name}`;
+                }
+
             }
 
             let results = { data, meta: { page, page_size, item_count: count, page_count } };
 
             resolve(results);
         })
+    }
+
+    async clean() {
+        let owners = await this.db("asset_owner").whereRaw("mailcode is not null");
+        let transfers = await this.db("asset_transfer").whereRaw("from_owner_mailcode is not null OR to_owner_mailcode is not null");
+
+        for (let o of owners) {
+            let mcMatch = mailcodeData.filter((mc: any) => mc.department == o.department && mc.description == o.name);
+
+            if (mcMatch.length == 1 && o.mailcode != mcMatch[0].mailcode) {
+                await this.db("asset_owner").where({ id: o.id }).update({ mailcode: mcMatch[0].mailcode });
+            }
+        }
+
+        for (let t of transfers) {
+            let from = t.from_owner_mailcode;
+            let to = t.to_owner_mailcode;
+
+            let fOwn = owners.filter(o => o.mailcode == from);
+            let tOwn = owners.filter(o => o.mailcode == to);
+            let needSaved = false;
+            let body = { from_owner_id: t.from_owner_id, to_owner_id: t.to_owner_id };
+
+            if (fOwn.length > 0) {
+                body.from_owner_id = fOwn[0].id;
+                needSaved = true;
+            }
+
+            if (tOwn.length > 0) {
+                body.to_owner_id = tOwn[0].id;
+                needSaved = true;
+            }
+
+            if (needSaved) {
+                //console.log("SAVING", t.id)
+                await this.db("asset_transfer").where({ id: t.id }).update(body);
+            }
+        }
     }
 }

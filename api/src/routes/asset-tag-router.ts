@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { ReturnValidationErrors } from "../middleware";
 import { AssetService, SortDirection, SortStatement } from "../services";
 import _ from "lodash";
@@ -27,14 +27,43 @@ assetTagRouter.post("/", [body("page").isInt().default(1), body("itemsPerPage").
         return res.json(results);
     });
 
-assetTagRouter.post("/search",
-    [body("keyword").notEmpty().isString()], ReturnValidationErrors,
+
+assetTagRouter.put("/:id", [param("id").isInt().notEmpty()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
+        let { id } = req.params;
 
-        let data = [{ id: "Y1234", type: "tt", display_name: "Y1234 : Water pump - small" }, { id: "Y3223", type: "Desk", display_name: "Y3223 : Desk" }];
+        let item = await db("asset_item").where({ id }).first();
 
-        return res.json({ data });
+        if (item) {
+            let { tag, dept_tag, status, condition, asset_owner_id, un_commodity_code, make, model, comment } = req.body;
+            let { serial, description, purchase_person, purchase_price, purchase_date, purchase_order_number, purchase_order_line } = req.body;
+
+            let body = {
+                tag,
+                dept_tag,
+                status,
+                condition,
+                asset_owner_id,
+                un_commodity_code,
+                make,
+                model,
+                serial,
+                description,
+                purchase_person,
+                purchase_price,
+                purchase_date,
+                purchase_order_number,
+                purchase_order_line,
+                comment
+            }
+
+            await db("asset_item").where({ id }).update(body);
+            return res.json({  messages: [{ variant: "success", text: "Asset saved" }] });
+        }
+
+        res.status(404).send();
     });
+
 
 assetTagRouter.delete("/:id",
     async (req: Request, res: Response) => {

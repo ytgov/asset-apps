@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { MAILCODE_URL } from "../urls";
+import { OWNER_URL } from "../urls";
 
 import auth from "./auth";
 import profile from "./profile";
@@ -27,7 +27,7 @@ export default new Vuex.Store({
     },
 
     loadMailcodes({ commit }) {
-      axios.get(`${MAILCODE_URL}`)
+      axios.get(`${OWNER_URL}`)
         .then(resp => { commit("SET_MAILCODEOPTIONS", resp.data.data) });
     }
   },
