@@ -29,6 +29,16 @@ spec:
           ports:
             - containerPort: 3000
           resources: {}
+          volumeMounts:
+            - mountPath: "/home/node/app/.env.production"
+              subPath: .env.production
+              name: env-configmap-volume
+      volumes:
+        - name: env-configmap-volume
+          configMap:
+            name: env-configmap
+
+
       imagePullSecrets:
         - name: ict-dmz-ns-assets-default-image-pull-secret
       restartPolicy: Always
