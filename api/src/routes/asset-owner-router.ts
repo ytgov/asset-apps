@@ -29,6 +29,18 @@ assetOwnerRouter.get("/:id", [param("id").notEmpty().isInt()], ReturnValidationE
 
             let transfers = await db("asset_transfer").where({ from_owner_id: id }).orWhere({ to_owner_id: id }).count("* as counter").first();
             list.transfer_count = (transfers as any).counter;
+
+            list.managers = new Array<any>();
+            let managers = await db("user").whereRaw(`manage_mailcodes LIKE '%${list.mailcode}%'`);
+
+            for (let manager of managers) {
+                let mcs = manager.manage_mailcodes.split(",");
+
+                if (mcs.indexOf(list.mailcode) >= 0) {
+                    manager.name = `${manager.first_name} ${manager.last_name}`;
+                    list.managers.push(manager);
+                }
+            }
         }
         return res.json({ data: list });
     });

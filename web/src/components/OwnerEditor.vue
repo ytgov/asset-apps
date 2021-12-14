@@ -57,12 +57,7 @@
           hide-details
         ></v-text-field>
 
-        <v-btn
-          @click="remove"
-          color="error"
-          :disabled="!user.id"
-          >Remove</v-btn
-        >
+        <v-btn @click="remove" color="error" :disabled="!user.id">Remove</v-btn>
         <v-btn
           @click="saveUser"
           color="primary"
@@ -71,14 +66,22 @@
           >Save</v-btn
         >
 
-        <hr class="my-3" />
+        <hr class="my-3" v-if="user.id" />
 
-        <p>This unit owns <router-link :to="`/administration/assets?owner=${user.id}`">{{assetCount}} assets</router-link> 
-        and <router-link :to="`/administration/transfers?owner=${user.id}`">{{transferCount}} transfers</router-link>.</p>
-        <p>This unit is currently managed by:
+        <p v-if="user.id">
+          This unit owns
+          <router-link :to="`/administration/assets?owner=${user.id}`"
+            >{{ assetCount }} assets</router-link
+          >
+          and
+          <router-link :to="`/administration/transfers?owner=${user.id}`"
+            >{{ transferCount }} transfers</router-link
+          >.
+        </p>
+
+         <p v-if="user.id && managers.length > 0">This unit is currently managed by:
         <ul>
-          <li>Russell Wilson</li>
-          <li>Tom Brady</li>
+          <li v-for="(manager) of managers" :key="manager.name">{{manager.name}}</li>
         </ul>
         </p>
       </v-form>
@@ -111,10 +114,10 @@ export default {
     isValid: false,
     assetCount: 0,
     transferCount: 0,
+    managers: [],
   }),
 
-  created() {
-  },
+  created() {},
 
   methods: {
     show(item) {
@@ -130,6 +133,7 @@ export default {
       axios.get(`${OWNER_URL}/${this.user.id}`).then((resp) => {
         this.assetCount = resp.data.data.asset_count;
         this.transferCount = resp.data.data.transfer_count;
+        this.managers = resp.data.data.managers;
       });
     },
     saveUser() {
