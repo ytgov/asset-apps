@@ -140,22 +140,16 @@
             :items="statusOptions"
             label="Status"
             hide-details
+            @change="statusChange"
           ></v-select>
         </v-col>
       </v-row>
 
-      <div v-if="isTransfer" class="text-error">
-        * Saving will generate an {{ isTransferDirection }} transfer
+      <div v-if="isTransfer" class="text-error float-left mt-4">
+        * Saving may generate transfer record(s)
       </div>
 
-      <v-btn @click="save" color="primary" class="float-left">Save</v-btn>
-      <v-btn @click="save" color="warning" class="float-right ml-3"
-        >Dispose</v-btn
-      >
-
-      <v-btn @click="save" color="secondary" class="float-right"
-        >Transfer</v-btn
-      >
+      <v-btn @click="save" color="primary" class="float-right">Save</v-btn>
     </v-sheet>
   </v-navigation-drawer>
 </template>
@@ -182,15 +176,10 @@ export default {
     },
     isTransfer: function () {
       if (this.oldOwner != this.item.asset_owner_id) {
-        if (this.item.asset_owner_id == this.ASSET_WAREHOUSE_ID) {
-          //moving it to the warehouse
-          //if (this.item.status == "Active") this.item.status = "Redistribute";
-        }
-
         return true;
       }
       if (this.oldStatus != this.item.status) {
-        if (this.asset_owner_id) return true;
+        return true;
       }
 
       return false;
@@ -203,7 +192,7 @@ export default {
   },
   props: ["onSave"],
   data: () => ({
-    ASSET_WAREHOUSE_ID: 704,
+    ASSET_WAREHOUSE_ID: 80,
     disposalOptions: ["Recycle", "Sale", "To be sold", "CFS"],
     ownerOptions: [],
     statusOptions: [
@@ -277,11 +266,6 @@ export default {
         });
     },
     save() {
-      if (this.item.asset_owner_id != this.oldOwner) {
-        console.log("OWNER CHANGED");
-        return;
-      }
-
       axios
         .put(`${ASSET_URL}/${this.item.id}`, this.item)
         .then((resp) => {
@@ -293,6 +277,13 @@ export default {
         .catch((error) => {
           console.log("ERROR: ", error);
         });
+    },
+    statusChange() {
+      if (this.item.status != "Active" && this.item.status != "Unknown") {
+        this.item.asset_owner_id = this.ASSET_WAREHOUSE_ID;
+      } else {
+        this.item.asset_owner_id = this.oldOwner;
+      }
     },
   },
 };

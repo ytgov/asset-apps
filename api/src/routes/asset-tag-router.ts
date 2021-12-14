@@ -8,6 +8,7 @@ export const assetTagRouter = express.Router();
 const PAGE_SIZE = 10;
 
 import { db } from "../data";
+import moment from "moment";
 const assetService = new AssetService(db);
 
 assetTagRouter.post("/", [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],
@@ -55,6 +56,56 @@ assetTagRouter.put("/:id", [param("id").isInt().notEmpty()], ReturnValidationErr
                 purchase_order_number,
                 purchase_order_line,
                 comment
+            };
+
+            if (item.asset_owner_id != asset_owner_id) {
+                // do a transfer to the new owner
+                console.log("Generating a transfer from " + item.asset_owner_id + " to " + asset_owner_id)
+
+                if (asset_owner_id == 80) {
+                    // this is an inbound transfer
+                    let transfer = {
+                        asset_item_id: id,
+                        request_user: req.user.email,
+                        request_date: new Date(),
+                        transfer_date: new Date(),
+                        condition: status,
+                        from_owner_id: item.asset_owner_id,
+                        to_owner_id: asset_owner_id,
+                        quantity: 1
+                    };
+
+                    await db("asset_transfer").insert(transfer);
+                }
+                else {
+                    let now = moment();
+                    //this is inbound and outbound
+                    let transfer1 = {
+                        asset_item_id: id,
+                        request_user: req.user.email,
+                        request_date: now.toDate(),
+                        transfer_date: now.toDate(),
+                        condition: status,
+                        from_owner_id: item.asset_owner_id,
+                        to_owner_id: 80,
+                        quantity: 1
+                    };
+                    await db("asset_transfer").insert(transfer1);
+
+                    now = now.add(1, 'second');
+                    
+                    let transfer2 = {
+                        asset_item_id: id,
+                        request_user: req.user.email,
+                        request_date: now.toDate(),
+                        transfer_date: now.toDate(),
+                        condition: status,
+                        from_owner_id: 80,
+                        to_owner_id: asset_owner_id,
+                        quantity: 1
+                    };
+                    await db("asset_transfer").insert(transfer2);
+                }
             }
 
             await db("asset_item").where({ id }).update(body);
