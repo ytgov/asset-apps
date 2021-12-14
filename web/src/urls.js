@@ -8,6 +8,7 @@ export const PROFILE_URL = `${config.apiBaseUrl}/api/user/me`;
 export const USER_URL = `${config.apiBaseUrl}/api/user`;
 
 export const ASSET_URL = `${config.apiBaseUrl}/api/asset-item`;
+export const ASSET_CATEGORY_URL = `${config.apiBaseUrl}/api/asset-category`;
 export const TAG_URL = `${config.apiBaseUrl}/api/asset-item`;
 export const MAILCODE_URL = `${config.apiBaseUrl}/api/mailcode`;
 export const SCAN_URL = `${config.apiBaseUrl}/api/scan`;

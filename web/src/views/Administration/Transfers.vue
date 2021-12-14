@@ -9,43 +9,67 @@
           <v-card-text>
             <v-row>
               <v-col cols="10">
-                <v-text-field
-                  v-model="search"
-                  dense
-                  outlined
-                  background-color="white"
-                  label="Search"
-                  prepend-icon="mdi-magnify"
-                  @change="loadList(true)"
-                ></v-text-field>
-                <v-autocomplete
-                  dense
-                  outlined
-                  background-color="white"
-                  label="From"
-                  v-model="fromOwners"
-                  :items="ownerOptions"
-                  item-text="display_name"
-                  item-value="id"
-                  multiple
-                  clearable
-                  @change="loadList(true)"
-                >
-                </v-autocomplete>
-                <v-autocomplete
-                  dense
-                  outlined
-                  background-color="white"
-                  label="To"
-                  v-model="toOwners"
-                  :items="ownerOptions"
-                  item-text="display_name"
-                  item-value="id"
-                  multiple
-                  clearable
-                  @change="loadList(true)"
-                >
-                </v-autocomplete>
+                <div class="row">
+                  <div class="col-md-6">
+                    <v-text-field
+                      v-model="search"
+                      dense
+                      outlined
+                      background-color="white"
+                      label="Search"
+                      prepend-icon="mdi-magnify"
+                      @change="loadList(true)"
+                      hide-details
+                    ></v-text-field>
+                  </div>
+                  <div class="col-md-6">
+                    <v-select
+                      v-model="conditions"
+                      dense
+                      outlined
+                      background-color="white"
+                      label="Condition"
+                      @change="loadList(true)"
+                      :items="conditionOptions"
+                      hide-details
+                      multiple
+                      clearable
+                    ></v-select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <v-autocomplete
+                      dense
+                      outlined
+                      background-color="white"
+                      label="From"
+                      v-model="fromOwners"
+                      :items="ownerOptions"
+                      item-text="display_name"
+                      item-value="id"
+                      multiple
+                      clearable
+                      @change="loadList(true)"
+                    >
+                    </v-autocomplete>
+                  </div>
+                  <div class="col-md-6">
+                    <v-autocomplete
+                      dense
+                      outlined
+                      background-color="white"
+                      label="To"
+                      v-model="toOwners"
+                      :items="ownerOptions"
+                      item-text="display_name"
+                      item-value="id"
+                      multiple
+                      clearable
+                      @change="loadList(true)"
+                    >
+                    </v-autocomplete>
+                  </div>
+                </div>
               </v-col>
 
               <v-col>
@@ -85,23 +109,25 @@
               :server-items-length="itemCount"
               :loading="loading"
               :headers="[
+                { text: 'Date', value: 'transfer_date' },
                 { text: 'Tag', value: 'asset.tag' },
-                { text: 'Description', value: 'asset.description' },
+                { text: 'Description', value: 'description' },
                 { text: 'From', value: 'from_owner.display_name' },
                 { text: 'To', value: 'to_owner.display_name' },
-                { text: 'Date', value: 'transfer_date' },
+                { text: 'Condition', value: 'condition' },
               ]"
-              @click:row="rowClick"
-              class="row-clickable"
               :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
-            ></v-data-table>
+            ></v-data-table
+            ><!--
+              @click:row="rowClick"
+              class="row-clickable1"-->
           </v-card-text>
         </v-card>
       </div>
     </div>
 
     <notifications ref="notifier"></notifications>
-    <transfer-editor ref="transferEditor"></transfer-editor>
+    <transfer-editor ref="transferEditor" :onSave="loadList"></transfer-editor>
   </div>
 </template>
 
@@ -113,11 +139,13 @@ import _ from "lodash";
 export default {
   name: "Home",
   data: () => ({
+    conditionOptions: ["Active", "Redistribute", "Recycle", "Sale", "To be sold", "CFS", "Unknown"],
     search: "",
     loading: false,
     itemCount: 0,
     items: [],
     options: {},
+    conditions: [],
     ownerOptions: [],
     fromOwners: [],
     toOwners: [],
@@ -153,7 +181,7 @@ export default {
 
       if (this.search.trim().length > 0)
         body.query.push({
-          field: "asset_item.tag",
+          fields: ["asset_item.tag", "asset_category.description"],
           operator: "contains",
           value: this.search,
         });
@@ -165,11 +193,20 @@ export default {
           value: this.fromOwners.join(","),
         });
       }
+
       if (this.toOwners.length > 0) {
         body.query.push({
           field: "to_owner_id",
           operator: "in",
           value: this.toOwners.join(","),
+        });
+      }
+
+      if (this.conditions.length > 0) {
+        body.query.push({
+          field: "asset_transfer.condition",
+          operator: "in",
+          value: this.conditions.join(","),
         });
       }
 
@@ -192,6 +229,21 @@ export default {
     },
 
     rowClick(item) {
+      console.log("CLICK", item);
+
+      if (item.asset_item_id) {
+        console.log("Asset");
+      } else if (item.asset_category_id) {
+        item.rows = [
+          {
+            type: item.asset_category_id,
+            quantity: item.quantity,
+            condition: item.condition,
+          },
+        ];
+      }
+      console.log("OPENINGG", item);
+
       this.$refs.transferEditor.show(item);
     },
 
@@ -207,13 +259,22 @@ export default {
     },
 
     addInbound() {
-      this.$refs.transferEditor.showInbound({ asset: {} });
+      this.$refs.transferEditor.showInbound({
+        to_owner_id: 80,
+        rows: [{ quantity: 1, type: 1, condition: "Redistribute" }],
+      });
     },
     addOutbound() {
-      this.$refs.transferEditor.showOutbound({ asset: {} });
+      this.$refs.transferEditor.showOutbound({
+        from_owner_id: 80,
+        rows: [{ quantity: 1, type: 1, condition: "Active" }],
+      });
     },
     addDisposal() {
-      this.$refs.transferEditor.showDisposal({ asset: {} });
+      this.$refs.transferEditor.showDisposal({
+        to_owner_id: 80,
+        rows: [{ quantity: 1, type: 1, condition: "Recycle" }],
+      });
     },
   },
 };

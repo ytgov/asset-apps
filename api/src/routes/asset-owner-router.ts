@@ -41,8 +41,6 @@ assetOwnerRouter.get("/:id", [param("id").notEmpty().isInt()], ReturnValidationE
                     list.managers.push(manager);
                 }
             }
-            console.log("LSIT", list)
-
         }
         return res.json({ data: list });
     });

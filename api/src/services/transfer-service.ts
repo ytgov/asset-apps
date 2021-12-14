@@ -14,7 +14,9 @@ export class TransferService {
 
     async doSearch(query: Array<QueryStatement>, sort: Array<SortStatement>, page: number, page_size: number, skip: number, take: number): Promise<any> {
         return new Promise(async (resolve, reject) => {
-            let selectStmt = this.db("asset_transfer").select("asset_transfer.*").leftJoin("asset_item", "asset_transfer.asset_item_id", "asset_item.id");
+            let selectStmt = this.db("asset_transfer").select("asset_transfer.*")
+                .leftJoin("asset_item", "asset_transfer.asset_item_id", "asset_item.id")
+                .leftJoin("asset_category", "asset_transfer.asset_category_id", "asset_category.id");
 
             if (query && query.length > 0) {
                 query.forEach((stmt: any) => {
@@ -80,7 +82,7 @@ export class TransferService {
                 })
             }
             else {
-                selectStmt.orderBy("asset_transfer.id");
+                selectStmt.orderBy("asset_transfer.request_date", "desc");
             }
 
             //console.log(selectStmt.toSQL().toNative())
@@ -92,11 +94,22 @@ export class TransferService {
 
             let data = await selectStmt.offset(skip).limit(take);
 
-            for (let item of data) {
-                item.transfer_date = moment(item.transfer_date).utc(false).format("YYYY-MM-DD")
+            let categories = await this.db("asset_category");
 
-                if (item.asset_item_id)
+            for (let item of data) {
+                item.transfer_date = moment(item.transfer_date).utc(false).format("YYYY-MM-DD");
+
+                if (item.asset_category_id) {
+                    let category = categories.filter(cat => cat.id == item.asset_category_id);
+
+                    if (category.length > 0)
+                        item.description = `${category[0].description} (${item.quantity} items)`;
+                }
+
+                if (item.asset_item_id) {
                     item.asset = await this.db("asset_item").where({ id: item.asset_item_id }).first();
+                    item.description = item.asset.description;
+                }
 
                 if (item.from_owner_id) {
                     item.from_owner = await this.db("asset_owner").where({ id: item.from_owner_id }).first();
@@ -114,7 +127,6 @@ export class TransferService {
                     else
                         item.to_owner.display_name = `(${item.to_owner.mailcode}) ${item.to_owner.name}`;
                 }
-
             }
 
             let results = { data, meta: { page, page_size, item_count: count, page_count } };

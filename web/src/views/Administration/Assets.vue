@@ -183,7 +183,7 @@ export default {
 
     saveComplete(resp) {
       this.$refs.notifier.showAPIMessages(resp.data);
-      this.loadList();
+      this.loadList(false);
     },
 
     rowClick(item) {

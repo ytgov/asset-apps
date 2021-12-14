@@ -27,6 +27,28 @@ transferRouter.post("/", [body("page").isInt().default(1), body("itemsPerPage").
         return res.json(results);
     });
 
+transferRouter.post("/transfer",
+    async (req: Request, res: Response) => {
+        let { from_owner_id, to_owner_id, rows, action } = req.body;
+
+        for (let row of rows) {
+            let transfer = {
+                asset_category_id: row.type,
+                request_user: req.user.email,
+                request_date: new Date(),
+                transfer_date: new Date(),
+                condition: row.condition,
+                from_owner_id,
+                to_owner_id,
+                quantity: row.quantity
+            }
+
+            await db("asset_transfer").insert(transfer);
+        }
+
+        return res.json({ messages: { variant: "success", text: "Transfer saved" } });
+    });
+
 transferRouter.delete("/:id",
     async (req: Request, res: Response) => {
         let { id } = req.params;

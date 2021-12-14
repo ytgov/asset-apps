@@ -58,12 +58,18 @@ assetTagRouter.put("/:id", [param("id").isInt().notEmpty()], ReturnValidationErr
             }
 
             await db("asset_item").where({ id }).update(body);
-            return res.json({  messages: [{ variant: "success", text: "Asset saved" }] });
+            return res.json({ messages: [{ variant: "success", text: "Asset saved" }] });
         }
 
         res.status(404).send();
     });
 
+assetTagRouter.get("/asset-category",
+    async (req: Request, res: Response) => {
+        let list = await db("asset_category");
+
+        return res.json({ data: list });
+    });
 
 assetTagRouter.delete("/:id",
     async (req: Request, res: Response) => {
