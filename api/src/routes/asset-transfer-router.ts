@@ -49,6 +49,47 @@ transferRouter.post("/transfer",
         return res.json({ messages: { variant: "success", text: "Transfer saved" } });
     });
 
+
+transferRouter.post("/transfer-request",
+    async (req: Request, res: Response) => {
+        let { asset, mailcode, rows, condition } = req.body;
+
+        if (asset) {
+            let transfer = {
+                asset_item_id: asset.id,
+                request_user: req.user.email,
+                request_date: new Date(),
+                transfer_date: new Date(),
+                condition: `REQUEST: ${condition}`,
+                from_owner_id: mailcode,
+                to_owner_id: 80,
+                quantity: 1
+            };
+
+            await db("asset_transfer").insert(transfer);
+        }
+        else {
+            for (let row of rows) {
+                let transfer = {
+                    asset_category_id: row.type,
+                    request_user: req.user.email,
+                    request_date: new Date(),
+                    transfer_date: new Date(),
+                    condition: `REQUEST: ${row.condition}`,
+                    from_owner_id: mailcode,
+                    to_owner_id: 80,
+                    quantity: row.quantity
+                };
+
+                await db("asset_transfer").insert(transfer);
+            }
+        }
+
+        return res.json({ messages: { variant: "success", text: "Transfer saved" } });
+    });
+
+
+
 transferRouter.delete("/:id",
     async (req: Request, res: Response) => {
         let { id } = req.params;

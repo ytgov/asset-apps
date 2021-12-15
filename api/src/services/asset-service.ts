@@ -106,4 +106,12 @@ export class AssetService {
             resolve(results);
         })
     }
+
+    async doItemSearch(keyword: string): Promise<any[]> {
+        return this.db("asset_item")
+            .where({ status: "Active" })
+            .whereRaw(`LOWER(tag) like ? OR LOWER(dept_tag) like ?`, [`%${keyword.toLowerCase().trim()}%`, `%${keyword.toLowerCase().trim()}%`])
+            .orderBy("tag")
+            .limit(50);
+    }
 }

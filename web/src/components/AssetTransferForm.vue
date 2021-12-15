@@ -53,13 +53,15 @@
               <v-select
                 dense
                 outlined
-                :items="['Desk', 'Chair']"
+                :items="assetTypeOptions"
+                item-text="description"
+                item-value="id"
                 label="Type of item"
                 hide-details
                 v-model="desc.type"
               ></v-select>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
               <v-text-field
                 dense
                 outlined
@@ -70,7 +72,7 @@
                 min="1"
               ></v-text-field>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
               <v-select
                 dense
                 outlined
@@ -86,7 +88,9 @@
             title="Add another item"
             color="secondary"
             class="mb-0"
-            @click="descriptions.push({ quantity: 1, condition: 'Good' })"
+            @click="
+              descriptions.push({ quantity: 1, condition: 'Good', type: 1 })
+            "
             ><v-icon>mdi-plus</v-icon> Add</v-btn
           >
 
@@ -104,15 +108,16 @@
       <v-stepper-step step="3">Complete</v-stepper-step>
 
       <v-stepper-content step="3" :complete="step > 3">
-        <v-select
+        <v-autocomplete
           class="mt-2"
           dense
           outlined
           :items="mailcodes"
           label="What's your mail code?"
           item-text="display_name"
-          item-value="mailcode"
-        ></v-select>
+          item-value="id"
+          v-model="fromMailcode"
+        ></v-autocomplete>
 
         <v-select
           v-if="hasIdentifier == 'Yes'"
@@ -138,11 +143,16 @@
 
 <script>
 import axios from "axios";
-import { MAILCODE_URL } from "../urls";
+import store from "../store";
+import { OWNER_URL, TRANSFER_URL } from "../urls";
 
 export default {
   name: "UserEditor",
-  computed: {},
+  computed: {
+    assetTypeOptions: function () {
+      return store.getters.assetTypeOptions;
+    },
+  },
   props: ["onSave"],
   data: () => ({
     step: 1,
@@ -153,13 +163,15 @@ export default {
     step2Name: "Tell us about the item(s)",
     assetToTransfer: null,
     transferReason: "",
-    descriptions: [{ quantity: 1, condition: "Good" }],
+    descriptions: [{ quantity: 1, condition: "Good", type: 1 }],
     mailcodes: [],
-    conditionOptions: ["Good", "Medium", "Bets"],
+    conditionOptions: ["Good", "Obsolete", "Beyond repair"],
+    fromMailcode: -1,
   }),
   created() {
-    axios.get(`${MAILCODE_URL}`).then((resp) => {
+    axios.get(OWNER_URL).then((resp) => {
       this.mailcodes = resp.data.data;
+      this.is_loading = false;
     });
   },
   methods: {
@@ -186,8 +198,19 @@ export default {
     },
 
     doComplete() {
-      this.$refs.notifier.showSuccess("Your transfer has been submitted");
-      this.resetForm();
+      let body = {
+        asset: this.assetToTransfer,
+        rows: this.descriptions,
+        mailcode: this.fromMailcode,
+        condition: this.transferReason,
+      };
+
+      console.log(body);
+
+      axios.post(`${TRANSFER_URL}/transfer-request`, body).then(() => {
+        this.$refs.notifier.showSuccess("Your transfer has been submitted");
+        this.resetForm();
+      });
     },
 
     resetForm() {

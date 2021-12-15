@@ -94,6 +94,7 @@ export default {
       "CFS",
       "Sold",
       "To be sold",
+      "Retired",
       "Unknown",
     ],
 

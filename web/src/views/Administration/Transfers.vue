@@ -139,7 +139,15 @@ import _ from "lodash";
 export default {
   name: "Home",
   data: () => ({
-    conditionOptions: ["Active", "Redistribute", "Recycle", "Sale", "To be sold", "CFS", "Unknown"],
+    conditionOptions: [
+      "Active",
+      "Redistribute",
+      "Recycle",
+      "Sold",
+      "CFS",
+      "Donation",
+      "Unknown",
+    ],
     search: "",
     loading: false,
     itemCount: 0,

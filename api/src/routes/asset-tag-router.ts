@@ -28,6 +28,26 @@ assetTagRouter.post("/", [body("page").isInt().default(1), body("itemsPerPage").
         return res.json(results);
     });
 
+assetTagRouter.post("/search", [body("keyword").notEmpty()], ReturnValidationErrors,
+    async (req: Request, res: Response) => {
+        let { keyword } = req.body;
+
+        let results = await assetService.doItemSearch(keyword);
+
+        for (let row of results) {
+            row.owner = await db("asset_owner").where({ id: row.asset_owner_id }).first()
+
+            if (row.purchase_date)
+                row.purchase_date = moment(row.purchase_date).utc(true).format("YYYY-MM-DD");
+
+            if (row.dept_tag)
+                row.display = `${row.tag} (${row.dept_tag})`;
+            else
+                row.display = `${row.tag} : ${row.description}`
+        }
+
+        return res.json({ data: results });
+    });
 
 assetTagRouter.put("/:id", [param("id").isInt().notEmpty()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
@@ -93,7 +113,7 @@ assetTagRouter.put("/:id", [param("id").isInt().notEmpty()], ReturnValidationErr
                     await db("asset_transfer").insert(transfer1);
 
                     now = now.add(1, 'second');
-                    
+
                     let transfer2 = {
                         asset_item_id: id,
                         request_user: req.user.email,
