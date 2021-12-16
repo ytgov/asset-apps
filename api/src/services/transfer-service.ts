@@ -111,6 +111,10 @@ export class TransferService {
                     item.description = item.asset.description;
                 }
 
+                if (item.description) {
+
+                }
+
                 if (item.from_owner_id) {
                     item.from_owner = await this.db("asset_owner").where({ id: item.from_owner_id }).first();
                     if (item.from_owner_id == -1)

@@ -53,6 +53,12 @@
         </div>
       </div>
       <div class="row" v-for="(row, idx) of item.rows" :key="idx">
+        <div class="col-sm-1">
+          <v-btn icon color="primary" @click="changeType(row)" class="my-0"
+            ><v-icon>{{ row.icon }}</v-icon></v-btn
+          >
+        </div>
+
         <div class="col-sm-4">
           <v-autocomplete
             dense
@@ -63,7 +69,16 @@
             label="Type of item"
             hide-details
             v-model="row.type"
+            v-if="row.icon != 'mdi-tag'"
           ></v-autocomplete>
+          <v-text-field
+            dense
+            outlined
+            label="Departmental tag"
+            hide-details
+            v-model="row.tag"
+            v-if="row.icon == 'mdi-tag'"
+          ></v-text-field>
         </div>
         <div class="col-sm-2">
           <v-text-field
@@ -76,7 +91,7 @@
             min="1"
           ></v-text-field>
         </div>
-        <div class="col-sm-4" v-if="action != 'Outbound'">
+        <div class="col-sm-3" v-if="action != 'Outbound'">
           <v-select
             v-if="action != 'Disposal'"
             dense
@@ -131,7 +146,7 @@
 import axios from "axios";
 import _ from "lodash";
 import store from "../store";
-import { OWNER_URL, TRANSFER_URL, USER_URL } from "../urls";
+import { OWNER_URL, TRANSFER_URL } from "../urls";
 
 export default {
   computed: {
@@ -151,20 +166,30 @@ export default {
     },
     isValid: function () {
       for (let row of this.item.rows) {
-        if (!row.type) return false;
+        if (row.icon != "mdi-tag" && !row.type) return false;
+
+        if (row.icon == "mdi-tag" && !row.tag) return false;
       }
 
       if (this.action == "Inbound" && this.item.from_owner_id) return true;
       else if (this.action == "Outbound" && this.item.to_owner_id) return true;
-      else if (this.action == "Disposal" && this.item.from_owner_id) return true;
+      else if (this.action == "Disposal" && this.item.from_owner_id)
+        return true;
 
       return false;
     },
   },
   props: ["onSave"],
   data: () => ({
-    disposalOptions: ["Recycle", "Sold","CFS", "Donation"],
-    conditionOptions: ["Redistribute", "Recycle", "Sold",  "CFS", "Donation"],
+    disposalOptions: ["Recycle", "Sold", "CFS", "Donation", "Destruction"],
+    conditionOptions: [
+      "Redistribute",
+      "Recycle",
+      "Sold",
+      "CFS",
+      "Donation",
+      "Destruction",
+    ],
     ownerOptions: [],
 
     drawer: null,
@@ -172,6 +197,8 @@ export default {
     isNew: false,
 
     action: "Inbound",
+
+    tIcon: "mdi-inbox-multiple",
   }),
   created() {
     this.loadList();
@@ -209,10 +236,22 @@ export default {
       let lastRow = this.item.rows[this.item.rows.length - 1];
 
       if (lastRow)
-        this.item.rows.push({ condition: lastRow.condition, quantity: 1 });
+        this.item.rows.push({
+          condition: lastRow.condition,
+          quantity: 1,
+          icon: lastRow.icon,
+        });
     },
     removeRow(idx) {
       if (this.item.rows.length > 1) this.item.rows.splice(idx, 1);
+    },
+
+    changeType(row) {
+      if (row.icon == "mdi-tag") {
+        row.icon = "mdi-inbox-multiple";
+      } else {
+        row.icon = "mdi-tag";
+      }
     },
 
     loadList() {
@@ -234,13 +273,14 @@ export default {
 
       body.rows.forEach((row) => {
         row.quantity = parseInt(row.quantity || 1);
-      });
 
-      console.log(body);
+        if (row.icon == "mdi-tag") row.type = null;
+        else row.tag = null;
+      });
 
       if (this.item.id) {
         axios
-          .put(`${USER_URL}/${this.item.id}`, body)
+          .put(`${TRANSFER_URL}/${this.item.id}`, body)
           .then((resp) => {
             if (this.onSave) {
               this.onSave(resp);
@@ -258,12 +298,24 @@ export default {
           if (this.action == "Inbound") {
             this.item.from_owner_id = null;
             this.item.rows = [
-              { quantity: 1, condition: "Redistribute", type: 1 },
+              {
+                quantity: 1,
+                condition: "Redistribute",
+                type: 1,
+                icon: "mdi-inbox-multiple",
+              },
             ];
           }
           if (this.action == "Outbound") {
             this.item.to_owner_id = null;
-            this.item.rows = [{ quantity: 1, condition: "Active", type: 1 }];
+            this.item.rows = [
+              {
+                quantity: 1,
+                condition: "Active",
+                type: 1,
+                icon: "mdi-inbox-multiple",
+              },
+            ];
           }
         });
       }

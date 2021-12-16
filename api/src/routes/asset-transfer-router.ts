@@ -40,7 +40,8 @@ transferRouter.post("/transfer",
                 condition: row.condition,
                 from_owner_id,
                 to_owner_id,
-                quantity: row.quantity
+                quantity: row.quantity,
+                description: row.tag
             }
 
             await db("asset_transfer").insert(transfer);

@@ -189,7 +189,7 @@ export default {
 
       if (this.search.trim().length > 0)
         body.query.push({
-          fields: ["asset_item.tag", "asset_category.description"],
+          fields: ["asset_item.tag", "asset_category.description", "asset_transfer.description"],
           operator: "contains",
           value: this.search,
         });
@@ -237,8 +237,6 @@ export default {
     },
 
     rowClick(item) {
-      console.log("CLICK", item);
-
       if (item.asset_item_id) {
         console.log("Asset");
       } else if (item.asset_category_id) {
@@ -250,7 +248,6 @@ export default {
           },
         ];
       }
-      console.log("OPENINGG", item);
 
       this.$refs.transferEditor.show(item);
     },
@@ -269,19 +266,40 @@ export default {
     addInbound() {
       this.$refs.transferEditor.showInbound({
         to_owner_id: 80,
-        rows: [{ quantity: 1, type: 1, condition: "Redistribute" }],
+        rows: [
+          {
+            quantity: 1,
+            type: 1,
+            condition: "Redistribute",
+            icon: "mdi-inbox-multiple",
+          },
+        ],
       });
     },
     addOutbound() {
       this.$refs.transferEditor.showOutbound({
         from_owner_id: 80,
-        rows: [{ quantity: 1, type: 1, condition: "Active" }],
+        rows: [
+          {
+            quantity: 1,
+            type: 1,
+            condition: "Active",
+            icon: "mdi-inbox-multiple",
+          },
+        ],
       });
     },
     addDisposal() {
       this.$refs.transferEditor.showDisposal({
         to_owner_id: 80,
-        rows: [{ quantity: 1, type: 1, condition: "Recycle" }],
+        rows: [
+          {
+            quantity: 1,
+            type: 1,
+            condition: "Recycle",
+            icon: "mdi-inbox-multiple",
+          },
+        ],
       });
     },
   },
