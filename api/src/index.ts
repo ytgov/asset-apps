@@ -5,7 +5,6 @@ import helmet from "helmet";
 import { API_PORT, FRONTEND_URL } from './config';
 import { doHealthCheck } from "./utils/healthCheck";
 import { assetOwnerRouter, assetTagRouter, mailcodeRouter, scanRouter, transferRouter, userRouter } from "./routes";
-import { RequiresData } from "./middleware";
 import { CreateMigrationRoutes } from "./data";
 
 //import { configureLocalAuthentication } from "./routes/auth-local";
@@ -42,8 +41,6 @@ app.use(cors({
 
 CreateMigrationRoutes(app);
 configureAuthentication(app);
-
-app.use("/", RequiresData);
 
 app.get("/api/healthCheck", (req: Request, res: Response) => {
   doHealthCheck(req, res);

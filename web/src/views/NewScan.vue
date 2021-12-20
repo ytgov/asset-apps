@@ -17,16 +17,18 @@
         </v-list-item-icon>
       </v-list-item>
     </v-list>
-    <v-btn color="success" class="mr-4" @click="activeSound"> Submit </v-btn>
+    <v-btn color="success" class="mr-4" @click="submit"> Submit </v-btn>
 
     <notifications ref="notifier"></notifications>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 import { useSound } from "@vueuse/sound";
 import dingMP3 from "../assets/sounds/ding.mp3";
+import { SCAN_URL } from "../urls";
 
 export default {
   name: "NewScan",
@@ -50,6 +52,10 @@ export default {
         this.dingSound.play();
         this.entries.unshift(a);
         this.$refs.notifier.showSuccess("Barcode scanned");
+
+        axios.post(`${SCAN_URL}`, { value: a }).then((resp) => {
+          console.log(resp);
+        });
       }
     },
     onLoaded() {

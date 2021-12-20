@@ -146,6 +146,7 @@ export default {
       "Sold",
       "CFS",
       "Donation",
+      "Destruction",
       "Unknown",
     ],
     search: "",
