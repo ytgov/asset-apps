@@ -14,7 +14,7 @@
 
     <v-sheet class="mx-5 mt-5">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mb-0">
           <v-select
             label="Action"
             :items="['Inbound', 'Outbound', 'Disposal']"
@@ -24,7 +24,7 @@
           >
           </v-select>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 mb-0">
           <v-autocomplete
             v-if="action != 'Outbound'"
             dense
@@ -53,13 +53,10 @@
         </div>
       </div>
       <div class="row" v-for="(row, idx) of item.rows" :key="idx">
-        <div class="col-sm-1">
-          <v-btn icon color="primary" @click="changeType(row)" class="my-0"
-            ><v-icon>{{ row.icon }}</v-icon></v-btn
-          >
+        <div class="col-md-12 mt-0 pt-0">
+          <v-divider></v-divider>
         </div>
-
-        <div class="col-sm-4">
+        <div class="col-sm-6">
           <v-autocomplete
             dense
             outlined
@@ -69,18 +66,19 @@
             label="Type of item"
             hide-details
             v-model="row.type"
-            v-if="row.icon != 'mdi-tag'"
           ></v-autocomplete>
+        </div>
+
+        <div class="col-sm-6">
           <v-text-field
             dense
             outlined
             label="Departmental tag"
             hide-details
             v-model="row.tag"
-            v-if="row.icon == 'mdi-tag'"
           ></v-text-field>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
           <v-text-field
             dense
             outlined
@@ -91,7 +89,7 @@
             min="1"
           ></v-text-field>
         </div>
-        <div class="col-sm-3" v-if="action != 'Outbound'">
+        <div class="col-sm-7" v-if="action != 'Outbound'">
           <v-select
             v-if="action != 'Disposal'"
             dense
@@ -166,9 +164,7 @@ export default {
     },
     isValid: function () {
       for (let row of this.item.rows) {
-        if (row.icon != "mdi-tag" && !row.type) return false;
-
-        if (row.icon == "mdi-tag" && !row.tag) return false;
+        if (!row.type) return false;
       }
 
       if (this.action == "Inbound" && this.item.from_owner_id) return true;
@@ -197,8 +193,6 @@ export default {
     isNew: false,
 
     action: "Inbound",
-
-    tIcon: "mdi-inbox-multiple",
   }),
   created() {
     this.loadList();
@@ -239,19 +233,10 @@ export default {
         this.item.rows.push({
           condition: lastRow.condition,
           quantity: 1,
-          icon: lastRow.icon,
         });
     },
     removeRow(idx) {
       if (this.item.rows.length > 1) this.item.rows.splice(idx, 1);
-    },
-
-    changeType(row) {
-      if (row.icon == "mdi-tag") {
-        row.icon = "mdi-inbox-multiple";
-      } else {
-        row.icon = "mdi-tag";
-      }
     },
 
     loadList() {
@@ -273,9 +258,6 @@ export default {
 
       body.rows.forEach((row) => {
         row.quantity = parseInt(row.quantity || 1);
-
-        if (row.icon == "mdi-tag") row.type = null;
-        else row.tag = null;
       });
 
       if (this.item.id) {
@@ -292,7 +274,6 @@ export default {
           });
       } else {
         axios.post(`${TRANSFER_URL}/transfer`, body).then((resp) => {
-          console.log(resp);
           this.onSave(resp);
 
           if (this.action == "Inbound") {
@@ -302,7 +283,6 @@ export default {
                 quantity: 1,
                 condition: "Redistribute",
                 type: 1,
-                icon: "mdi-inbox-multiple",
               },
             ];
           }
@@ -313,7 +293,6 @@ export default {
                 quantity: 1,
                 condition: "Active",
                 type: 1,
-                icon: "mdi-inbox-multiple",
               },
             ];
           }
