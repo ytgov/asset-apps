@@ -1,23 +1,22 @@
 <template>
   <div class="barcode">
+    <h1>New scans</h1>
+    <p>
+      When you scan codes, they will automatically save and become available on
+      the <router-link to="/my-scans">My Scans</router-link> page where you can
+      view the asset or search if a match isn't found.
+    </p>
+
     <StreamBarcodeReader
       @decode="onDecode"
       @loaded="onLoaded"
     ></StreamBarcodeReader>
-    <v-list subheader>
-      <v-subheader>Scanned Codes</v-subheader>
-      <v-list-item v-for="(entry, counter) in entries" :key="counter">
-        <v-list-item-content>
-          <v-list-item-title v-text="entry"></v-list-item-title>
-        </v-list-item-content>
-        <v-list-item-icon>
-          <v-icon @click="deleteEntry(counter)" style="float: right">
-            mdi-minus-circle
-          </v-icon>
-        </v-list-item-icon>
-      </v-list-item>
-    </v-list>
-    <v-btn color="success" class="mr-4" @click="submit"> Submit </v-btn>
+
+    <h2>Scanned Codes</h2>
+
+    <ol class="mt-4">
+      <li v-for="(entry, counter) in entries" :key="counter">{{ entry }}</li>
+    </ol>
 
     <notifications ref="notifier"></notifications>
   </div>

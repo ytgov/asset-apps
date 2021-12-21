@@ -115,6 +115,12 @@ export default {
     if (ownerParam && ownerParam.length > 0) {
       this.owners = [parseInt(ownerParam)];
     }
+
+    let searchParam = this.$route.query.search;
+
+    if (searchParam && searchParam.length > 0) {
+      this.search = searchParam;
+    }
   },
   computed: {},
   watch: {
