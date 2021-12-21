@@ -98,9 +98,7 @@ export class TransferService {
 
             for (let item of data) {
                 item.transfer_date = moment(item.transfer_date).utc(true).format("YYYY-MM-DD");
-
-                console.log(item)
-
+                
                 if (item.asset_category_id) {
                     let category = categories.filter(cat => cat.id == item.asset_category_id);
 
