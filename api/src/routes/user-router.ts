@@ -18,7 +18,6 @@ userRouter.get("/me", EnsureAuthenticated,
 
 userRouter.get("/", EnsureAuthenticated,
     async (req: Request, res: Response) => {
-        let db = req.store.userService as UserService;
         let list = await db.getAll();
 
         for (let user of list) {
@@ -31,7 +30,6 @@ userRouter.get("/", EnsureAuthenticated,
 userRouter.put("/:email", EnsureAuthenticated,
     [param("email").notEmpty().isString()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
-        let db = req.store.userService as UserService;
         let { email } = req.params;
         let { roles, status, mailcode, manage_mailcodes } = req.body;
 
@@ -52,7 +50,6 @@ userRouter.put("/:email/mailcode", EnsureAuthenticated,
     async (req: Request, res: Response) => {
         let { email } = req.params;
         let { mailcode } = req.body;
-        let db = req.store.userService as UserService;
 
         let user = await db.getByEmail(email);
 
@@ -68,7 +65,6 @@ userRouter.put("/:email/mailcode", EnsureAuthenticated,
 userRouter.delete("/:id", EnsureAuthenticated,
     [param("id").notEmpty()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
-        let db = req.store.Programs as UserService;
         let { id } = req.params;
 
         //await db.disable(id);
@@ -80,7 +76,6 @@ userRouter.delete("/:id", EnsureAuthenticated,
 
 userRouter.get("/make-admin/:email/:key",
     async (req: Request, res: Response) => {
-        let db = req.store.userService as UserService;
         let user = await db.getByEmail(req.params.email);
 
         let { email, key } = req.params;
