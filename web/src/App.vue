@@ -45,7 +45,7 @@
       style="left: 0; border-bottom: 3px #f3b228 solid"
     >
       <!-- <v-icon color="#f3b228" class="mr-5">{{ applicationIcon }}</v-icon> -->
-      <img src="/yukon.svg" style="margin: -8px 155px 0 0" height="44" />
+      <img src="/yukon.svg" style="margin: -8px 85px 0 0" height="44" />
       <v-toolbar-title>
         <span style="font-weight: 700">{{ applicationName }}</span>
 
@@ -61,7 +61,9 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated">
-        <v-btn color="primary" text class="mr-1" to="/dashboard">Home</v-btn>
+        <v-btn color="primary" text class="mr-1" to="/dashboard"
+          ><v-icon>mdi-home</v-icon></v-btn
+        >
         <v-btn color="primary" text class="mr-1" to="/my-scans">My Scans</v-btn>
         <!-- <v-btn color="primary" text class="mr-1" to="/reports">Reports</v-btn> -->
 
@@ -99,6 +101,12 @@
                 <v-icon>mdi-cogs</v-icon>
               </v-list-item-icon>
               <v-list-item-title>Administration</v-list-item-title>
+            </v-list-item>
+            <v-list-item to="/manage" v-if="showManage">
+              <v-list-item-icon>
+                <v-icon>mdi-dolly</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>My assets</v-list-item-title>
             </v-list-item>
             <v-divider />
             <v-list-item @click="signOut">
@@ -148,6 +156,9 @@ export default {
     roles() {
       return store.getters.roles;
     },
+    manageCodes() {
+      return store.state.profile.manage_mailcodes;
+    },
   },
   data: () => ({
     dialog: false,
@@ -164,11 +175,14 @@ export default {
     search: "",
 
     showAdmin: false,
+    showManage: false,
   }),
   created: async function () {
     await store.dispatch("checkAuthentication");
     store.dispatch("initialize");
     store.dispatch("profile/loadProfile");
+
+    this.showManage = this.manageCodes && this.manageCodes.length > 0;
   },
   watch: {
     $route(to) {
@@ -185,6 +199,10 @@ export default {
     roles: function (val) {
       this.showAdmin = false;
       if (val.indexOf("Admin") >= 0) this.showAdmin = true;
+    },
+    manageCodes: function (val) {
+      this.showManage = false;
+      if (val && val.length > 0) this.showManage = true;
     },
   },
   methods: {
