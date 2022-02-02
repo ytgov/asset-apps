@@ -124,7 +124,7 @@ export default {
         (o) => this.manageCodes.indexOf(o.mailcode) >= 0
       );
 
-      this.manageNames = this.toManage.map((c) => c.mailcode).join(", ");
+      this.manageNames = _.uniq(this.toManage.map((c) => c.mailcode)).join(", ");
     }
   },
   methods: {
