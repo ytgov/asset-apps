@@ -135,6 +135,91 @@ assetTagRouter.put("/:id", [param("id").isInt().notEmpty()], ReturnValidationErr
         res.status(404).send();
     });
 
+assetTagRouter.put("/:id/limited", [param("id").isInt().notEmpty()], ReturnValidationErrors,
+    async (req: Request, res: Response) => {
+        let { id } = req.params;
+
+        let item = await db("asset_item").where({ id }).first();
+
+        if (item) {
+            let { dept_tag, status, condition, un_commodity_code, make, model, comment } = req.body;
+            let { serial, description, purchase_person, purchase_price, purchase_date, purchase_order_number, purchase_order_line } = req.body;
+
+            let body = {
+                dept_tag,
+                status,
+                condition,
+                un_commodity_code,
+                make,
+                model,
+                serial,
+                description,
+                purchase_person,
+                purchase_price,
+                purchase_date,
+                purchase_order_number,
+                purchase_order_line,
+                comment
+            };
+
+            await db("asset_item").where({ id }).update(body);
+            return res.json({ messages: [{ variant: "success", text: "Asset saved" }] });
+        }
+
+        res.status(404).send();
+    });
+
+assetTagRouter.put("/:id/limited/transfer", [param("id").isInt().notEmpty()], ReturnValidationErrors,
+    async (req: Request, res: Response) => {
+        let { id } = req.params;
+
+        let item = await db("asset_item").where({ id }).first();
+
+        if (item) {
+            let { dept_tag, status, condition, asset_owner_id, un_commodity_code, make, model, comment } = req.body;
+            let { serial, description, purchase_person, purchase_price, purchase_date, purchase_order_number, purchase_order_line } = req.body;
+
+            let body = {
+                dept_tag,
+                status,
+                condition,
+                asset_owner_id,
+                un_commodity_code,
+                make,
+                model,
+                serial,
+                description,
+                purchase_person,
+                purchase_price,
+                purchase_date,
+                purchase_order_number,
+                purchase_order_line,
+                comment
+            };
+
+            await db("asset_item").where({ id }).update(body);
+            
+            let transfer = {
+                asset_item_id: id,
+                request_user: req.user.email,
+                request_date: new Date(),
+                transfer_date: new Date(),
+                condition: `REQUEST: ${condition}`,
+                from_owner_id: asset_owner_id,
+                to_owner_id: 80,
+                quantity: 1
+            };
+
+            await db("asset_transfer").insert(transfer);
+            
+            
+            return res.json({ messages: [{ variant: "success", text: "Asset saved" }] });
+        }
+
+        res.status(404).send();
+    });
+
+
 assetTagRouter.get("/asset-category",
     async (req: Request, res: Response) => {
         let list = await db("asset_category");

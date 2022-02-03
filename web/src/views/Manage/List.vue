@@ -61,7 +61,7 @@
     </div>
 
     
-    <asset-editor ref="editor" :onSave="saveComplete"></asset-editor>
+    <asset-editor-limited ref="editor" :onSave="saveComplete"></asset-editor-limited>
     <notifications ref="notifier"></notifications>
   </div>
 </template>
@@ -173,7 +173,10 @@ export default {
     rowClick(item) {
       this.$refs.editor.show(item);
     },
-    saveComplete() {}
+    saveComplete(resp) {
+      this.$refs.notifier.showAPIMessages(resp.data);
+      this.loadList(false)
+    }
   },
 };
 </script>

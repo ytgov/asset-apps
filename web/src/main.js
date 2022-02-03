@@ -11,6 +11,7 @@ import UserEditor from "./components/UserEditor";
 import OwnerEditor from "./components/OwnerEditor";
 import TransferEditor from "./components/TransferEditor";
 import AssetEditor from "./components/AssetEditor";
+import AssetEditorLimited from "./components/AssetEditorLimited";
 
 import AssetRegisterForm from "./components/AssetRegisterForm";
 import AssetTransferForm from "./components/AssetTransferForm";
@@ -30,6 +31,7 @@ Vue.component("user-editor", UserEditor);
 Vue.component("owner-editor", OwnerEditor);
 Vue.component("transfer-editor", TransferEditor);
 Vue.component("asset-editor", AssetEditor);
+Vue.component("asset-editor-limited", AssetEditorLimited);
 
 Vue.component("asset-register-form", AssetRegisterForm);
 Vue.component("asset-transfer-form", AssetTransferForm);
