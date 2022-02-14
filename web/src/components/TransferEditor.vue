@@ -131,7 +131,7 @@
         @click="save"
         color="primary"
         class="float-right"
-        :disabled="!isValid"
+        :disabled="!item.id || !isValid"
         >Save</v-btn
       >
       <!-- <v-btn @click="save" color="primary" class="float-right"
@@ -231,7 +231,7 @@ export default {
       if (item.condition === "Redistribute") return "Inbound";
       else if (item.condition === "Active") return "Outbound";
       else {
-        return "Unknown";
+        return "Inbound";
       }
     },
     addRow() {

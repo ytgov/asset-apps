@@ -90,13 +90,15 @@ transferRouter.post("/transfer-request",
     });
 
 
+transferRouter.delete("/:id", async (req: Request, res: Response) => {
+    let { id } = req.params;
 
-transferRouter.delete("/:id",
-    async (req: Request, res: Response) => {
-        let { id } = req.params;
-
-        return res.json({ data: {}, messages: [{ variant: "success", text: "Location removed" }] });
+    await db("asset_transfer").where({ id }).delete();
+    return res.json({
+        data: {},
+        messages: [{ variant: "success", text: "Transfer removed" }],
     });
+});
 
 transferRouter.get("/clean",
     async (req: Request, res: Response) => {

@@ -125,7 +125,10 @@
       </div>
     </div>
 
-    <transfer-editor ref="transferEditor" :onSave="loadList"></transfer-editor>
+    <transfer-editor
+      ref="transferEditor"
+      :onSave="saveComplete"
+    ></transfer-editor>
     <notifications ref="notifier"></notifications>
   </div>
 </template>
