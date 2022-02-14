@@ -116,18 +116,17 @@
                 { text: 'To', value: 'to_owner.display_name' },
                 { text: 'Condition', value: 'condition' },
               ]"
-              :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
-            ></v-data-table
-            ><!--
               @click:row="rowClick"
-              class="row-clickable1"-->
+              class="row-clickable"
+              :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
+            ></v-data-table>
           </v-card-text>
         </v-card>
       </div>
     </div>
 
-    <notifications ref="notifier"></notifications>
     <transfer-editor ref="transferEditor" :onSave="loadList"></transfer-editor>
+    <notifications ref="notifier"></notifications>
   </div>
 </template>
 
@@ -238,19 +237,16 @@ export default {
     },
 
     rowClick(item) {
-      if (item.asset_item_id) {
-        console.log("Asset");
-      } else if (item.asset_category_id) {
-        item.rows = [
+      this.$refs.transferEditor.show({
+        ...item,
+        rows: [
           {
             type: item.asset_category_id,
             quantity: item.quantity,
             condition: item.condition,
           },
-        ];
-      }
-
-      this.$refs.transferEditor.show(item);
+        ],
+      });
     },
 
     loadOwners() {

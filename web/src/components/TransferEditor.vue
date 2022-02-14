@@ -126,6 +126,7 @@
         </div>
       </div>
 
+      <v-btn @click="remove" color="error" :disabled="!item.id">Remove</v-btn>
       <v-btn
         @click="save"
         color="primary"
@@ -202,6 +203,7 @@ export default {
       this.item = _.clone(item);
       this.drawer = true;
       this.isNew = false;
+      this.action = this.determineAction(item);
     },
     showInbound(item) {
       this.item = _.clone(item);
@@ -225,7 +227,13 @@ export default {
       this.item = {};
       this.drawer = false;
     },
-
+    determineAction(item) {
+      if (item.condition === "Redistribute") return "Inbound";
+      else if (item.condition === "Active") return "Outbound";
+      else {
+        return "Unknown";
+      }
+    },
     addRow() {
       let lastRow = this.item.rows[this.item.rows.length - 1];
 
@@ -297,6 +305,21 @@ export default {
             ];
           }
         });
+      }
+    },
+    remove() {
+      if (this.item.id) {
+        axios
+          .delete(`${TRANSFER_URL}/${this.item.id}`)
+          .then((resp) => {
+            if (this.onSave) {
+              this.onSave(resp);
+            }
+            this.hide();
+          })
+          .catch((error) => {
+            console.log("ERROR: ", error);
+          });
       }
     },
   },
