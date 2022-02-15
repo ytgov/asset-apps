@@ -17,6 +17,7 @@
         <div class="col-sm-6">
           <v-autocomplete
             dense
+            disabled
             outlined
             label="To"
             :items="ownerOptions"
@@ -30,6 +31,7 @@
         <div class="col-sm-6">
           <v-autocomplete
             dense
+            disabled
             outlined
             label="From"
             :items="ownerOptions"
@@ -48,6 +50,7 @@
         <div class="col-sm-6">
           <v-text-field
             dense
+            disabled
             outlined
             label="Description"
             hide-details
@@ -58,15 +61,17 @@
         <div class="col-sm-6">
           <v-text-field
             dense
+            disabled
             outlined
             label="Departmental tag"
             hide-details
-            v-model="item.asset_item.tag"
+            v-model="assetItemTag"
           ></v-text-field>
         </div>
         <div class="col-sm-3">
           <v-text-field
             dense
+            disabled
             outlined
             label="Quantity"
             type="number"
@@ -78,6 +83,7 @@
         <div class="col-sm-7">
           <v-select
             dense
+            disabled
             outlined
             label="Condition"
             hide-details
@@ -86,19 +92,21 @@
           ></v-select>
         </div>
       </div>
-
-      <div class="row">
-        <pre>{{ item }}</pre>
-      </div>
-
-      <v-btn @click="remove" color="error" :disabled="!item.id">Remove</v-btn>
       <v-btn
+        class="float-right"
+        color="error"
+        :loading="loading"
+        @click="remove"
+        >Remove</v-btn
+      >
+      <!-- <v-btn
         @click="save"
         color="primary"
         class="float-right"
-        :disabled="!isValid"
+        :disabled="loading || !isValid"
+        :loading="loading"
         >Save</v-btn
-      >
+      > -->
     </v-sheet>
   </v-navigation-drawer>
 </template>
@@ -134,14 +142,17 @@ export default {
     disposalOptions: ["Recycle", "Sold", "CFS", "Donation", "Destruction"],
     ownerOptions: [],
     drawer: null,
-    item: { asset_item: {} },
+    item: {},
+    assetItemTag: null,
+    loading: false,
   }),
   created() {
     this.loadList();
   },
   methods: {
     show(item) {
-      this.item = { asset_item: {}, ..._.cloneDeep(item) };
+      this.item = _.clone(item);
+      this.assetItemTag = item?.asset_item?.tag;
       this.drawer = true;
     },
     hide() {
@@ -149,20 +160,23 @@ export default {
       this.drawer = false;
     },
     loadList() {
-      this.is_loading = true;
+      this.loading = true;
       axios
         .get(OWNER_URL)
         .then((resp) => {
           this.ownerOptions = resp.data.data;
-          this.is_loading = false;
         })
         .catch((error) => {
           console.log("ERROR", error);
-          this.is_loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     save() {
-      let body = _.clone(this.item);
+      const body = _.clone(this.item);
+
+      this.loading = true;
       axios
         .put(`${TRANSFER_URL}/${this.item.id}`, body)
         .then((resp) => {
@@ -173,9 +187,13 @@ export default {
         })
         .catch((error) => {
           console.log("ERROR: ", error);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     remove() {
+      this.loading = true;
       axios
         .delete(`${TRANSFER_URL}/${this.item.id}`)
         .then((resp) => {
@@ -186,6 +204,9 @@ export default {
         })
         .catch((error) => {
           console.log("ERROR: ", error);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
   },
