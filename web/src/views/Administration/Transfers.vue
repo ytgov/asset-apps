@@ -242,16 +242,7 @@ export default {
     },
 
     rowClick(item) {
-      this.$refs.transferEditor.show({
-        ...item,
-        rows: [
-          {
-            type: item.asset_category_id,
-            quantity: item.quantity,
-            condition: item.condition,
-          },
-        ],
-      });
+      this.$refs.transferEditor.show(item);
     },
 
     loadOwners() {

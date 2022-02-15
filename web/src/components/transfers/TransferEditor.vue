@@ -14,22 +14,8 @@
 
     <v-sheet class="mx-5 mt-5">
       <div class="row">
-        <div class="col-md-8 mb-0">
+        <div class="col-sm-6">
           <v-autocomplete
-            v-if="action != 'Outbound'"
-            dense
-            outlined
-            label="From"
-            :items="ownerOptions"
-            item-text="display_name"
-            item-value="id"
-            v-model="item.from_owner_id"
-            persistent-hint
-            hint="(Mailcode) Name"
-          ></v-autocomplete>
-
-          <v-autocomplete
-            v-if="action == 'Outbound'"
             dense
             outlined
             label="To"
@@ -41,22 +27,32 @@
             hint="(Mailcode) Name"
           ></v-autocomplete>
         </div>
-      </div>
-      <div class="row" v-for="(row, idx) of item.rows" :key="idx">
-        <div class="col-md-12 mt-0 pt-0">
-          <v-divider></v-divider>
-        </div>
         <div class="col-sm-6">
           <v-autocomplete
             dense
             outlined
-            :items="assetTypeOptions"
-            item-text="description"
+            label="From"
+            :items="ownerOptions"
+            item-text="display_name"
             item-value="id"
-            label="Type of item"
-            hide-details
-            v-model="row.type"
+            v-model="item.from_owner_id"
+            persistent-hint
+            hint="(Mailcode) Name"
           ></v-autocomplete>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mt-0 pt-0">
+          <v-divider></v-divider>
+        </div>
+        <div class="col-sm-6">
+          <v-text-field
+            dense
+            outlined
+            label="Description"
+            hide-details
+            v-model="item.description"
+          ></v-text-field>
         </div>
 
         <div class="col-sm-6">
@@ -65,7 +61,7 @@
             outlined
             label="Departmental tag"
             hide-details
-            v-model="row.tag"
+            v-model="item.asset_item.tag"
           ></v-text-field>
         </div>
         <div class="col-sm-3">
@@ -75,45 +71,24 @@
             label="Quantity"
             type="number"
             hide-details
-            v-model="row.quantity"
+            v-model="item.quantity"
             min="1"
           ></v-text-field>
         </div>
-        <div class="col-sm-7" v-if="action != 'Outbound'">
+        <div class="col-sm-7">
           <v-select
-            v-if="action != 'Disposal'"
             dense
             outlined
             label="Condition"
             hide-details
-            v-model="row.condition"
-            :items="conditionOptions"
+            v-model="item.condition"
+            :items="assetConditionOptions"
           ></v-select>
+        </div>
+      </div>
 
-          <v-autocomplete
-            v-if="action == 'Disposal'"
-            dense
-            outlined
-            label="Disposal type"
-            :items="disposalOptions"
-            v-model="row.condition"
-            hide-details
-          ></v-autocomplete>
-        </div>
-        <div class="col-md-2 text-right" v-if="isNew">
-          <v-btn @click="addRow" fab x-small color="info" class="my-0 mr-2">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-btn
-            @click="removeRow(idx)"
-            fab
-            x-small
-            color="warning"
-            class="my-0"
-          >
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-        </div>
+      <div class="row">
+        <pre>{{ item }}</pre>
       </div>
 
       <v-btn @click="remove" color="error" :disabled="!item.id">Remove</v-btn>
@@ -121,7 +96,7 @@
         @click="save"
         color="primary"
         class="float-right"
-        :disabled="!item.id || !isValid"
+        :disabled="!isValid"
         >Save</v-btn
       >
     </v-sheet>
@@ -131,17 +106,17 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-import store from "../../store";
+import { mapGetters } from "vuex";
+
 import { OWNER_URL, TRANSFER_URL } from "../../urls";
 
 export default {
   computed: {
-    mailcodeOptions: function () {
-      return store.getters.mailcodeOptions;
-    },
-    assetTypeOptions: function () {
-      return store.getters.assetTypeOptions;
-    },
+    ...mapGetters([
+      "assetTypeOptions",
+      "assetConditionOptions",
+      "mailcodeOptions",
+    ]),
     transferDirectionIcon: function () {
       if (this.transferDirection) return "mdi-redo";
       return "mdi-undo";
@@ -151,89 +126,28 @@ export default {
       return "Outbound transfer";
     },
     isValid: function () {
-      for (let row of this.item.rows) {
-        if (!row.type) return false;
-      }
-
-      if (this.action == "Inbound" && this.item.from_owner_id) return true;
-      else if (this.action == "Outbound" && this.item.to_owner_id) return true;
-      else if (this.action == "Disposal" && this.item.from_owner_id)
-        return true;
-
-      return false;
+      return true;
     },
   },
   props: ["onSave"],
   data: () => ({
     disposalOptions: ["Recycle", "Sold", "CFS", "Donation", "Destruction"],
-    conditionOptions: [
-      "Redistribute",
-      "Recycle",
-      "Sold",
-      "CFS",
-      "Donation",
-      "Destruction",
-    ],
     ownerOptions: [],
-
     drawer: null,
-    item: { rows: [] },
-    isNew: false,
-
-    action: "Inbound",
+    item: { asset_item: {} },
   }),
   created() {
     this.loadList();
   },
   methods: {
     show(item) {
-      this.item = _.clone(item);
-      this.drawer = true;
-      this.isNew = false;
-      this.action = this.determineAction(item);
-    },
-    showInbound(item) {
-      this.item = _.clone(item);
-      this.action = "Inbound";
-      this.isNew = true;
-      this.drawer = true;
-    },
-    showOutbound(item) {
-      this.item = _.clone(item);
-      this.action = "Outbound";
-      this.isNew = true;
-      this.drawer = true;
-    },
-    showDisposal(item) {
-      this.item = _.clone(item);
-      this.action = "Disposal";
-      this.isNew = true;
+      this.item = { asset_item: {}, ..._.cloneDeep(item) };
       this.drawer = true;
     },
     hide() {
       this.item = {};
       this.drawer = false;
     },
-    determineAction(item) {
-      if (item.condition === "Redistribute") return "Inbound";
-      else if (item.condition === "Active") return "Outbound";
-      else {
-        return "Inbound";
-      }
-    },
-    addRow() {
-      let lastRow = this.item.rows[this.item.rows.length - 1];
-
-      if (lastRow)
-        this.item.rows.push({
-          condition: lastRow.condition,
-          quantity: 1,
-        });
-    },
-    removeRow(idx) {
-      if (this.item.rows.length > 1) this.item.rows.splice(idx, 1);
-    },
-
     loadList() {
       this.is_loading = true;
       axios
@@ -249,65 +163,30 @@ export default {
     },
     save() {
       let body = _.clone(this.item);
-      body.action = this.action;
-
-      body.rows.forEach((row) => {
-        row.quantity = parseInt(row.quantity || 1);
-      });
-
-      if (this.item.id) {
-        axios
-          .put(`${TRANSFER_URL}/${this.item.id}`, body)
-          .then((resp) => {
-            if (this.onSave) {
-              this.onSave(resp);
-            }
-            this.hide();
-          })
-          .catch((error) => {
-            console.log("ERROR: ", error);
-          });
-      } else {
-        axios.post(`${TRANSFER_URL}/transfer`, body).then((resp) => {
-          this.onSave(resp);
-
-          if (this.action == "Inbound") {
-            this.item.from_owner_id = null;
-            this.item.rows = [
-              {
-                quantity: 1,
-                condition: "Redistribute",
-                type: 1,
-              },
-            ];
+      axios
+        .put(`${TRANSFER_URL}/${this.item.id}`, body)
+        .then((resp) => {
+          if (this.onSave) {
+            this.onSave(resp);
           }
-          if (this.action == "Outbound") {
-            this.item.to_owner_id = null;
-            this.item.rows = [
-              {
-                quantity: 1,
-                condition: "Active",
-                type: 1,
-              },
-            ];
-          }
+          this.hide();
+        })
+        .catch((error) => {
+          console.log("ERROR: ", error);
         });
-      }
     },
     remove() {
-      if (this.item.id) {
-        axios
-          .delete(`${TRANSFER_URL}/${this.item.id}`)
-          .then((resp) => {
-            if (this.onSave) {
-              this.onSave(resp);
-            }
-            this.hide();
-          })
-          .catch((error) => {
-            console.log("ERROR: ", error);
-          });
-      }
+      axios
+        .delete(`${TRANSFER_URL}/${this.item.id}`)
+        .then((resp) => {
+          if (this.onSave) {
+            this.onSave(resp);
+          }
+          this.hide();
+        })
+        .catch((error) => {
+          console.log("ERROR: ", error);
+        });
     },
   },
 };
