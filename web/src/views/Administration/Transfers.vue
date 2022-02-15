@@ -125,6 +125,10 @@
       </div>
     </div>
 
+    <transfer-creator
+      ref="transferCreator"
+      :onSave="saveComplete"
+    ></transfer-creator>
     <transfer-editor
       ref="transferEditor"
       :onSave="saveComplete"
@@ -267,7 +271,7 @@ export default {
     },
 
     addInbound() {
-      this.$refs.transferEditor.showInbound({
+      this.$refs.transferCreator.showInbound({
         to_owner_id: 80,
         rows: [
           {
@@ -280,7 +284,7 @@ export default {
       });
     },
     addOutbound() {
-      this.$refs.transferEditor.showOutbound({
+      this.$refs.transferCreator.showOutbound({
         from_owner_id: 80,
         rows: [
           {
@@ -293,7 +297,7 @@ export default {
       });
     },
     addDisposal() {
-      this.$refs.transferEditor.showDisposal({
+      this.$refs.transferCreator.showDisposal({
         to_owner_id: 80,
         rows: [
           {

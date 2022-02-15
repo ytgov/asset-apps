@@ -126,12 +126,11 @@
         </div>
       </div>
 
-      <v-btn @click="remove" color="error" :disabled="!item.id">Remove</v-btn>
       <v-btn
         @click="save"
         color="primary"
         class="float-right"
-        :disabled="!item.id || !isValid"
+        :disabled="!isValid"
         >Save</v-btn
       >
       <!-- <v-btn @click="save" color="primary" class="float-right"
@@ -144,8 +143,8 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-import store from "../store";
-import { OWNER_URL, TRANSFER_URL } from "../urls";
+import store from "../../store";
+import { OWNER_URL, TRANSFER_URL } from "../../urls";
 
 export default {
   computed: {
@@ -199,12 +198,6 @@ export default {
     this.loadList();
   },
   methods: {
-    show(item) {
-      this.item = _.clone(item);
-      this.drawer = true;
-      this.isNew = false;
-      this.action = this.determineAction(item);
-    },
     showInbound(item) {
       this.item = _.clone(item);
       this.action = "Inbound";
@@ -226,13 +219,6 @@ export default {
     hide() {
       this.item = {};
       this.drawer = false;
-    },
-    determineAction(item) {
-      if (item.condition === "Redistribute") return "Inbound";
-      else if (item.condition === "Active") return "Outbound";
-      else {
-        return "Inbound";
-      }
     },
     addRow() {
       let lastRow = this.item.rows[this.item.rows.length - 1];
@@ -305,21 +291,6 @@ export default {
             ];
           }
         });
-      }
-    },
-    remove() {
-      if (this.item.id) {
-        axios
-          .delete(`${TRANSFER_URL}/${this.item.id}`)
-          .then((resp) => {
-            if (this.onSave) {
-              this.onSave(resp);
-            }
-            this.hide();
-          })
-          .catch((error) => {
-            console.log("ERROR: ", error);
-          });
       }
     },
   },
