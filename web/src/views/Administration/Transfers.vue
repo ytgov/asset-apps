@@ -30,7 +30,7 @@
                       background-color="white"
                       label="Condition"
                       @change="loadList(true)"
-                      :items="conditionOptions"
+                      :items="assetConditionOptions"
                       hide-details
                       multiple
                       clearable
@@ -141,16 +141,6 @@ import { TRANSFER_URL, OWNER_URL } from "../../urls";
 export default {
   name: "Home",
   data: () => ({
-    conditionOptions: [
-      "Active",
-      "Redistribute",
-      "Recycle",
-      "Sold",
-      "CFS",
-      "Donation",
-      "Destruction",
-      "Unknown",
-    ],
     search: "",
     loading: false,
     itemCount: 0,
@@ -172,7 +162,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["defaultAssetOwner"]),
+    ...mapGetters(["assetConditionOptions", "defaultAssetOwner"]),
   },
   watch: {
     options: {
