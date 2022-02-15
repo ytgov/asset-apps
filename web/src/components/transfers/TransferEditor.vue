@@ -96,9 +96,23 @@
         class="float-right"
         color="error"
         :loading="loading"
-        @click="remove"
+        @click="confirmDelete"
         >Remove</v-btn
       >
+      <v-dialog v-model="isShowingDeleteDialog" max-width="290">
+        <v-card>
+          <v-card-title> Confirm Deletion </v-card-title>
+          <v-card-text>
+            Are you sure you want to delete this transfer?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="info" @click="cancelDelete">Cancel</v-btn>
+            <v-btn color="error" @click="deleteConfirmed"> Delete </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <!-- <v-btn
         @click="save"
         color="primary"
@@ -145,11 +159,22 @@ export default {
     item: {},
     assetItemTag: null,
     loading: false,
+    isShowingDeleteDialog: false,
   }),
   created() {
     this.loadList();
   },
   methods: {
+    cancelDelete() {
+      this.isShowingDeleteDialog = false;
+    },
+    confirmDelete() {
+      this.isShowingDeleteDialog = true;
+    },
+    deleteConfirmed() {
+      this.isShowingDeleteDialog = false;
+      this.remove();
+    },
     show(item) {
       this.item = _.clone(item);
       this.assetItemTag = item?.asset_item?.tag;
