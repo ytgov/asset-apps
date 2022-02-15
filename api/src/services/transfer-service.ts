@@ -104,7 +104,7 @@ export class TransferService {
 
                     if (category.length > 0) {
                         if (item.description) {
-                            item.asset = { tag: item.description };
+                            item.asset_item = { tag: item.description };
                         }
 
                         item.description = `${category[0].description} (${item.quantity} items)`;
@@ -112,8 +112,8 @@ export class TransferService {
                 }
 
                 if (item.asset_item_id) {
-                    item.asset = await this.db("asset_item").where({ id: item.asset_item_id }).first();
-                    item.description = item.asset.description;
+                    item.asset_item = await this.db("asset_item").where({ id: item.asset_item_id }).first();
+                    item.description = item.asset_item.description;
                 }
 
                 if (item.from_owner_id) {

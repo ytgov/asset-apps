@@ -110,7 +110,7 @@
               :loading="loading"
               :headers="[
                 { text: 'Date', value: 'transfer_date' },
-                { text: 'Tag', value: 'asset.tag' },
+                { text: 'Tag', value: 'asset_item.tag' },
                 { text: 'Description', value: 'description' },
                 { text: 'From', value: 'from_owner.display_name' },
                 { text: 'To', value: 'to_owner.display_name' },
