@@ -30,7 +30,7 @@
                       background-color="white"
                       label="Condition"
                       @change="loadList(true)"
-                      :items="conditionOptions"
+                      :items="assetConditionOptions"
                       hide-details
                       multiple
                       clearable
@@ -139,25 +139,14 @@
 
 <script>
 import axios from "axios";
-import { TRANSFER_URL, OWNER_URL } from "../../urls";
 import _ from "lodash";
+import { mapGetters } from "vuex";
+
+import { TRANSFER_URL, OWNER_URL } from "../../urls";
 
 export default {
   name: "Home",
   data: () => ({
-    conditionOptions: [
-      "Active",
-      "Redistribute",
-      "Recycle",
-      "Sold",
-      "CFS",
-      "Donation",
-      "Destruction",
-      "Unknown",
-      "REQUEST: Obsolete",
-      "REQUEST: Good",
-      "REQUEST: Beyond repair",
-    ],
     search: "",
     loading: false,
     itemCount: 0,
@@ -178,7 +167,9 @@ export default {
       this.fromOwners.push(parseInt(fp));
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["assetConditionOptions"]),
+  },
   watch: {
     options: {
       handler() {
