@@ -107,6 +107,37 @@ transferRouter.post(
     }
 );
 
+transferRouter.patch("/:id", async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const {
+        to_owner_id,
+        from_owner_id,
+        description,
+        quantity,
+        condition,
+        asset_item,
+    } = req.body;
+
+    await db("asset_transfer").where({ id }).update({
+        to_owner_id,
+        from_owner_id,
+        description,
+        quantity,
+        condition,
+    });
+
+    if (asset_item?.tag) {
+        const { id: asset_item_id, tag } = asset_item;
+        await db("asset_item").where({ id: asset_item_id }).update({ tag });
+    }
+
+    return res.json({
+        data: {},
+        messages: [{ variant: "success", text: "Transfer saved" }],
+    });
+});
+
 transferRouter.delete("/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
 

@@ -17,7 +17,6 @@
         <div class="col-sm-6">
           <v-autocomplete
             dense
-            disabled
             outlined
             label="To"
             :items="ownerOptions"
@@ -31,7 +30,6 @@
         <div class="col-sm-6">
           <v-autocomplete
             dense
-            disabled
             outlined
             label="From"
             :items="ownerOptions"
@@ -50,7 +48,6 @@
         <div class="col-sm-6">
           <v-text-field
             dense
-            disabled
             outlined
             label="Description"
             hide-details
@@ -61,7 +58,6 @@
         <div class="col-sm-6">
           <v-text-field
             dense
-            disabled
             outlined
             label="Departmental tag"
             hide-details
@@ -71,7 +67,6 @@
         <div class="col-sm-3">
           <v-text-field
             dense
-            disabled
             outlined
             label="Quantity"
             type="number"
@@ -83,7 +78,6 @@
         <div class="col-sm-7">
           <v-select
             dense
-            disabled
             outlined
             label="Condition"
             hide-details
@@ -92,13 +86,19 @@
           ></v-select>
         </div>
       </div>
-      <v-btn
-        class="float-right"
-        color="error"
-        :loading="loading"
-        @click="confirmDelete"
+
+      <v-btn color="error" :loading="loading" @click="confirmDelete"
         >Remove</v-btn
       >
+      <v-btn
+        color="primary"
+        class="float-right"
+        :disabled="!isValid"
+        :loading="loading"
+        @click="save"
+        >Save</v-btn
+      >
+
       <v-dialog v-model="isShowingDeleteDialog" max-width="290">
         <v-card>
           <v-card-title> Confirm Deletion </v-card-title>
@@ -113,14 +113,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- <v-btn
-        @click="save"
-        color="primary"
-        class="float-right"
-        :disabled="loading || !isValid"
-        :loading="loading"
-        >Save</v-btn
-      > -->
     </v-sheet>
   </v-navigation-drawer>
 </template>
@@ -199,11 +191,30 @@ export default {
         });
     },
     save() {
-      const body = _.clone(this.item);
+      const {
+        id,
+        to_owner_id,
+        from_owner_id,
+        description,
+        quantity,
+        condition,
+        asset_item_id,
+      } = this.item;
+      const asset_item = {
+        id: asset_item_id,
+        tag: this.assetItemTag,
+      };
 
       this.loading = true;
       axios
-        .put(`${TRANSFER_URL}/${this.item.id}`, body)
+        .patch(`${TRANSFER_URL}/${id}`, {
+          to_owner_id,
+          from_owner_id,
+          description,
+          quantity,
+          condition,
+          asset_item,
+        })
         .then((resp) => {
           if (this.onSave) {
             this.onSave(resp);
