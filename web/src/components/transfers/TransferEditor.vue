@@ -200,9 +200,11 @@ export default {
         condition,
         asset_item_id,
       } = this.item;
+
       const asset_item = {
         id: asset_item_id,
         tag: this.assetItemTag,
+        description: description,
       };
 
       this.loading = true;
@@ -213,6 +215,7 @@ export default {
           description,
           quantity,
           condition,
+          asset_item_id,
           asset_item,
         })
         .then((resp) => {

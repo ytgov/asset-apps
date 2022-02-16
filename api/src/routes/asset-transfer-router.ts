@@ -116,6 +116,7 @@ transferRouter.patch("/:id", async (req: Request, res: Response) => {
         description,
         quantity,
         condition,
+        asset_item_id,
         asset_item,
     } = req.body;
 
@@ -127,9 +128,11 @@ transferRouter.patch("/:id", async (req: Request, res: Response) => {
         condition,
     });
 
-    if (asset_item?.tag) {
-        const { id: asset_item_id, tag } = asset_item;
-        await db("asset_item").where({ id: asset_item_id }).update({ tag });
+    if (asset_item_id) {
+        const { id: asset_item_id, tag, description } = asset_item;
+        await db("asset_item")
+            .where({ id: asset_item_id })
+            .update({ tag, description });
     }
 
     return res.json({
