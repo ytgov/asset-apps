@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" temporary absolute right width="700px">
+  <v-navigation-drawer v-model="drawer" temporary app right width="700px">
     <v-list-item>
       <v-list-item-avatar>
         <v-icon>mdi-swap-horizontal-bold</v-icon>
