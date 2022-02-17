@@ -180,7 +180,11 @@ export default {
     },
     hide() {
       this.item = {};
+      this.assetItem = {};
+      this.assetCategory = {};
       this.drawer = false;
+      this.loading = false;
+      this.isShowingDeleteDialog = false;
     },
     loadList() {
       this.loading = true;
