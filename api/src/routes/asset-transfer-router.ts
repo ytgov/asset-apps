@@ -7,7 +7,7 @@ import _ from "lodash";
 export const transferRouter = express.Router();
 const PAGE_SIZE = 10;
 
-import { db } from "../data";
+import { db, DB_TRUE } from "../data";
 const transferService = new TransferService(db);
 
 transferRouter.post(
@@ -70,6 +70,9 @@ transferRouter.post(
   "/transfer-request",
   async (req: Request, res: Response) => {
     let { asset, mailcode, rows, condition } = req.body;
+    const default_owner = await db("asset_owner")
+      .where({ default_owner: DB_TRUE })
+      .first();
 
     if (asset) {
       let transfer = {
@@ -79,7 +82,7 @@ transferRouter.post(
         transfer_date: new Date(),
         condition: `REQUEST: ${condition}`,
         from_owner_id: mailcode,
-        to_owner_id: 80,
+        to_owner_id: default_owner.id,
         quantity: 1,
       };
 
@@ -93,7 +96,7 @@ transferRouter.post(
           transfer_date: new Date(),
           condition: `REQUEST: ${row.condition}`,
           from_owner_id: mailcode,
-          to_owner_id: 80,
+          to_owner_id: default_owner.id,
           quantity: row.quantity,
         };
 
