@@ -7,7 +7,7 @@ import _ from "lodash";
 export const assetTagRouter = express.Router();
 const PAGE_SIZE = 10;
 
-import { db } from "../data";
+import { db, DB_TRUE } from "../data";
 import moment from "moment";
 const assetService = new AssetService(db);
 
@@ -78,6 +78,9 @@ assetTagRouter.put(
     let { id } = req.params;
 
     let item = await db("asset_item").where({ id }).first();
+    const default_owner = await db("asset_owner")
+      .where({ default_owner: DB_TRUE })
+      .first();
 
     if (item) {
       let {
@@ -129,7 +132,7 @@ assetTagRouter.put(
             asset_owner_id
         );
 
-        if (asset_owner_id == 80) {
+        if (asset_owner_id == default_owner.id) {
           // this is an inbound transfer
           let transfer = {
             asset_item_id: id,
@@ -153,7 +156,7 @@ assetTagRouter.put(
             transfer_date: now.toDate(),
             condition: status,
             from_owner_id: item.asset_owner_id,
-            to_owner_id: 80,
+            to_owner_id: default_owner.id,
             quantity: 1,
           };
           await db("asset_transfer").insert(transfer1);
@@ -166,7 +169,7 @@ assetTagRouter.put(
             request_date: now.toDate(),
             transfer_date: now.toDate(),
             condition: status,
-            from_owner_id: 80,
+            from_owner_id: default_owner.id,
             to_owner_id: asset_owner_id,
             quantity: 1,
           };
@@ -248,6 +251,9 @@ assetTagRouter.put(
     let { id } = req.params;
 
     let item = await db("asset_item").where({ id }).first();
+    const default_owner = await db("asset_owner")
+      .where({ default_owner: DB_TRUE })
+      .first();
 
     if (item) {
       let {
@@ -297,7 +303,7 @@ assetTagRouter.put(
         transfer_date: new Date(),
         condition: `REQUEST: ${condition}`,
         from_owner_id: asset_owner_id,
-        to_owner_id: 80,
+        to_owner_id: default_owner.id,
         quantity: 1,
       };
 
