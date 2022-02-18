@@ -191,19 +191,18 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
+import { mapGetters } from "vuex";
 
-import store from "../store";
 import { OWNER_URL, ASSET_URL } from "../urls";
 import { formatDollar } from "../utils/formatters";
 
 export default {
+  name: "AssetEditorLimited",
   computed: {
-    mailcodeOptions: function () {
-      return store.getters.mailcodeOptions;
-    },
-    manageCodes: () => {
-      return store.state.profile.manage_mailcodes;
-    },
+    ...mapGetters(["mailcodeOptions"]),
+    ...mapGetters("profile", {
+      manageCodes: "manage_mailcodes",
+    }),
   },
   props: ["onSave"],
   data: () => ({
