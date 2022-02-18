@@ -14,11 +14,11 @@ export default new Vuex.Store({
     assetTypeOptions: (state) => state.assetTypeOptions,
   },
   state: {
-    mailCodeOptions: [],
+    mailcodeOptions: [],
     assetTypeOptions: [],
   },
   mutations: {
-    setMailCodeOptions(state, value) {
+    setMailcodeOptions(state, value) {
       state.mailcodeOptions = value;
     },
     setAssetTypeOptions(state, value) {
@@ -34,7 +34,7 @@ export default new Vuex.Store({
 
     loadMailcodes({ commit }) {
       axios.get(`${OWNER_URL}`).then((resp) => {
-        commit("setMailCodeOptions", resp.data.data);
+        commit("setMailcodeOptions", resp.data.data);
       });
     },
 
