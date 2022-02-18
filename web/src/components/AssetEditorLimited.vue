@@ -206,7 +206,6 @@ export default {
   },
   props: ["onSave"],
   data: () => ({
-    ASSET_WAREHOUSE_ID: 80,
     disposalOptions: ["Recycle", "Sale", "To be sold", "CFS", "Donation"],
     ownerOptions: [],
     statusOptions: [
