@@ -133,8 +133,9 @@
 
 <script>
 import axios from "axios";
-import { TRANSFER_URL, OWNER_URL } from "../../urls";
 import _ from "lodash";
+
+import { TRANSFER_URL, OWNER_URL } from "../../urls";
 
 export default {
   name: "Home",
@@ -190,7 +191,11 @@ export default {
 
       if (this.search.trim().length > 0)
         body.query.push({
-          fields: ["asset_item.tag", "asset_category.description", "asset_transfer.description"],
+          fields: [
+            "asset_item.tag",
+            "asset_category.description",
+            "asset_transfer.description",
+          ],
           operator: "contains",
           value: this.search,
         });
