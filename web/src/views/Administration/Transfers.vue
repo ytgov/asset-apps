@@ -134,6 +134,7 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
+import { mapGetters } from "vuex";
 
 import { TRANSFER_URL, OWNER_URL } from "../../urls";
 
@@ -170,7 +171,9 @@ export default {
       this.fromOwners.push(parseInt(fp));
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["defaultAssetOwner"]),
+  },
   watch: {
     options: {
       handler() {
@@ -271,7 +274,7 @@ export default {
 
     addInbound() {
       this.$refs.transferEditor.showInbound({
-        to_owner_id: 80,
+        to_owner_id: this.defaultAssetOwner.id,
         rows: [
           {
             quantity: 1,
@@ -284,7 +287,7 @@ export default {
     },
     addOutbound() {
       this.$refs.transferEditor.showOutbound({
-        from_owner_id: 80,
+        from_owner_id: this.defaultAssetOwner.id,
         rows: [
           {
             quantity: 1,
@@ -297,7 +300,7 @@ export default {
     },
     addDisposal() {
       this.$refs.transferEditor.showDisposal({
-        to_owner_id: 80,
+        to_owner_id: this.defaultAssetOwner.id,
         rows: [
           {
             quantity: 1,

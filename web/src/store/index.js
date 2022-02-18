@@ -10,6 +10,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   getters: {
+    defaultAssetOwner: (state) =>
+      state.mailcodeOptions.find((o) => o.default_owner === true),
     mailcodeOptions: (state) => state.mailcodeOptions,
     assetTypeOptions: (state) => state.assetTypeOptions,
   },
