@@ -13,6 +13,8 @@ import AdministrationOwners from "../views/Administration/Owners";
 import AdministrationTransfers from "../views/Administration/Transfers";
 import AdministrationAssets from "../views/Administration/Assets";
 
+import ManageList from "../views/Manage/List";
+
 import MyScans from "../views/MyScans.vue";
 import MyTags from "../views/MyTags.vue";
 import NewScan from "../views/NewScan.vue";
@@ -120,6 +122,14 @@ const routes = [
     },
   },
 
+  {
+    path: "/manage",
+    name: "ManageList",
+    component: ManageList,
+    meta: {
+      requiresAuth: true
+    },
+  },
 
 
   {

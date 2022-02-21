@@ -10,37 +10,41 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   getters: {
-    mailcodeOptions: state => state.mailcodeOptions,
-    assetTypeOptions: state => state.assetTypeOptions,
+    defaultAssetOwner: (state) =>
+      state.mailcodeOptions.find((o) => o.default_owner === true),
+    mailcodeOptions: (state) => state.mailcodeOptions,
+    assetTypeOptions: (state) => state.assetTypeOptions,
   },
   state: {
-    mailCodeOptions: [],
+    mailcodeOptions: [],
     assetTypeOptions: [],
   },
   mutations: {
-    SET_MAILCODEOPTIONS(state, value) {
+    setMailcodeOptions(state, value) {
       state.mailcodeOptions = value;
     },
-    SET_ASSETTYPEOPTIONS(state, value) {
+    setAssetTypeOptions(state, value) {
       state.assetTypeOptions = value;
-    }
+    },
   },
   actions: {
     initialize() {
-      console.log("Initializing Store")
+      console.log("Initializing Store");
       this.dispatch("loadMailcodes");
+      this.dispatch("loadAssetConditionOptions");
       this.dispatch("loadAssetTypeOptions");
     },
 
     loadMailcodes({ commit }) {
-      axios.get(`${OWNER_URL}`)
-        .then(resp => { commit("SET_MAILCODEOPTIONS", resp.data.data) });
+      axios.get(`${OWNER_URL}`).then((resp) => {
+        commit("setMailcodeOptions", resp.data.data);
+      });
     },
-
     loadAssetTypeOptions({ commit }) {
-      axios.get(`${ASSET_URL}/asset-category`)
-        .then(resp => { commit("SET_ASSETTYPEOPTIONS", resp.data.data) });
-    }
+      axios.get(`${ASSET_URL}/asset-category`).then((resp) => {
+        commit("setAssetTypeOptions", resp.data.data);
+      });
+    },
   },
-  modules: { auth, profile }
+  modules: { auth, profile },
 });

@@ -94,6 +94,7 @@ export default {
       "CFS",
       "Sold",
       "To be sold",
+      "Donation",
       "Retired",
       "Unknown",
     ],
@@ -114,6 +115,12 @@ export default {
 
     if (ownerParam && ownerParam.length > 0) {
       this.owners = [parseInt(ownerParam)];
+    }
+
+    let searchParam = this.$route.query.search;
+
+    if (searchParam && searchParam.length > 0) {
+      this.search = searchParam;
     }
   },
   computed: {},

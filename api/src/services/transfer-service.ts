@@ -97,22 +97,23 @@ export class TransferService {
             let categories = await this.db("asset_category");
 
             for (let item of data) {
-                item.transfer_date = moment(item.transfer_date).utc(false).format("YYYY-MM-DD");
-
+                item.transfer_date = moment(item.transfer_date).utc(true).format("YYYY-MM-DD");
+                
                 if (item.asset_category_id) {
                     let category = categories.filter(cat => cat.id == item.asset_category_id);
 
-                    if (category.length > 0)
+                    if (category.length > 0) {
+                        if (item.description) {
+                            item.asset_item = { tag: item.description };
+                        }
+
                         item.description = `${category[0].description} (${item.quantity} items)`;
+                    }
                 }
 
                 if (item.asset_item_id) {
-                    item.asset = await this.db("asset_item").where({ id: item.asset_item_id }).first();
-                    item.description = item.asset.description;
-                }
-
-                if (item.description) {
-
+                    item.asset_item = await this.db("asset_item").where({ id: item.asset_item_id }).first();
+                    item.description = item.asset_item.description;
                 }
 
                 if (item.from_owner_id) {

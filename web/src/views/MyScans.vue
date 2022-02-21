@@ -14,10 +14,9 @@
       dense
       :items="scans"
       :headers="[
-        { text: 'Date', value: 'date', width: '200px' },
-        { text: 'Scanned value', value: 'value' },
-        { text: 'Scan action', value: 'reason' },
-        { text: 'Actions', value: 'actions', width: '120px' },
+        { text: 'Date', value: 'scan_date', width: '200px' },
+        { text: 'Scanned value', value: 'description' },
+        { text: 'Scan actions', value: 'actions', width: '120px' },
       ]"
       sort-by="['date']"
     >
@@ -27,7 +26,7 @@
           fab
           x-small
           class="my-1"
-          @click="copy(item.value)"
+          @click="copy(item.scan_value)"
           title="Copy value"
         >
           <v-icon>mdi-content-copy</v-icon>
@@ -47,22 +46,36 @@
       <template v-slot:item.value="{ item }">
         {{ item.value }} - <router-link to="/">{{ item.device }}</router-link>
       </template>
-      <template v-slot:item.reason="{ item }">
-        {{ item.reason }}
+      <template v-slot:item.description="{ item }">
+        <v-btn
+          fab
+          x-small
+          color="primary"
+          class="my-1 mr-3"
+          title="View asset"
+          @click="openAsset(item.asset)"
+          v-if="item.asset && item.asset.id"
+        >
+          <v-icon>mdi-dolly</v-icon>
+        </v-btn>
 
         <v-btn
           fab
           x-small
           color="primary"
-          class="my-1 ml-4"
-          title="Execute transfer"
-          @click="doExecute(item)"
-          v-if="item.reasonAction == 'Execute'"
-          ><v-icon>mdi-play</v-icon></v-btn
+          class="my-1 mr-3"
+          title="Find possible matches"
+          @click="lookup(item.scan_value)"
+          v-if="!(item.asset && item.asset.id)"
         >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        {{ item.description }}
       </template>
     </v-data-table>
 
+    <asset-editor ref="editor" :onSave="loadScans"></asset-editor>
     <notifications ref="notifier"></notifications>
   </div>
 </template>
@@ -76,26 +89,29 @@ export default {
     scans: [],
   }),
   async created() {
-    axios.get(`${SCAN_URL}`).then((resp) => {
-      console.log(resp.data.data);
-      this.scans = resp.data.data;
-    });
+    this.loadScans();
   },
   methods: {
+    loadScans() {
+      axios.get(`${SCAN_URL}`).then((resp) => {
+        this.scans = resp.data.data;
+      });
+    },
     copy(value) {
       navigator.clipboard.writeText(value);
-      this.$refs.notifier.showSuccess("Value copied");
+      this.$refs.notifier.showSuccess(`'${value}' copied to your clipboard`);
     },
     lookup(item) {
       console.log("Looking up ", item);
+      this.$router.push("/administration/assets?search=" + item);
     },
     deleteScan(item) {
-      console.log(item);
-      this.scans = this.scans.filter((s) => s.value != item.value);
+      axios.delete(`${SCAN_URL}/${item.id}`).then(() => {
+        this.loadScans();
+      });
     },
-    doExecute(item) {
-      this.scans = this.scans.filter((s) => s.value != item.value);
-      this.$refs.notifier.showSuccess("Transfer completed");
+    openAsset(item) {
+      this.$refs.editor.show(item);
     },
   },
 };

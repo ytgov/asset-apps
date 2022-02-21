@@ -20,6 +20,8 @@
             outlined
             label="Tag"
             v-model="item.tag"
+            readonly
+            append-icon="mdi-lock"
             hide-details
           ></v-text-field>
         </v-col>
@@ -44,8 +46,6 @@
             item-text="display_name"
             item-value="id"
             hide-details
-            append-outer-icon="mdi-warehouse"
-            @click:append-outer="goToOwner"
           ></v-autocomplete>
         </v-col>
         <v-col cols="12">
@@ -140,16 +140,50 @@
             :items="statusOptions"
             label="Status"
             hide-details
-            @change="statusChange"
+            readonly
+            append-icon="mdi-lock"
           ></v-select>
         </v-col>
       </v-row>
 
-      <div v-if="isTransfer" class="text-error float-left mt-4">
-        * Saving may generate transfer record(s)
-      </div>
-
-      <v-btn @click="save" color="primary" class="float-right">Save</v-btn>
+      <v-row>
+        <v-col cols="3"
+          ><v-btn @click="save" color="primary" class="float-left"
+            >Save</v-btn
+          ></v-col
+        >
+        <v-col cols="9"
+          ><v-card class="default">
+            <v-card-text>
+              <h4 class="mt-0 mb-2">
+                Request transfer or disposal of this asset
+              </h4>
+              <v-row>
+                <v-col cols="7">
+                  <v-select
+                    :items="['Good', 'Obsolete', 'Beyond repair']"
+                    v-model="disposeCondition"
+                    label="Condition"
+                    dense
+                    outlined
+                    background-color="white"
+                    hide-details
+                  ></v-select>
+                </v-col>
+                <v-col cols="5">
+                  <v-btn
+                    @click="transfer"
+                    color="warning"
+                    class="my-0 float-right"
+                  >
+                    Request
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-sheet>
   </v-navigation-drawer>
 </template>
@@ -163,30 +197,12 @@ import { OWNER_URL, ASSET_URL } from "../urls";
 import { formatDollar } from "../utils/formatters";
 
 export default {
+  name: "AssetEditorLimited",
   computed: {
-    ...mapGetters(["defaultAssetOwner", "mailcodeOptions"]),
-    transferDirectionIcon: function () {
-      if (this.transferDirection) return "mdi-redo";
-      return "mdi-undo";
-    },
-    transferDirectionName: function () {
-      if (this.transferDirection) return "Inbound transfer";
-      return "Outbound transfer";
-    },
-    isTransfer: function () {
-      if (this.oldOwner != this.item.asset_owner_id) {
-        return true;
-      }
-      if (this.oldStatus != this.item.status) {
-        return true;
-      }
-
-      return false;
-    },
-    isTransferDirection: function () {
-      if (this.item.asset_owner_id == this.defaultAssetOwner) return "incoming";
-      return "outgoing";
-    },
+    ...mapGetters(["mailcodeOptions"]),
+    ...mapGetters("profile", {
+      manageCodes: "manage_mailcodes",
+    }),
   },
   props: ["onSave"],
   data: () => ({
@@ -212,6 +228,7 @@ export default {
 
     oldOwner: -1,
     oldStatus: -1,
+    disposeCondition: "Good",
   }),
   created() {
     this.loadList();
@@ -225,38 +242,19 @@ export default {
       this.item.purchase_price = formatDollar(this.item.purchase_price);
       this.drawer = true;
     },
-    showInbound(item) {
-      this.item = _.clone(item);
-      this.action = "Inbound";
-      this.hasTag = this.item.asset_item_id;
-      this.drawer = true;
-    },
-    showOutbound(item) {
-      this.item = _.clone(item);
-      this.action = "Outbound";
-      this.hasTag = this.item.asset_item_id;
-      this.drawer = true;
-    },
-    showDisposal(item) {
-      this.item = _.clone(item);
-      this.action = "Disposal";
-
-      this.hasTag = this.item.asset_item_id;
-      this.drawer = true;
-    },
     hide() {
       this.item = {};
       this.drawer = false;
-    },
-    goToOwner() {
-      this.$router.push(`/administration/owners#${this.item.asset_owner_id}`);
     },
     loadList() {
       this.is_loading = true;
       axios
         .get(OWNER_URL)
         .then((resp) => {
-          this.ownerOptions = resp.data.data;
+          let rawList = resp.data.data;
+          this.ownerOptions = rawList.filter(
+            (o) => this.manageCodes.indexOf(o.mailcode) >= 0
+          );
           this.is_loading = false;
         })
         .catch((error) => {
@@ -266,7 +264,7 @@ export default {
     },
     save() {
       axios
-        .put(`${ASSET_URL}/${this.item.id}`, this.item)
+        .put(`${ASSET_URL}/${this.item.id}/limited`, this.item)
         .then((resp) => {
           if (this.onSave) {
             this.onSave(resp);
@@ -277,12 +275,23 @@ export default {
           console.log("ERROR: ", error);
         });
     },
-    statusChange() {
-      if (this.item.status != "Active" && this.item.status != "Unknown") {
-        this.item.asset_owner_id = this.defaultAssetOwner;
-      } else {
-        this.item.asset_owner_id = this.oldOwner;
-      }
+    transfer() {
+      console.log("disposeCondition", this.disposeCondition);
+
+      let body = _.clone(this.item);
+      body.condition = this.disposeCondition;
+
+      axios
+        .put(`${ASSET_URL}/${this.item.id}/limited/transfer`, body)
+        .then((resp) => {
+          if (this.onSave) {
+            this.onSave(resp);
+          }
+          this.hide();
+        })
+        .catch((error) => {
+          console.log("ERROR: ", error);
+        });
     },
   },
 };
