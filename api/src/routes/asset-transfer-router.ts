@@ -134,9 +134,10 @@ transferRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
 
   await db("asset_transfer").where({ id }).delete();
+
   return res.json({
     data: {},
-    messages: [{ variant: "success", text: "Location removed" }],
+    messages: [{ variant: "success", text: "Transfer removed" }],
   });
 });
 
@@ -147,6 +148,6 @@ transferRouter.get("/clean", async (req: Request, res: Response) => {
 
   return res.json({
     data: {},
-    messages: [{ variant: "success", text: "Location removed" }],
+    messages: [{ variant: "success", text: "Transfer removed" }],
   });
 });
