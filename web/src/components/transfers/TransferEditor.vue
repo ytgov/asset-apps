@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" temporary absolute right width="700px">
+  <v-navigation-drawer v-model="drawer" temporary absolute right width="600px">
     <v-list-item>
       <v-list-item-avatar>
         <v-icon>mdi-swap-horizontal-bold</v-icon>
@@ -99,17 +99,19 @@
         @click="confirmDelete"
         >Remove</v-btn
       >
-      <v-dialog v-model="isShowingDeleteDialog" max-width="290">
+      <v-dialog v-model="isShowingDeleteDialog" max-width="400">
         <v-card>
-          <v-card-title> Confirm Deletion </v-card-title>
+          <v-card-title>Remove Transfer</v-card-title>
           <v-card-text>
-            Are you sure you want to delete this transfer?
+            <p>Are you sure you want to permanently remove this transfer record?</p>
+
+            <p class="text-error mb-0"><em>* This action does not change the ownership of any attached asset or its condition.</em></p>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" @click="cancelDelete">Cancel</v-btn>
-            <v-btn color="error" @click="deleteConfirmed"> Delete </v-btn>
+            <v-btn color="info" @click="cancelDelete">No</v-btn>
+            <v-btn color="error" @click="deleteConfirmed">Yes, Remove</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
