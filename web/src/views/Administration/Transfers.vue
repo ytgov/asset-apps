@@ -30,7 +30,7 @@
                       background-color="white"
                       label="Condition"
                       @change="loadList(true)"
-                      :items="conditionOptions"
+                      :items="assetConditionOptions"
                       hide-details
                       multiple
                       clearable
@@ -110,24 +110,30 @@
               :loading="loading"
               :headers="[
                 { text: 'Date', value: 'transfer_date' },
-                { text: 'Tag', value: 'asset.tag' },
+                { text: 'Tag', value: 'asset_item.tag' },
                 { text: 'Description', value: 'description' },
                 { text: 'From', value: 'from_owner.display_name' },
                 { text: 'To', value: 'to_owner.display_name' },
                 { text: 'Condition', value: 'condition' },
               ]"
-              :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
-            ></v-data-table
-            ><!--
               @click:row="rowClick"
-              class="row-clickable1"-->
+              class="row-clickable"
+              :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
+            ></v-data-table>
           </v-card-text>
         </v-card>
       </div>
     </div>
 
+    <transfer-creator
+      ref="transferCreator"
+      :onSave="saveComplete"
+    ></transfer-creator>
+    <transfer-editor
+      ref="transferEditor"
+      :onSave="saveComplete"
+    ></transfer-editor>
     <notifications ref="notifier"></notifications>
-    <transfer-editor ref="transferEditor" :onSave="loadList"></transfer-editor>
   </div>
 </template>
 
@@ -139,18 +145,8 @@ import { mapGetters } from "vuex";
 import { TRANSFER_URL, OWNER_URL } from "../../urls";
 
 export default {
-  name: "Home",
+  name: "Transfers",
   data: () => ({
-    conditionOptions: [
-      "Active",
-      "Redistribute",
-      "Recycle",
-      "Sold",
-      "CFS",
-      "Donation",
-      "Destruction",
-      "Unknown",
-    ],
     search: "",
     loading: false,
     itemCount: 0,
@@ -172,7 +168,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["defaultAssetOwner"]),
+    ...mapGetters(["defaultAssetOwner", "assetConditionOptions"]),
   },
   watch: {
     options: {
@@ -246,18 +242,6 @@ export default {
     },
 
     rowClick(item) {
-      if (item.asset_item_id) {
-        console.log("Asset");
-      } else if (item.asset_category_id) {
-        item.rows = [
-          {
-            type: item.asset_category_id,
-            quantity: item.quantity,
-            condition: item.condition,
-          },
-        ];
-      }
-
       this.$refs.transferEditor.show(item);
     },
 

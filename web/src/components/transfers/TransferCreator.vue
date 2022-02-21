@@ -143,8 +143,8 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-import store from "../store";
-import { OWNER_URL, TRANSFER_URL } from "../urls";
+import store from "../../store";
+import { OWNER_URL, TRANSFER_URL } from "../../urls";
 
 export default {
   computed: {
@@ -198,11 +198,6 @@ export default {
     this.loadList();
   },
   methods: {
-    show(item) {
-      this.item = _.clone(item);
-      this.drawer = true;
-      this.isNew = false;
-    },
     showInbound(item) {
       this.item = _.clone(item);
       this.action = "Inbound";
@@ -225,7 +220,6 @@ export default {
       this.item = {};
       this.drawer = false;
     },
-
     addRow() {
       let lastRow = this.item.rows[this.item.rows.length - 1];
 

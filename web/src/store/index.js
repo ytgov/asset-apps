@@ -31,6 +31,7 @@ export default new Vuex.Store({
     initialize() {
       console.log("Initializing Store");
       this.dispatch("loadMailcodes");
+      this.dispatch("loadAssetConditionOptions");
       this.dispatch("loadAssetTypeOptions");
     },
 
@@ -39,7 +40,6 @@ export default new Vuex.Store({
         commit("setMailcodeOptions", resp.data.data);
       });
     },
-
     loadAssetTypeOptions({ commit }) {
       axios.get(`${ASSET_URL}/asset-category`).then((resp) => {
         commit("setAssetTypeOptions", resp.data.data);
