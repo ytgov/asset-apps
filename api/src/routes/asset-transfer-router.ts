@@ -7,104 +7,125 @@ import _ from "lodash";
 export const transferRouter = express.Router();
 const PAGE_SIZE = 10;
 
-import { db } from "../data";
+import { db, DB_TRUE } from "../data";
 const transferService = new TransferService(db);
 
-transferRouter.post("/", [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],
-    async (req: Request, res: Response) => {
-        let { query, sortBy, sortDesc, page, itemsPerPage } = req.body;
-        let sort = new Array<SortStatement>();
+transferRouter.post(
+  "/",
+  [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],
+  async (req: Request, res: Response) => {
+    let { query, sortBy, sortDesc, page, itemsPerPage } = req.body;
+    let sort = new Array<SortStatement>();
 
-        sortBy.forEach((s: string, i: number) => {
-            sort.push({ field: s, direction: sortDesc[i] ? SortDirection.ASCENDING : SortDirection.DESCENDING })
-        })
-
-        let skip = (page - 1) * itemsPerPage;
-        let take = itemsPerPage;
-
-        let results = await transferService.doSearch(query, sort, page, itemsPerPage, skip, take);
-
-        return res.json(results);
+    sortBy.forEach((s: string, i: number) => {
+      sort.push({
+        field: s,
+        direction: sortDesc[i]
+          ? SortDirection.ASCENDING
+          : SortDirection.DESCENDING,
+      });
     });
 
-transferRouter.post("/transfer",
-    async (req: Request, res: Response) => {
-        let { from_owner_id, to_owner_id, rows, action } = req.body;
+    let skip = (page - 1) * itemsPerPage;
+    let take = itemsPerPage;
 
-        for (let row of rows) {
-            let transfer = {
-                asset_category_id: row.type,
-                request_user: req.user.email,
-                request_date: new Date(),
-                transfer_date: new Date(),
-                condition: row.condition,
-                from_owner_id,
-                to_owner_id,
-                quantity: row.quantity,
-                description: row.tag
-            }
+    let results = await transferService.doSearch(
+      query,
+      sort,
+      page,
+      itemsPerPage,
+      skip,
+      take
+    );
 
-            await db("asset_transfer").insert(transfer);
-        }
+    return res.json(results);
+  }
+);
 
-        return res.json({ messages: { variant: "success", text: "Transfer saved" } });
-    });
+transferRouter.post("/transfer", async (req: Request, res: Response) => {
+  let { from_owner_id, to_owner_id, rows, action } = req.body;
 
+  for (let row of rows) {
+    let transfer = {
+      asset_category_id: row.type,
+      request_user: req.user.email,
+      request_date: new Date(),
+      transfer_date: new Date(),
+      condition: row.condition,
+      from_owner_id,
+      to_owner_id,
+      quantity: row.quantity,
+      description: row.tag,
+    };
 
-transferRouter.post("/transfer-request",
-    async (req: Request, res: Response) => {
-        let { asset, mailcode, rows, condition } = req.body;
+    await db("asset_transfer").insert(transfer);
+  }
 
-        if (asset) {
-            let transfer = {
-                asset_item_id: asset.id,
-                request_user: req.user.email,
-                request_date: new Date(),
-                transfer_date: new Date(),
-                condition: `REQUEST: ${condition}`,
-                from_owner_id: mailcode,
-                to_owner_id: 80,
-                quantity: 1
-            };
-
-            await db("asset_transfer").insert(transfer);
-        }
-        else {
-            for (let row of rows) {
-                let transfer = {
-                    asset_category_id: row.type,
-                    request_user: req.user.email,
-                    request_date: new Date(),
-                    transfer_date: new Date(),
-                    condition: `REQUEST: ${row.condition}`,
-                    from_owner_id: mailcode,
-                    to_owner_id: 80,
-                    quantity: row.quantity
-                };
-
-                await db("asset_transfer").insert(transfer);
-            }
-        }
-
-        return res.json({ messages: { variant: "success", text: "Transfer saved" } });
-    });
-
-
-transferRouter.delete("/:id", async (req: Request, res: Response) => {
-    let { id } = req.params;
-
-    await db("asset_transfer").where({ id }).delete();
-    return res.json({
-        data: {},
-        messages: [{ variant: "success", text: "Transfer removed" }],
-    });
+  return res.json({
+    messages: { variant: "success", text: "Transfer saved" },
+  });
 });
 
-transferRouter.get("/clean",
-    async (req: Request, res: Response) => {
-        let { id } = req.params;
+transferRouter.post(
+  "/transfer-request",
+  async (req: Request, res: Response) => {
+    let { asset, mailcode, rows, condition } = req.body;
+    const default_owner = await db("asset_owner")
+      .where({ default_owner: DB_TRUE })
+      .first();
 
-        await transferService.clean();
+    if (asset) {
+      let transfer = {
+        asset_item_id: asset.id,
+        request_user: req.user.email,
+        request_date: new Date(),
+        transfer_date: new Date(),
+        condition: `REQUEST: ${condition}`,
+        from_owner_id: mailcode,
+        to_owner_id: default_owner.id,
+        quantity: 1,
+      };
 
-        return res.json({ data: {}, messages: [{ variant: "success", text: "Location removed" }] });
+      await db("asset_transfer").insert(transfer);
+    } else {
+      for (let row of rows) {
+        let transfer = {
+          asset_category_id: row.type,
+          request_user: req.user.email,
+          request_date: new Date(),
+          transfer_date: new Date(),
+          condition: `REQUEST: ${row.condition}`,
+          from_owner_id: mailcode,
+          to_owner_id: default_owner.id,
+          quantity: row.quantity,
+        };
+
+        await db("asset_transfer").insert(transfer);
+      }
+    }
+
+    return res.json({
+      messages: { variant: "success", text: "Transfer saved" },
     });
+  }
+);
+
+transferRouter.delete("/:id", async (req: Request, res: Response) => {
+  let { id } = req.params;
+
+  return res.json({
+    data: {},
+    messages: [{ variant: "success", text: "Location removed" }],
+  });
+});
+
+transferRouter.get("/clean", async (req: Request, res: Response) => {
+  let { id } = req.params;
+
+  await transferService.clean();
+
+  return res.json({
+    data: {},
+    messages: [{ variant: "success", text: "Location removed" }],
+  });
+});

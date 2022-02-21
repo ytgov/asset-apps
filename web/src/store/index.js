@@ -10,23 +10,20 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   getters: {
+    defaultAssetOwner: (state) =>
+      state.mailcodeOptions.find((o) => o.default_owner === true),
     mailcodeOptions: (state) => state.mailcodeOptions,
-    assetConditionOptions: (state) => state.assetConditionOptions,
     assetTypeOptions: (state) => state.assetTypeOptions,
   },
   state: {
-    mailCodeOptions: [],
-    assetConditionOptions: [],
+    mailcodeOptions: [],
     assetTypeOptions: [],
   },
   mutations: {
-    SET_MAILCODEOPTIONS(state, value) {
+    setMailcodeOptions(state, value) {
       state.mailcodeOptions = value;
     },
-    SET_ASSETCONDITIONOPTIONS(state, value) {
-      state.assetConditionOptions = value;
-    },
-    SET_ASSETTYPEOPTIONS(state, value) {
+    setAssetTypeOptions(state, value) {
       state.assetTypeOptions = value;
     },
   },
@@ -40,28 +37,12 @@ export default new Vuex.Store({
 
     loadMailcodes({ commit }) {
       axios.get(`${OWNER_URL}`).then((resp) => {
-        commit("SET_MAILCODEOPTIONS", resp.data.data);
+        commit("setMailcodeOptions", resp.data.data);
       });
-    },
-    loadAssetConditionOptions({ commit }) {
-      // In the future consider loading this from the database.
-      commit("SET_ASSETCONDITIONOPTIONS", [
-        "Active",
-        "Redistribute",
-        "Recycle",
-        "Sold",
-        "CFS",
-        "Donation",
-        "Destruction",
-        "Unknown",
-        "REQUEST: Obsolete",
-        "REQUEST: Good",
-        "REQUEST: Beyond repair",
-      ]);
     },
     loadAssetTypeOptions({ commit }) {
       axios.get(`${ASSET_URL}/asset-category`).then((resp) => {
-        commit("SET_ASSETTYPEOPTIONS", resp.data.data);
+        commit("setAssetTypeOptions", resp.data.data);
       });
     },
   },
