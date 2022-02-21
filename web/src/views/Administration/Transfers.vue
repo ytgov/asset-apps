@@ -168,7 +168,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["assetConditionOptions"]),
+    ...mapGetters(["assetConditionOptions", "defaultAssetOwner"]),
   },
   watch: {
     options: {
@@ -258,7 +258,7 @@ export default {
 
     addInbound() {
       this.$refs.transferCreator.showInbound({
-        to_owner_id: 80,
+        to_owner_id: this.defaultAssetOwner.id,
         rows: [
           {
             quantity: 1,
@@ -271,7 +271,7 @@ export default {
     },
     addOutbound() {
       this.$refs.transferCreator.showOutbound({
-        from_owner_id: 80,
+        from_owner_id: this.defaultAssetOwner.id,
         rows: [
           {
             quantity: 1,
@@ -284,7 +284,7 @@ export default {
     },
     addDisposal() {
       this.$refs.transferCreator.showDisposal({
-        to_owner_id: 80,
+        to_owner_id: this.defaultAssetOwner.id,
         rows: [
           {
             quantity: 1,

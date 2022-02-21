@@ -157,15 +157,14 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-import store from "../store";
+import { mapGetters } from "vuex";
+
 import { OWNER_URL, ASSET_URL } from "../urls";
 import { formatDollar } from "../utils/formatters";
 
 export default {
   computed: {
-    mailcodeOptions: function () {
-      return store.getters.mailcodeOptions;
-    },
+    ...mapGetters(["defaultAssetOwner", "mailcodeOptions"]),
     transferDirectionIcon: function () {
       if (this.transferDirection) return "mdi-redo";
       return "mdi-undo";
@@ -185,14 +184,12 @@ export default {
       return false;
     },
     isTransferDirection: function () {
-      if (this.item.asset_owner_id == this.ASSET_WAREHOUSE_ID)
-        return "incoming";
+      if (this.item.asset_owner_id == this.defaultAssetOwner) return "incoming";
       return "outgoing";
     },
   },
   props: ["onSave"],
   data: () => ({
-    ASSET_WAREHOUSE_ID: 80,
     disposalOptions: ["Recycle", "Sale", "To be sold", "CFS", "Donation"],
     ownerOptions: [],
     statusOptions: [
@@ -282,7 +279,7 @@ export default {
     },
     statusChange() {
       if (this.item.status != "Active" && this.item.status != "Unknown") {
-        this.item.asset_owner_id = this.ASSET_WAREHOUSE_ID;
+        this.item.asset_owner_id = this.defaultAssetOwner;
       } else {
         this.item.asset_owner_id = this.oldOwner;
       }

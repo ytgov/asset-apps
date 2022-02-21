@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+dc () {
+	docker-compose -f docker-compose.dev.yaml "$@"
+}
+
+build () {
+	echo "not yet implemented"
+}
+
+up () {
+	dc up --remove-orphans "$@"
+}
+
+down () {
+	dc down --remove-orphans "$@"
+}
+
+logs () {
+	dc logs -f "$@"
+}
+
+refresh () {
+	down
+	up
+}
+
+sqlcmd () {
+	dc exec db /opt/mssql-tools/bin/sqlcmd \
+			-U sa \
+			-P Testing1122 \
+			-H localhost \
+			-d AssetControl
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	eval "$@"
+fi

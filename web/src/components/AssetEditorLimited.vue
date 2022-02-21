@@ -155,7 +155,9 @@
         <v-col cols="9"
           ><v-card class="default">
             <v-card-text>
-              <h4 class="mt-0 mb-2">Request transfer or disposal of this asset</h4>
+              <h4 class="mt-0 mb-2">
+                Request transfer or disposal of this asset
+              </h4>
               <v-row>
                 <v-col cols="7">
                   <v-select
@@ -189,22 +191,21 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-import store from "../store";
+import { mapGetters } from "vuex";
+
 import { OWNER_URL, ASSET_URL } from "../urls";
 import { formatDollar } from "../utils/formatters";
 
 export default {
+  name: "AssetEditorLimited",
   computed: {
-    mailcodeOptions: function () {
-      return store.getters.mailcodeOptions;
-    },
-    manageCodes: () => {
-      return store.state.profile.manage_mailcodes;
-    },
+    ...mapGetters(["mailcodeOptions"]),
+    ...mapGetters("profile", {
+      manageCodes: "manage_mailcodes",
+    }),
   },
   props: ["onSave"],
   data: () => ({
-    ASSET_WAREHOUSE_ID: 80,
     disposalOptions: ["Recycle", "Sale", "To be sold", "CFS", "Donation"],
     ownerOptions: [],
     statusOptions: [
