@@ -31,7 +31,6 @@ export default new Vuex.Store({
     initialize() {
       console.log("Initializing Store");
       this.dispatch("loadMailcodes");
-      this.dispatch("loadAssetConditionOptions");
       this.dispatch("loadAssetTypeOptions");
     },
 
