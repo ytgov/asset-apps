@@ -51,7 +51,7 @@ export function configureAuthentication(app: Express) {
     app.use(
         authenticationForEverywhereExcept([
             "/api/auth/login",
-            "/api/auth/isAuthenticated",
+            "/api/auth/is-authenticated",
         ])
     );
 
@@ -95,7 +95,7 @@ export function configureAuthentication(app: Express) {
     });
 
     app.get(
-        "/api/auth/isAuthenticated",
+        "/api/auth/is-authenticated",
         async (req: Request, res: Response) => {
             if (req.oidc.isAuthenticated()) {
                 let person = req.user;
