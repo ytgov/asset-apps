@@ -17,7 +17,6 @@
         <div class="col-sm-6">
           <v-autocomplete
             dense
-            disabled
             outlined
             label="To"
             :items="ownerOptions"
@@ -31,7 +30,6 @@
         <div class="col-sm-6">
           <v-autocomplete
             dense
-            disabled
             outlined
             label="From"
             :items="ownerOptions"
@@ -47,31 +45,46 @@
         <div class="col-md-12 mt-0 pt-0">
           <v-divider></v-divider>
         </div>
-        <div class="col-sm-6">
-          <v-text-field
-            dense
-            disabled
-            outlined
-            label="Description"
-            hide-details
-            v-model="item.description"
-          ></v-text-field>
-        </div>
+        <template v-if="hasAssetCategory">
+          <div class="col-sm-6">
+            <v-autocomplete
+              dense
+              outlined
+              :items="assetTypeOptions"
+              item-text="description"
+              item-value="id"
+              label="Type of item"
+              hide-details
+              v-model="item.asset_category_id"
+            ></v-autocomplete>
+          </div>
+        </template>
+        <template v-else>
+          <div class="col-sm-6">
+            <v-text-field
+              dense
+              outlined
+              label="Description"
+              hide-details
+              disabled
+              v-model="assetItem.description"
+            ></v-text-field>
+          </div>
 
-        <div class="col-sm-6">
-          <v-text-field
-            dense
-            disabled
-            outlined
-            label="Departmental tag"
-            hide-details
-            v-model="assetItemTag"
-          ></v-text-field>
-        </div>
+          <div class="col-sm-6">
+            <v-text-field
+              dense
+              outlined
+              label="Departmental tag"
+              hide-details
+              disabled
+              v-model="assetItem.tag"
+            ></v-text-field>
+          </div>
+        </template>
         <div class="col-sm-3">
           <v-text-field
             dense
-            disabled
             outlined
             label="Quantity"
             type="number"
@@ -83,7 +96,6 @@
         <div class="col-sm-7">
           <v-select
             dense
-            disabled
             outlined
             label="Condition"
             hide-details
@@ -92,20 +104,32 @@
           ></v-select>
         </div>
       </div>
-      <v-btn
-        class="float-right"
-        color="error"
-        :loading="loading"
-        @click="confirmDelete"
+
+      <v-btn color="error" :loading="loading" @click="confirmDelete"
         >Remove</v-btn
       >
+      <v-btn
+        color="primary"
+        class="float-right"
+        :loading="loading"
+        @click="save"
+        >Save</v-btn
+      >
+
       <v-dialog v-model="isShowingDeleteDialog" max-width="400">
         <v-card>
           <v-card-title>Remove Transfer</v-card-title>
           <v-card-text>
-            <p>Are you sure you want to permanently remove this transfer record?</p>
+            <p>
+              Are you sure you want to permanently remove this transfer record?
+            </p>
 
-            <p class="text-error mb-0"><em>* This action does not change the ownership of any attached asset or its condition.</em></p>
+            <p class="text-error mb-0">
+              <em
+                >* This action does not change the ownership of any attached
+                asset or its condition.</em
+              >
+            </p>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -115,51 +139,31 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- <v-btn
-        @click="save"
-        color="primary"
-        class="float-right"
-        :disabled="loading || !isValid"
-        :loading="loading"
-        >Save</v-btn
-      > -->
     </v-sheet>
   </v-navigation-drawer>
 </template>
 
 <script>
 import axios from "axios";
-import _ from "lodash";
+import { isNil, clone } from "lodash";
 import { mapGetters } from "vuex";
 
 import { OWNER_URL, TRANSFER_URL } from "../../urls";
 
 export default {
   computed: {
-    ...mapGetters([
-      "assetTypeOptions",
-      "assetConditionOptions",
-      "mailcodeOptions",
-    ]),
-    transferDirectionIcon: function () {
-      if (this.transferDirection) return "mdi-redo";
-      return "mdi-undo";
-    },
-    transferDirectionName: function () {
-      if (this.transferDirection) return "Inbound transfer";
-      return "Outbound transfer";
-    },
-    isValid: function () {
-      return true;
+    ...mapGetters(["assetTypeOptions", "assetConditionOptions"]),
+    hasAssetCategory() {
+      return !isNil(this.item.asset_category_id);
     },
   },
   props: ["onSave"],
   data: () => ({
-    disposalOptions: ["Recycle", "Sold", "CFS", "Donation", "Destruction"],
     ownerOptions: [],
     drawer: null,
     item: {},
-    assetItemTag: null,
+    assetItem: {},
+    assetCategory: {},
     loading: false,
     isShowingDeleteDialog: false,
   }),
@@ -178,13 +182,18 @@ export default {
       this.remove();
     },
     show(item) {
-      this.item = _.clone(item);
-      this.assetItemTag = item?.asset_item?.tag;
+      this.item = clone(item);
+      this.assetItem = clone(item.asset_item);
+      this.assetCategory = clone(item.asset_category);
       this.drawer = true;
     },
     hide() {
       this.item = {};
+      this.assetItem = {};
+      this.assetCategory = {};
       this.drawer = false;
+      this.loading = false;
+      this.isShowingDeleteDialog = false;
     },
     loadList() {
       this.loading = true;
@@ -201,11 +210,24 @@ export default {
         });
     },
     save() {
-      const body = _.clone(this.item);
+      const {
+        id,
+        asset_category_id,
+        condition,
+        from_owner_id,
+        quantity,
+        to_owner_id,
+      } = this.item;
 
       this.loading = true;
       axios
-        .put(`${TRANSFER_URL}/${this.item.id}`, body)
+        .patch(`${TRANSFER_URL}/${id}`, {
+          asset_category_id,
+          condition,
+          from_owner_id,
+          quantity,
+          to_owner_id,
+        })
         .then((resp) => {
           if (this.onSave) {
             this.onSave(resp);

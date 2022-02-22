@@ -110,12 +110,33 @@ transferRouter.post(
   }
 );
 
+transferRouter.patch("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const { asset_category_id, condition, from_owner_id, quantity, to_owner_id } =
+    req.body;
+
+  await db("asset_transfer").where({ id }).update({
+    asset_category_id,
+    condition,
+    from_owner_id,
+    quantity,
+    to_owner_id,
+  });
+
+  return res.json({
+    data: {},
+    messages: [{ variant: "success", text: "Transfer saved" }],
+  });
+});
+
 transferRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
 
   await db("asset_transfer").where({ id }).delete();
 
   return res.json({
+    data: {},
     messages: [{ variant: "success", text: "Transfer removed" }],
   });
 });

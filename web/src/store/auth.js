@@ -1,49 +1,45 @@
 import axios from "axios";
+
 import { AUTH_CHECK_URL, LOGOUT_URL } from "../urls";
 
 const state = {
-    user: null,
-    fullName: "",
-    roles: []
+    isAuthenticated: false,
 };
 const getters = {
-    isAuthenticated: state => !!state.user,
-    fullName: state => { return state.fullName },
-    roles: state => { return state.roles }
+    isAuthenticated: (state) => state.isAuthenticated,
 };
 const actions = {
     async checkAuthentication({ commit }) {
-        await axios.get(AUTH_CHECK_URL)
-            .then(resp => {
-                commit("setUser", resp.data.data);
-            }).catch(() => {
-                commit("clearUser");
+        await axios
+            .get(AUTH_CHECK_URL)
+            .then((resp) => {
+                commit("setIsAuthenticated", resp.data.data);
+            })
+            .catch(() => {
+                commit("setIsAuthenticated", false);
+                commit("clearProfile");
             });
     },
     async signOut({ commit }) {
-        await axios.get(LOGOUT_URL)
+        await axios
+            .get(LOGOUT_URL)
             .then(() => {
-                commit("clearUser");
-            }).catch(err => {
-                console.error(err);
+                commit("clearProfile");
+            })
+            .catch((error) => {
+                console.error(error);
             });
-    }
+    },
 };
 const mutations = {
-    setUser(state, user) {
-        state.user = user;
-        state.fullName = user.display_name;
-        state.roles = user.roles;
+    setIsAuthenticated(state, value) {
+        state.isAuthenticated = value;
     },
-    clearUser(state) {
-        state.user = null;
-        state.fullName = null;
-    }
 };
 
 export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 };

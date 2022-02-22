@@ -81,24 +81,14 @@
 
 <script>
 import axios from "axios";
-import { ASSET_URL, OWNER_URL } from "../../urls";
 import _ from "lodash";
+import { mapGetters } from "vuex";
+
+import { ASSET_URL, OWNER_URL } from "../../urls";
 
 export default {
   name: "Home",
   data: () => ({
-    statusOptions: [
-      "Active",
-      "Recycled",
-      "Redistribute",
-      "CFS",
-      "Sold",
-      "To be sold",
-      "Donation",
-      "Retired",
-      "Unknown",
-    ],
-
     search: "",
     statusFilter: ["Active"],
     loading: false,
@@ -123,7 +113,9 @@ export default {
       this.search = searchParam;
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({ statusOptions: "assetConditionOptions" }),
+  },
   watch: {
     options: {
       handler() {
