@@ -2,44 +2,60 @@ import axios from "axios";
 import { PROFILE_URL } from "../urls";
 
 const state = {
-    firstName: "",
-    lastName: "",
     email: "",
+    firstName: "",
+    fullName: "",
     id: "",
-    username: "",
+    lastName: "",
     mailcode: "",
-    roles: "",
-    manage_mailcodes: "",
+    manage_mailcodes: [],
+    roles: [],
 };
+
 const getters = {
-    firstName: state => state.firstName,
-    lastName: state => state.lastName,
-    email: state => state.email,
-    id: state => state.id,
-    username: state => state.username,
-    mailcode: state => state.mailcode,
-    roles: state => state.roles,
-    manage_mailcodes: state => state.manage_mailcodes,
+    email: (state) => state.email,
+    firstName: (state) => state.firstName,
+    fullName: (state) => state.fullName,
+    id: (state) => state.id,
+    lastName: (state) => state.lastName,
+    mailcode: (state) => state.mailcode,
+    manage_mailcodes: (state) => state.manage_mailcodes,
+    roles: (state) => state.roles,
 };
 const actions = {
-    async loadProfile({ commit }) {
-        await axios.get(PROFILE_URL)
-            .then(resp => {
+    loadProfile({ commit }) {
+        return axios
+            .get(PROFILE_URL)
+            .then((resp) => {
                 commit("setProfile", resp.data.data);
-            }).catch(() => {
-                commit("clearUser");
+            })
+            .catch(() => {
+                commit("clearProfile");
             });
     },
 };
 const mutations = {
     setProfile(state, profile) {
-        state.firstName = profile.first_name;
-        state.lastName = profile.last_name;
         state.email = profile.email;
-        state.status = profile.status;
+        state.firstName = profile.first_name;
+        state.fullName = profile.display_name;
+        state.lastName = profile.last_name;
         state.mailcode = profile.mailcode;
-        state.roles = profile.roles;
         state.manage_mailcodes = profile.manage_mailcodes;
+        state.roles = profile.roles;
+        state.status = profile.status;
+    },
+    clearProfile(state) {
+        Object.assign(state, {
+            email: "",
+            firstName: "",
+            fullName: "",
+            id: "",
+            lastName: "",
+            mailcode: "",
+            manage_mailcodes: [],
+            roles: [],
+        });
     },
 };
 
@@ -48,5 +64,5 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 };
