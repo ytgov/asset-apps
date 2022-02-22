@@ -12,6 +12,19 @@ export default new Vuex.Store({
   getters: {
     defaultAssetOwner: (state) =>
       state.mailcodeOptions.find((o) => o.default_owner === true),
+    assetConditionOptions: () => [
+      "Active",
+      "Redistribute",
+      "Recycle",
+      "Sold",
+      "CFS",
+      "Donation",
+      "Destruction",
+      "Unknown",
+      "REQUEST: Obsolete",
+      "REQUEST: Good",
+      "REQUEST: Beyond repair",
+    ],
     mailcodeOptions: (state) => state.mailcodeOptions,
     assetTypeOptions: (state) => state.assetTypeOptions,
   },
@@ -31,7 +44,6 @@ export default new Vuex.Store({
     initialize() {
       console.log("Initializing Store");
       this.dispatch("loadMailcodes");
-      this.dispatch("loadAssetConditionOptions");
       this.dispatch("loadAssetTypeOptions");
     },
 
