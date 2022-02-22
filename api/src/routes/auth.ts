@@ -98,12 +98,10 @@ export function configureAuthentication(app: Express) {
         "/api/auth/is-authenticated",
         async (req: Request, res: Response) => {
             if (req.oidc.isAuthenticated()) {
-                let person = req.user;
-                //let me = await db.getByEmail(person.email);
-                return res.json({ data: person });
+                return res.json({ data: true });
             }
 
-            return res.status(401).send();
+            return res.json({ data: false });
         }
     );
 

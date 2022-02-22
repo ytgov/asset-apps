@@ -81,7 +81,7 @@
           </v-list>
         </v-menu> -->
         <v-divider class="mr-5" vertical inset></v-divider>
-        <span>{{ username }}</span>
+        <span>{{ firstName }}</span>
         <v-menu offset-y class="ml-0">
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon color="primary" v-bind="attrs" v-on="on">
@@ -139,25 +139,27 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 import router from "./router";
-import store from "./store";
 import * as config from "./config";
 import { LOGOUT_URL } from "./urls";
 
 export default {
   name: "App",
   computed: {
-    username() {
-      return store.getters.fullName;
+    ...mapGetters(["isAuthenticated"]),
+    ...mapGetters("profile", [
+      "fullName",
+      "manage_mailcodes",
+      "roles",
+      "firstName",
+    ]),
+    showManage() {
+      return this.manage_mailcodes.length > 0;
     },
-    isAuthenticated() {
-      return store.getters.isAuthenticated;
-    },
-    roles() {
-      return store.getters.roles;
-    },
-    manageCodes() {
-      return store.state.profile.manage_mailcodes;
+    showAdmin() {
+      return this.roles.indexOf("Admin") >= 0;
     },
   },
   data: () => ({
@@ -173,16 +175,9 @@ export default {
     hasSidebar: false, //config.hasSidebar,
     hasSidebarClosable: config.hasSidebarClosable,
     search: "",
-
-    showAdmin: false,
-    showManage: false,
   }),
-  created: async function () {
-    await store.dispatch("checkAuthentication");
-    store.dispatch("initialize");
-    store.dispatch("profile/loadProfile");
-
-    this.showManage = this.manageCodes && this.manageCodes.length > 0;
+  created() {
+    this.checkAuthentication();
   },
   watch: {
     $route(to) {
@@ -196,16 +191,17 @@ export default {
         this.hasSidebar = false;
       }
     },
-    roles: function (val) {
-      this.showAdmin = false;
-      if (val.indexOf("Admin") >= 0) this.showAdmin = true;
-    },
-    manageCodes: function (val) {
-      this.showManage = false;
-      if (val && val.length > 0) this.showManage = true;
+    isAuthenticated(value) {
+      if (value) {
+        this.initialize().then(() => {
+          this.loadProfile();
+        });
+      }
     },
   },
   methods: {
+    ...mapActions(["initialize", "checkAuthentication"]),
+    ...mapActions("profile", ["loadProfile"]),
     nav: function (location) {
       router.push(location);
       console.log(location);
