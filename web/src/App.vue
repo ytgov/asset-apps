@@ -81,7 +81,7 @@
           </v-list>
         </v-menu> -->
         <v-divider class="mr-5" vertical inset></v-divider>
-        <span>{{ firstName }}</span>
+        <span>{{ fullName }}</span>
         <v-menu offset-y class="ml-0">
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon color="primary" v-bind="attrs" v-on="on">

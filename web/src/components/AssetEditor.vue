@@ -200,6 +200,7 @@ export default {
       "Sold",
       "To be sold",
       "Donation",
+      "Destruction",
       "Retired",
       "Unknown",
     ],

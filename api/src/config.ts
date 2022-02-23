@@ -52,4 +52,4 @@ export const EMAIL_CONFIG = {
 };
 
 // API access for Shaun
-export const V2_API_KEY_FOR_SHAUN = process.env.V2_API_KEY_FOR_SHAUN || "";
+export const V2_API_KEY_REMOTE = process.env.V2_API_KEY_REMOTE || "";

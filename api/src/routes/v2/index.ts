@@ -1,1 +1,1 @@
-export * from "./asset-tag-router-for-shaun";
+export * from "./asset-tag-router-remote";
