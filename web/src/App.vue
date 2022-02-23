@@ -64,7 +64,13 @@
         <v-btn color="primary" text class="mr-1" to="/dashboard"
           ><v-icon>mdi-home</v-icon></v-btn
         >
-        <v-btn color="primary" text class="mr-1 d-none d-md-inline-flex" to="/my-scans">My Scans</v-btn>
+        <v-btn
+          color="primary"
+          text
+          class="mr-1 d-none d-md-inline-flex"
+          to="/my-scans"
+          >My Scans</v-btn
+        >
         <!-- <v-btn color="primary" text class="mr-1" to="/reports">Reports</v-btn> -->
 
         <!-- <v-menu offset-y class="ml-0">
@@ -92,12 +98,11 @@
           </template>
 
           <v-list dense style="min-width: 200px">
-
-            <v-list-item>
+            <v-list-item class="d-md-none">
               <v-list-item-title>{{ fullName }}</v-list-item-title>
             </v-list-item>
 
-            <v-list-item to="/my-scans">
+            <v-list-item to="/my-scans" class="d-md-none">
               <v-list-item-icon>
                 <v-icon>mdi-camera</v-icon>
               </v-list-item-icon>
