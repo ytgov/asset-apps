@@ -1,25 +1,39 @@
 import { Express, NextFunction, Request, Response } from "express";
 import * as ExpressSession from "express-session";
+
 import { AuthUser } from "../data";
-import { AUTH_REDIRECT, FRONTEND_URL } from "../config";
+import { AUTH_REDIRECT, FRONTEND_URL, V2_API_KEY_FOR_SHAUN } from "../config";
 import { UserService } from "../services";
 
 import { auth } from "express-openid-connect";
 
 const db = new UserService();
 
-function authenticationForEverywhereExcept(excludes: string[]) {
+const V2_API_REGEX = /^\/api\/v2\/.*/;
+
+function oidcAuthenticationForEverywhereExcept(exclusions: RegExp[]) {
     return (req: Request, res: Response, next: NextFunction) => {
-        if (excludes.includes(req.path)) {
+        if (req.oidc.isAuthenticated()) {
             return next();
         }
 
-        if (req.oidc.isAuthenticated()) {
+        const excludeFromAuthentication = exclusions.some((regex) =>
+            regex.test(req.path)
+        );
+        if (excludeFromAuthentication) {
             return next();
         }
 
         res.status(401).send("Not authenticated");
     };
+}
+
+function bearerAuthentication(req: Request, res: Response, next: NextFunction) {
+    if (req.header("Authorization") === `Bearer ${V2_API_KEY_FOR_SHAUN}`) {
+        return next();
+    }
+
+    res.status(401).send("Not authenticated");
 }
 
 export function configureAuthentication(app: Express) {
@@ -49,11 +63,13 @@ export function configureAuthentication(app: Express) {
     );
 
     app.use(
-        authenticationForEverywhereExcept([
-            "/api/auth/login",
-            "/api/auth/is-authenticated",
+        oidcAuthenticationForEverywhereExcept([
+            /^\/api\/auth\/login$/,
+            /^\/api\/auth\/is-authenticated$/,
+            V2_API_REGEX,
         ])
     );
+    app.use(V2_API_REGEX, bearerAuthentication);
 
     app.use("/", async (req: Request, res: Response, next: NextFunction) => {
         if (req.oidc.isAuthenticated()) {
