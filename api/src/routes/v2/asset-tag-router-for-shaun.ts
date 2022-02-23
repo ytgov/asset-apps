@@ -12,7 +12,10 @@ const assetService = new AssetService(db);
 assetTagRouterForShaun.get(
   "/",
   [param("page").toInt().default(1), param("pageSize").toInt().default(10)],
-  async (req: Request<{ page: number; pageSize: number }>, res: Response) => {
+  async (
+    req: Request & { params: { page: number; pageSize: number } },
+    res: Response
+  ) => {
     const { page, pageSize } = req.params;
 
     const itemCount = await db("asset_item")
