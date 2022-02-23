@@ -2,7 +2,7 @@ import { Express, NextFunction, Request, Response } from "express";
 import * as ExpressSession from "express-session";
 
 import { AuthUser } from "../data";
-import { AUTH_REDIRECT, FRONTEND_URL } from "../config";
+import { AUTH_REDIRECT, FRONTEND_URL, V2_API_KEY_FOR_SHAUN } from "../config";
 import { UserService } from "../services";
 
 import { auth } from "express-openid-connect";
@@ -26,6 +26,14 @@ function oidcAuthenticationForEverywhereExcept(exclusions: RegExp[]) {
 
         res.status(401).send("Not authenticated");
     };
+}
+
+function bearerAuthentication(req: Request, res: Response, next: NextFunction) {
+    if (req.header("Authorization") === `Bearer ${V2_API_KEY_FOR_SHAUN}`) {
+        return next();
+    }
+
+    res.status(401).send("Not authenticated");
 }
 
 export function configureAuthentication(app: Express) {
@@ -61,6 +69,7 @@ export function configureAuthentication(app: Express) {
             V2_API_REGEX,
         ])
     );
+    app.use(V2_API_REGEX, bearerAuthentication);
 
     app.use("/", async (req: Request, res: Response, next: NextFunction) => {
         if (req.oidc.isAuthenticated()) {

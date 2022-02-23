@@ -37,9 +37,9 @@ export const DB_CONFIG = {
     user: DB_USER,
     password: DB_PASS,
     database: DB_NAME,
-    port: DB_PORT
-  }
-}
+    port: DB_PORT,
+  },
+};
 
 export const EMAIL_CONFIG = {
   host: "smtp.ethereal.email",
@@ -49,4 +49,7 @@ export const EMAIL_CONFIG = {
     user: "", // generated ethereal user
     pass: "", // generated ethereal password
   },
-}
+};
+
+// API access for Shaun
+export const V2_API_KEY_FOR_SHAUN = process.env.V2_API_KEY_FOR_SHAUN || "";
