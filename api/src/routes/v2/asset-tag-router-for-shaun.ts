@@ -9,6 +9,45 @@ import { db, DB_TRUE } from "../../data";
 export const assetTagRouterForShaun = express.Router();
 const assetService = new AssetService(db);
 
+assetTagRouterForShaun.get(
+  "/",
+  [param("page").toInt().default(1), param("pageSize").toInt().default(10)],
+  async (req: Request<{ page: number; pageSize: number }>, res: Response) => {
+    const { page, pageSize } = req.params;
+
+    const itemCount = await db("asset_item")
+      .count({ count: "*" })
+      .first()
+      .then(({ count = 0 } = {}) => {
+        return Number(count);
+      })
+      .catch(() => 0);
+    const pageCount = Math.ceil(itemCount / pageSize);
+    const data = await db
+      .select("*")
+      .from("asset_item")
+      .join("asset_owner", "asset_owner.id", "=", "asset_item.asset_owner_id")
+      .orderBy("tag")
+      .limit(pageSize)
+      .offset((page - 1) * pageSize);
+
+    for (let row of data) {
+      if (row.purchase_date)
+        row.purchase_date = moment(row.purchase_date)
+          .utc(false)
+          .format("YYYY-MM-DD");
+
+      if (row.entry_date)
+        row.entry_date = moment(row.entry_date).utc(false).format("YYYY-MM-DD");
+    }
+
+    return res.json({
+      data,
+      meta: { page, pageSize, itemCount, pageCount },
+    });
+  }
+);
+
 assetTagRouterForShaun.post(
   "/",
   [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],
