@@ -23,15 +23,16 @@ assetTagRouterForShaun.get(
       })
       .catch(() => 0);
     const pageCount = Math.ceil(itemCount / pageSize);
-    const data = await db
-      .select("*")
-      .from("asset_item")
-      .join("asset_owner", "asset_owner.id", "=", "asset_item.asset_owner_id")
+    const data = await db("asset_item")
       .orderBy("tag")
       .limit(pageSize)
       .offset((page - 1) * pageSize);
 
     for (let row of data) {
+      row.owner = await db("asset_owner")
+        .where({ id: row.asset_owner_id })
+        .first();
+
       if (row.purchase_date)
         row.purchase_date = moment(row.purchase_date)
           .utc(false)
