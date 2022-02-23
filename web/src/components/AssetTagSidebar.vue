@@ -114,7 +114,7 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
-import { TAG_URL } from "../urls";
+import { ASSET_URL } from "../urls";
 import { formatDollar } from "../utils/formatters";
 
 export default {
@@ -140,10 +140,10 @@ export default {
     },
     save() {
       axios
-        .put(`${TAG_URL}/${this.asset.value}`, this.asset)
+        .put(`${ASSET_URL}/${this.asset.value}`, this.asset)
         .then((resp) => {
           if (resp.data.errors) {
-            console.log(resp.data.errors)
+            console.log(resp.data.errors);
           } else {
             if (this.onSave) {
               this.onSave(resp);
