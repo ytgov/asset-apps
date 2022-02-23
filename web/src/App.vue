@@ -64,7 +64,7 @@
         <v-btn color="primary" text class="mr-1" to="/dashboard"
           ><v-icon>mdi-home</v-icon></v-btn
         >
-        <v-btn color="primary" text class="mr-1" to="/my-scans">My Scans</v-btn>
+        <v-btn color="primary" text class="mr-1 d-none d-md-inline-flex" to="/my-scans">My Scans</v-btn>
         <!-- <v-btn color="primary" text class="mr-1" to="/reports">Reports</v-btn> -->
 
         <!-- <v-menu offset-y class="ml-0">
@@ -80,8 +80,10 @@
             </v-list-item>
           </v-list>
         </v-menu> -->
-        <v-divider class="mr-5" vertical inset></v-divider>
-        <span>{{ fullName }}</span>
+        <v-divider class="mr-5 d-none d-md-inline" vertical inset></v-divider>
+
+        <span class="d-none d-md-inline">{{ fullName }}</span>
+
         <v-menu offset-y class="ml-0">
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon color="primary" v-bind="attrs" v-on="on">
@@ -90,12 +92,25 @@
           </template>
 
           <v-list dense style="min-width: 200px">
+
+            <v-list-item>
+              <v-list-item-title>{{ fullName }}</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item to="/my-scans">
+              <v-list-item-icon>
+                <v-icon>mdi-camera</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>My scans</v-list-item-title>
+            </v-list-item>
+
             <v-list-item to="/profile">
               <v-list-item-icon>
                 <v-icon>mdi-account</v-icon>
               </v-list-item-icon>
               <v-list-item-title>My profile</v-list-item-title>
             </v-list-item>
+
             <v-list-item to="/administration" v-if="showAdmin">
               <v-list-item-icon>
                 <v-icon>mdi-cogs</v-icon>
