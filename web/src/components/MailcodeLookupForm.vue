@@ -36,7 +36,7 @@ import axios from "axios";
 import { MAILCODE_URL } from "../urls";
 
 export default {
-  name: "UserEditor",
+  name: "MailcodeLookupForm",
   props: ["onSave"],
   data: () => ({
     search: null,
