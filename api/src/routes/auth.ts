@@ -64,6 +64,7 @@ export function configureAuthentication(app: Express) {
 
     app.use(
         oidcAuthenticationForEverywhereExcept([
+            /^(?<!\/api\/).*$/,
             /^\/api\/auth\/login$/,
             /^\/api\/auth\/is-authenticated$/,
             V2_API_REGEX,
