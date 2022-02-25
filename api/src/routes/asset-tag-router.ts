@@ -11,6 +11,11 @@ import { db, DB_TRUE } from "../data";
 import moment from "moment";
 const assetService = new AssetService(db);
 
+assetTagRouter.post("/", (req: Request, res: Response) => {
+  const { asset_item } = req.body;
+  console.log("asset_item", JSON.stringify(asset_item, null, 2));
+});
+
 assetTagRouter.post(
   "/query",
   [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],

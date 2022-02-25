@@ -84,8 +84,12 @@
           item-value="mailcode"
         ></v-select>
 
-        <v-btn small color="primary" class="mb-0" @click="step1Click()"
-          >Generate tags</v-btn
+        <v-btn
+          small
+          color="primary"
+          class="mb-0"
+          @click="openAdditionalInformationMenu"
+          >Add individual item information</v-btn
         >
       </v-stepper-content>
 
@@ -105,11 +109,16 @@
                 'Undefined',
               ]"
               label="How were these items purchased?"
-              v-model="purchased"
+              v-model="purchasedType"
             ></v-select>
           </div>
           <div class="col-sm-6">
-            <v-text-field label="Order number" dense outlined></v-text-field>
+            <v-text-field
+              v-model="orderNumber"
+              label="Order number"
+              dense
+              outlined
+            ></v-text-field>
           </div>
         </div>
 
@@ -117,8 +126,8 @@
           Back
         </v-btn>
 
-        <v-btn color="primary" class="mb-0" small @click="finish()">
-          Add individual item information
+        <v-btn color="primary" class="mb-0" small @click="generateTags">
+          Generate tags
         </v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -129,12 +138,19 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { times } from "lodash";
+
+import { ASSET_URL } from "@/urls";
+import http from "@/utils/http-client";
 
 export default {
   name: "UserEditor",
   computed: {
     ...mapGetters(["mailcodeOptions"]),
-    ...mapGetters("profile", { defaultMailcode: "mailcode" }),
+    ...mapGetters("profile", {
+      defaultMailcode: "mailcode",
+      currentUserEmail: "email",
+    }),
   },
   props: ["onSave"],
   data: () => ({
@@ -148,12 +164,13 @@ export default {
     hasIdentifier: "",
     step2Name: "Tell us about the item(s)",
     assetToTransfer: null,
+    orderNumber: null,
     transferReason: "",
     descriptions: [{ quantity: 1 }],
 
     menu: null,
     date: null,
-    purchased: null,
+    purchasedType: null,
     sendMailcode: "",
   }),
   created() {
@@ -161,7 +178,7 @@ export default {
     this.date = new Date().toISOString().slice(0, 10);
   },
   methods: {
-    step1Click() {
+    openAdditionalInformationMenu() {
       this.descriptions = new Array();
 
       for (let i = 0; i < this.tagCount && i < 50; i++) {
@@ -186,8 +203,27 @@ export default {
       this.resetForm();
     },
 
-    finish() {
-      this.$router.push("/asset-tags/recent");
+    generateTags() {
+      const sendMailcodeId = this.mailcodeOptions.find(
+        ({ mailcode }) => mailcode == this.sendMailcode
+      ).id;
+
+      const assetItemCreationPromises = times(this.tagCount, () =>
+        http.post(ASSET_URL, {
+          asset_item: {
+            asset_owner_id: sendMailcodeId,
+            purchased_date: this.date,
+            purchase_type: this.purchasedType,
+            purchase_person: this.currentUserEmail,
+            purchase_order_number: this.orderNumber,
+          },
+        })
+      );
+
+      Promise.all([assetItemCreationPromises]).then(() => {
+        this.$refs.notifier.showSuccess("Your tags have been generated.");
+        this.$router.push("/asset-tags/recent");
+      });
     },
 
     resetForm() {
