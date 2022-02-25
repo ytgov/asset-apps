@@ -54,7 +54,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
+                  v-model="purchaseDate"
                   label="Purchase date"
                   append-icon="mdi-calendar"
                   readonly
@@ -66,7 +66,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="date"
+                v-model="purchaseDate"
                 @input="menu = false"
               ></v-date-picker>
             </v-menu>
@@ -126,7 +126,7 @@
           Back
         </v-btn>
 
-        <v-btn color="primary" class="mb-0" small @click="generateTags">
+        <v-btn color="primary" class="mb-0" small @click="createTags">
           Generate tags
         </v-btn>
       </v-stepper-content>
@@ -144,7 +144,7 @@ import { ASSET_URL } from "@/urls";
 import http from "@/utils/http-client";
 
 export default {
-  name: "UserEditor",
+  name: "AssetRegisterForm",
   computed: {
     ...mapGetters(["mailcodeOptions"]),
     ...mapGetters("profile", {
@@ -153,57 +153,27 @@ export default {
     }),
   },
   props: ["onSave"],
-  data: () => ({
-    step: 1,
-
-    tagCount: 1,
-
-    search: null,
-    isLoading: null,
-    count: 0,
-    hasIdentifier: "",
-    step2Name: "Tell us about the item(s)",
-    assetToTransfer: null,
-    orderNumber: null,
-    transferReason: "",
-    descriptions: [{ quantity: 1 }],
-
-    menu: null,
-    date: null,
-    purchasedType: null,
-    sendMailcode: "",
-  }),
-  created() {
+  data() {
+    return {
+      menu: null,
+      orderNumber: null,
+      purchaseDate: null,
+      purchasedType: null,
+      sendMailcode: "",
+      step: 1,
+      tagCount: 1,
+    };
+  },
+  mounted() {
+    this.step = 1;
     this.sendMailcode = this.defaultMailcode;
-    this.date = new Date().toISOString().slice(0, 10);
+    this.purchaseDate = new Date().toISOString().slice(0, 10);
   },
   methods: {
     openAdditionalInformationMenu() {
-      this.descriptions = new Array();
-
-      for (let i = 0; i < this.tagCount && i < 50; i++) {
-        this.descriptions.push({});
-      }
-
       this.step = 2;
     },
-
-    assetSelected(asset) {
-      this.assetToTransfer = asset;
-    },
-
-    foundAsset() {
-      if (this.assetToTransfer) {
-        this.step = 3;
-      }
-    },
-
-    doComplete() {
-      this.$refs.notifier.showSuccess("Your transfer has been submitted");
-      this.resetForm();
-    },
-
-    generateTags() {
+    createTags() {
       const sendMailcodeId = this.mailcodeOptions.find(
         ({ mailcode }) => mailcode == this.sendMailcode
       ).id;
@@ -212,7 +182,7 @@ export default {
         http.post(ASSET_URL, {
           asset_item: {
             asset_owner_id: sendMailcodeId,
-            purchased_date: this.date,
+            purchased_date: this.purchaseDate,
             purchase_type: this.purchasedType,
             purchase_person: this.currentUserEmail,
             purchase_order_number: this.orderNumber,
@@ -224,14 +194,6 @@ export default {
         this.$refs.notifier.showSuccess("Your tags have been generated.");
         this.$router.push("/asset-tags/recent");
       });
-    },
-
-    resetForm() {
-      this.hasIdentifier = "";
-      this.step = 1;
-      this.step2Name = "Tell us about the item(s)";
-      this.assetToTransfer = null;
-      this.transferReason = "";
     },
   },
 };
