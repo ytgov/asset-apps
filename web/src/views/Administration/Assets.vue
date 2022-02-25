@@ -158,7 +158,7 @@ export default {
       }
 
       axios
-        .post(ASSET_URL, body)
+        .post(`${ASSET_URL}/query`, body)
         .then((resp) => {
           this.items = resp.data.data;
           this.itemCount = resp.data.meta.item_count;

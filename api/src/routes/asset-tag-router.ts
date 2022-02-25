@@ -12,7 +12,7 @@ import moment from "moment";
 const assetService = new AssetService(db);
 
 assetTagRouter.post(
-  "/",
+  "/query",
   [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],
   async (req: Request, res: Response) => {
     let { query, sortBy, sortDesc, page, itemsPerPage } = req.body;
