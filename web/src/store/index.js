@@ -27,6 +27,13 @@ export default new Vuex.Store({
     ],
     mailcodeOptions: (state) => state.mailcodeOptions,
     assetTypeOptions: (state) => state.assetTypeOptions,
+    purchaseTypeOptions: () => [
+      "Purchase Order",
+      "RFP",
+      "Contract",
+      "Credit Card",
+      "Undefined",
+    ],
   },
   state: {
     mailcodeOptions: [],

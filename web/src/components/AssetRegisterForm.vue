@@ -101,13 +101,7 @@
             <v-select
               dense
               outlined
-              :items="[
-                'Purchase Order',
-                'RFP',
-                'Contract',
-                'Credit Card',
-                'Undefined',
-              ]"
+              :items="purchaseTypeOptions"
               label="How were these items purchased?"
               v-model="purchasedType"
             ></v-select>
@@ -146,7 +140,7 @@ import http from "@/utils/http-client";
 export default {
   name: "AssetRegisterForm",
   computed: {
-    ...mapGetters(["mailcodeOptions"]),
+    ...mapGetters(["mailcodeOptions", "purchaseTypeOptions"]),
     ...mapGetters("profile", {
       defaultMailcode: "mailcode",
       currentUserEmail: "email",
