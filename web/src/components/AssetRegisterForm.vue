@@ -77,7 +77,7 @@
           dense
           outlined
           hide-details
-          :items="mailcodes"
+          :items="mailcodeOptions"
           label="What mail code do we send them to?"
           v-model="sendMailcode"
           item-text="display_name"
@@ -128,15 +128,13 @@
 </template>
 
 <script>
-import router from "../router";
-import { mapState } from "vuex";
-import axios from "axios";
-import { MAILCODE_URL } from "../urls";
+import { mapGetters } from "vuex";
 
 export default {
   name: "UserEditor",
   computed: {
-    ...mapState("profile", ["mailcode"]),
+    ...mapGetters(["mailcodeOptions"]),
+    ...mapGetters("profile", { defaultMailcode: "mailcode" }),
   },
   props: ["onSave"],
   data: () => ({
@@ -153,21 +151,14 @@ export default {
     transferReason: "",
     descriptions: [{ quantity: 1 }],
 
-    mailcodes: [],
-
     menu: null,
     date: null,
     purchased: null,
     sendMailcode: "",
   }),
   created() {
-    this.sendMailcode = this.mailcode;
-
-    axios.get(`${MAILCODE_URL}`).then((resp) => {
-      this.mailcodes = resp.data.data;
-    });
-
-    this.date = new Date().toISOString().slice(0, 10)
+    this.sendMailcode = this.defaultMailcode;
+    this.date = new Date().toISOString().slice(0, 10);
   },
   methods: {
     step1Click() {
@@ -196,7 +187,7 @@ export default {
     },
 
     finish() {
-      router.push("/asset-tags/recent");
+      this.$router.push("/asset-tags/recent");
     },
 
     resetForm() {
