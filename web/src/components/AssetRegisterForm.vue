@@ -116,6 +116,16 @@
           </div>
         </div>
 
+        <v-select
+          dense
+          outlined
+          :items="assetTypeOptions"
+          item-text="description"
+          item-value="id"
+          label="What type of item was purchased?"
+          v-model="assetTypeId"
+        ></v-select>
+
         <v-btn color="secondary" class="mb-0 mr-2" small @click="step = 1">
           Back
         </v-btn>
@@ -140,7 +150,11 @@ import http from "@/utils/http-client";
 export default {
   name: "AssetRegisterForm",
   computed: {
-    ...mapGetters(["mailcodeOptions", "purchaseTypeOptions"]),
+    ...mapGetters([
+      "assetTypeOptions",
+      "mailcodeOptions",
+      "purchaseTypeOptions",
+    ]),
     ...mapGetters("profile", {
       defaultMailcode: "mailcode",
       currentUserEmail: "email",
@@ -149,6 +163,7 @@ export default {
   props: ["onSave"],
   data() {
     return {
+      assetTypeId: null,
       menu: null,
       orderNumber: null,
       purchaseDate: null,
@@ -176,10 +191,14 @@ export default {
         http.post(ASSET_URL, {
           assetItem: {
             asset_owner_id: sendMailcodeId,
+            asset_type_id: this.assetTypeId,
             purchase_date: this.purchaseDate,
-            purchase_type: this.purchasedType,
+            // purchase_type: this.purchasedType,
             purchase_person: this.currentUserEmail,
             purchase_order_number: this.orderNumber,
+          },
+          additionalDetails: {
+            purchase_type: this.purchasedType,
           },
         })
       );

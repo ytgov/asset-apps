@@ -14,15 +14,37 @@ const assetService = new AssetService(db);
 assetTagRouter.post("/", (req: Request, res: Response) => {
   const { assetItem } = req.body;
 
-  return db("asset_item")
-    .insert(assetItem)
-    .then((newAssetItem) => res.status(201).json(newAssetItem))
+  return db
+    .transaction(async (trx) => {
+      const next_y_number_result = await trx.raw(
+        "SELECT NEXT VALUE FOR dbo.y_numbers as y_number"
+      );
+      const next_y_number = next_y_number_result[0]["y_number"];
+
+      return trx
+        .insert(
+          {
+            ...assetItem,
+            status: "Active",
+            condition: "Good",
+            tag: `Y${next_y_number}`,
+          },
+          [...Object.keys(assetItem), "status", "condition", "tag"]
+        )
+        .into("asset_item");
+    })
+    .then((result) =>
+      res.status(201).json({
+        data: result,
+        messages: [{ variant: "success", text: "Asset created" }],
+      })
+    )
     .catch(({ message: errorDetails }) =>
       res.status(422).json({
         messages: [
           {
             variant: "error",
-            text: "Asset failed to save.",
+            text: "Asset failed to save",
             details: errorDetails,
           },
         ],
