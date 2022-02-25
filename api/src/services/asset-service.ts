@@ -3,12 +3,32 @@ import _ from "lodash";
 import moment from "moment";
 
 import { QueryStatement, SortStatement } from ".";
+import { AssetItem } from "../data/models";
 
 export class AssetService {
     readonly db: Knex;
 
     constructor(db: Knex) {
         this.db = db;
+    }
+
+    create(assetItem: AssetItem) {
+        return this.db.transaction(async (trx) => {
+            const next_y_number_result = await trx.raw(
+                "SELECT NEXT VALUE FOR dbo.y_numbers as y_number"
+            );
+            const next_y_number = next_y_number_result[0]["y_number"];
+
+            return trx
+                .insert(
+                    {
+                        ...assetItem,
+                        tag: `Y${next_y_number}`,
+                    },
+                    [...Object.keys(assetItem), "tag"]
+                )
+                .into("asset_item");
+        });
     }
 
     async doSearch(
