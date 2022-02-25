@@ -12,8 +12,22 @@ import moment from "moment";
 const assetService = new AssetService(db);
 
 assetTagRouter.post("/", (req: Request, res: Response) => {
-  const { asset_item } = req.body;
-  console.log("asset_item", JSON.stringify(asset_item, null, 2));
+  const { assetItem } = req.body;
+
+  return db("asset_item")
+    .insert(assetItem)
+    .then((newAssetItem) => res.status(201).json(newAssetItem))
+    .catch(({ message: errorDetails }) =>
+      res.status(422).json({
+        messages: [
+          {
+            variant: "error",
+            text: "Asset failed to save.",
+            details: errorDetails,
+          },
+        ],
+      })
+    );
 });
 
 assetTagRouter.post(

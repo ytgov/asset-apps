@@ -180,9 +180,9 @@ export default {
 
       const assetItemCreationPromises = times(this.tagCount, () =>
         http.post(ASSET_URL, {
-          asset_item: {
+          assetItem: {
             asset_owner_id: sendMailcodeId,
-            purchased_date: this.purchaseDate,
+            purchase_date: this.purchaseDate,
             purchase_type: this.purchasedType,
             purchase_person: this.currentUserEmail,
             purchase_order_number: this.orderNumber,
