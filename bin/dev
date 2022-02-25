@@ -37,7 +37,8 @@ sqlcmd () {
 			-U sa \
 			-P Testing1122 \
 			-H localhost \
-			-d AssetControl
+			-d AssetControl \
+			"$@"
 }
 
 # Core logic
