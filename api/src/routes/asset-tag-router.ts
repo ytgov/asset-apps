@@ -34,6 +34,7 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         purchase_date,
         purchase_person,
         asset_owner_id,
+        asset_type_id,
         purchase_order_number,
         tag,
       } = assetItemResult;
@@ -44,8 +45,15 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         .where({ id: asset_owner_id })
         .first();
 
+      const { description } = await db
+        .select("description")
+        .from("asset_type")
+        .where({ id: asset_type_id })
+        .first();
+
       const assetTagPrinter = await assetTagPrinterService.create({
         DateTagRequestSubmitted: purchase_date,
+        DescriptionOfItem: description,
         EmailOfRequestor: purchase_person,
         EndTime: MAXIMUM_DATE,
         Mailcode: mailcode,

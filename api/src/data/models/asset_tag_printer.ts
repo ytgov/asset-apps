@@ -1,7 +1,7 @@
 export interface AssetTagPrinter {
     id?: number;
     DateTagRequestSubmitted: Date;
-    DescriptionOfItem?: string;
+    DescriptionOfItem: string;
     EmailOfRequestor: string;
     EndTime: Date;
     Mailcode: string;
