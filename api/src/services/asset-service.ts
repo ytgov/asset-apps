@@ -25,9 +25,10 @@ export class AssetService {
                         ...assetItem,
                         tag: `Y${next_y_number}`,
                     },
-                    [...Object.keys(assetItem), "tag"]
+                    ["id", "tag", ...Object.keys(assetItem)]
                 )
-                .into("asset_item");
+                .into("asset_item")
+                .then((result) => result[0]);
         });
     }
 

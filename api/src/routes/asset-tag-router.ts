@@ -1,18 +1,26 @@
 import express, { Request, Response } from "express";
 import { body, param } from "express-validator";
-import { ReturnValidationErrors } from "../middleware";
-import { AssetService, SortDirection, SortStatement } from "../services";
+import moment from "moment";
 import _ from "lodash";
 
-export const assetTagRouter = express.Router();
-const PAGE_SIZE = 10;
-
+import { ReturnValidationErrors } from "../middleware";
+import {
+  AssetService,
+  AssetTagPrinterService,
+  SortDirection,
+  SortStatement,
+} from "../services";
 import { db, DB_TRUE } from "../data";
-import moment from "moment";
+
+export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
+const assetTagPrinterService = new AssetTagPrinterService(db);
 
 assetTagRouter.post("/", (req: Request, res: Response) => {
-  const { assetItem } = req.body;
+  const {
+    assetItem,
+    additionalDetails: { purchase_type },
+  } = req.body;
 
   return assetService
     .create({
@@ -20,12 +28,40 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
       status: "Active",
       condition: "Good",
     })
-    .then((result) =>
-      res.status(201).json({
+    .then(async (assetItemResult) => {
+      const {
+        id,
+        purchase_date,
+        purchase_person,
+        asset_owner_id,
+        purchase_order_number,
+        tag,
+      } = assetItemResult;
+
+      const { mailcode } = await db
+        .select("mailcode")
+        .from("asset_owner")
+        .where({ id: asset_owner_id })
+        .first();
+
+      const assetTagPrinter = await assetTagPrinterService.create({
+        DateTagRequestSubmitted: purchase_date,
+        EmailOfRequestor: purchase_person,
+        Mailcode: mailcode,
+        Purchase_Order: purchase_order_number,
+        PurchaseType: purchase_type,
+        TagRequestID: id,
+        YTG_NUMBER: tag,
+      });
+
+      return assetItemResult;
+    })
+    .then((result) => {
+      return res.status(201).json({
         data: result,
         messages: [{ variant: "success", text: "Asset created" }],
-      })
-    )
+      });
+    })
     .catch(({ message: errorDetails }) =>
       res.status(422).json({
         messages: [

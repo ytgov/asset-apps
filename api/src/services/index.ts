@@ -1,5 +1,5 @@
 export * from "./asset-service";
-export * from "./asset-tag-service";
+export * from "./asset-tag-printer-service";
 export * from "./email-service";
 export * from "./transfer-service";
 export * from "./user-service";
