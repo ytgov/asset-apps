@@ -49,7 +49,6 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         EmailOfRequestor: purchase_person,
         EndTime: MAXIMUM_DATE,
         Mailcode: mailcode,
-        Purchase_Order: purchase_order_number,
         PurchaseType: purchase_type,
         StartTime: new Date(),
         TagRequestID: id,

@@ -5,7 +5,6 @@ export interface AssetTagPrinter {
     EmailOfRequestor: string;
     EndTime: Date;
     Mailcode: string;
-    Purchase_Order: string;
     PurchaseType: string;
     StartTime: Date;
     TagRequestID: number;
