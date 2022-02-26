@@ -10,7 +10,7 @@ import {
   SortDirection,
   SortStatement,
 } from "../services";
-import { db, DB_TRUE } from "../data";
+import { db, DB_TRUE, MAXIMUM_DATE } from "../data";
 
 export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
@@ -47,9 +47,11 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
       const assetTagPrinter = await assetTagPrinterService.create({
         DateTagRequestSubmitted: purchase_date,
         EmailOfRequestor: purchase_person,
+        EndTime: MAXIMUM_DATE,
         Mailcode: mailcode,
         Purchase_Order: purchase_order_number,
         PurchaseType: purchase_type,
+        StartTime: new Date(),
         TagRequestID: id,
         YTG_NUMBER: tag,
       });

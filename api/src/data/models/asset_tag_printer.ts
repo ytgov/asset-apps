@@ -3,11 +3,11 @@ export interface AssetTagPrinter {
     DateTagRequestSubmitted: Date;
     DescriptionOfItem?: string;
     EmailOfRequestor: string;
-    EndTime?: Date;
+    EndTime: Date;
     Mailcode: string;
     Purchase_Order: string;
     PurchaseType: string;
-    StartTime?: Date;
+    StartTime: Date;
     TagRequestID: number;
     YTG_NUMBER: string;
 }
