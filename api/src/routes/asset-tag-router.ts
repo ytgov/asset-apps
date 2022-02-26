@@ -31,11 +31,11 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
     .then(async (assetItemResult) => {
       const {
         id,
-        purchase_date,
-        purchase_person,
         asset_owner_id,
         asset_type_id,
+        purchase_date,
         purchase_order_number,
+        purchase_person,
         tag,
       } = assetItemResult;
 
