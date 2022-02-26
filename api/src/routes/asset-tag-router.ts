@@ -56,7 +56,7 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         YTG_NUMBER: tag,
       });
 
-      return assetItemResult;
+      return { assetItem: assetItemResult, assetTagPrinter };
     })
     .then((result) => {
       return res.status(201).json({

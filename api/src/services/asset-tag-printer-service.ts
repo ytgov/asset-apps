@@ -14,6 +14,7 @@ export class AssetTagPrinterService {
   create(assetTagPrinter: AssetTagPrinter) {
     return this.db
       .insert(assetTagPrinter, ["id", ...Object.keys(assetTagPrinter)])
-      .into(ASSET_TAG_PRINTER_TABLE_NAME);
+      .into(ASSET_TAG_PRINTER_TABLE_NAME)
+      .then((result) => result[0]);
   }
 }
