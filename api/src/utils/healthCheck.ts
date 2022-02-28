@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 export async function doHealthCheck(req: Request, res: Response) {
-    /* let data = req.store as Storage;
+  /* let data = req.store as Storage;
     let dbConnected = await data.isConnected();
 
     if (!dbConnected)
