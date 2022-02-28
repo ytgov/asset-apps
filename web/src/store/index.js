@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import http from "@/utils/http-client";
-import { ASSET_URL, OWNER_URL } from "@/urls";
+import { ASSET_URL, ASSET_PURCHASE_TYPES_URL, OWNER_URL } from "@/urls";
 
 import auth from "./auth";
 import profile from "./profile";
@@ -26,23 +26,21 @@ export default new Vuex.Store({
       "REQUEST: Good",
       "REQUEST: Beyond repair",
     ],
+    assetPurchaseTypeOptions: (state) => state.assetPurchaseTypeOptions,
     mailcodeOptions: (state) => state.mailcodeOptions,
     assetTypeOptions: (state) => state.assetTypeOptions,
-    purchaseTypeOptions: () => [
-      "Purchase Order",
-      "RFP",
-      "Contract",
-      "Credit Card",
-      "Undefined",
-    ],
   },
   state: {
     mailcodeOptions: [],
+    assetPurchaseTypeOptions: [],
     assetTypeOptions: [],
   },
   mutations: {
     setMailcodeOptions(state, value) {
       state.mailcodeOptions = value;
+    },
+    setAssetPurchaseTypeOptions(state, value) {
+      state.assetPurchaseTypeOptions = value;
     },
     setAssetTypeOptions(state, value) {
       state.assetTypeOptions = value;
@@ -52,12 +50,18 @@ export default new Vuex.Store({
     initialize() {
       console.log("Initializing Store");
       this.dispatch("loadMailcodes");
+      this.dispatch("loadAssetPurchaseTypeOptions");
       this.dispatch("loadAssetTypeOptions");
     },
 
     loadMailcodes({ commit }) {
-      http.get(`${OWNER_URL}`).then((resp) => {
+      http.get(OWNER_URL).then((resp) => {
         commit("setMailcodeOptions", resp.data.data);
+      });
+    },
+    loadAssetPurchaseTypeOptions({ commit }) {
+      http.get(ASSET_PURCHASE_TYPES_URL).then((resp) => {
+        commit("setAssetPurchaseTypeOptions", resp.data.data);
       });
     },
     loadAssetTypeOptions({ commit }) {

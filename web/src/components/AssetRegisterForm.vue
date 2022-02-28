@@ -101,9 +101,11 @@
             <v-select
               dense
               outlined
-              :items="purchaseTypeOptions"
+              :items="assetPurchaseTypeOptions"
+              item-text="description"
+              item-value="id"
               label="How were these items purchased?"
-              v-model="purchasedType"
+              v-model="purchasedTypeId"
             ></v-select>
           </div>
           <div class="col-sm-6">
@@ -153,7 +155,7 @@ export default {
     ...mapGetters([
       "assetTypeOptions",
       "mailcodeOptions",
-      "purchaseTypeOptions",
+      "assetPurchaseTypeOptions",
     ]),
     ...mapGetters("profile", {
       defaultMailcode: "mailcode",
@@ -167,7 +169,7 @@ export default {
       menu: null,
       orderNumber: null,
       purchaseDate: null,
-      purchasedType: null,
+      purchasedTypeId: null,
       sendMailcode: "",
       step: 1,
       tagCount: 1,
@@ -193,12 +195,9 @@ export default {
             asset_owner_id: sendMailcodeId,
             asset_type_id: this.assetTypeId,
             purchase_date: this.purchaseDate,
-            // purchase_type: this.purchasedType,
+            purchase_type_id: this.purchasedTypeId,
             purchase_person: this.currentUserEmail,
             purchase_order_number: this.orderNumber,
-          },
-          additionalDetails: {
-            purchase_type: this.purchasedType,
           },
         })
       );
