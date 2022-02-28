@@ -17,10 +17,7 @@ const assetService = new AssetService(db);
 const assetTagPrinterService = new AssetTagPrinterService(db);
 
 assetTagRouter.post("/", (req: Request, res: Response) => {
-  const {
-    assetItem,
-    additionalDetails: { purchase_type },
-  } = req.body;
+  const { assetItem } = req.body;
 
   return assetService
     .create({
@@ -36,6 +33,7 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         purchase_date,
         purchase_order_number,
         purchase_person,
+        purchase_type_id,
         tag,
       } = assetItemResult;
 
@@ -49,6 +47,12 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         .select("description")
         .from("asset_type")
         .where({ id: asset_type_id })
+        .first();
+
+      const { description: purchase_type } = await db
+        .select("description")
+        .from("asset_purchase_type")
+        .where({ id: purchase_type_id })
         .first();
 
       const assetTagPrinter = await assetTagPrinterService.create({
