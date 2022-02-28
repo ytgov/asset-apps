@@ -1,7 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import { ASSET_URL, OWNER_URL } from "../urls";
+
+import http from "@/utils/http-client";
+import { ASSET_URL, OWNER_URL } from "@/urls";
 
 import auth from "./auth";
 import profile from "./profile";
@@ -55,12 +56,12 @@ export default new Vuex.Store({
     },
 
     loadMailcodes({ commit }) {
-      axios.get(`${OWNER_URL}`).then((resp) => {
+      http.get(`${OWNER_URL}`).then((resp) => {
         commit("setMailcodeOptions", resp.data.data);
       });
     },
     loadAssetTypeOptions({ commit }) {
-      axios.get(`${ASSET_URL}/asset-category`).then((resp) => {
+      http.get(`${ASSET_URL}/asset-category`).then((resp) => {
         commit("setAssetTypeOptions", resp.data.data);
       });
     },
