@@ -143,7 +143,7 @@ export default {
         .put(`${TAG_URL}/${this.asset.value}`, this.asset)
         .then((resp) => {
           if (resp.data.errors) {
-            console.log(resp.data.errors)
+            console.log(resp.data.errors);
           } else {
             if (this.onSave) {
               this.onSave(resp);

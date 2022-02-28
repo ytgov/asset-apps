@@ -167,7 +167,7 @@ export default {
       this.mailcodes = resp.data.data;
     });
 
-    this.date = new Date().toISOString().slice(0, 10)
+    this.date = new Date().toISOString().slice(0, 10);
   },
   methods: {
     step1Click() {

@@ -60,8 +60,10 @@
       </v-card>
     </div>
 
-    
-    <asset-editor-limited ref="editor" :onSave="saveComplete"></asset-editor-limited>
+    <asset-editor-limited
+      ref="editor"
+      :onSave="saveComplete"
+    ></asset-editor-limited>
     <notifications ref="notifier"></notifications>
   </div>
 </template>
@@ -124,7 +126,9 @@ export default {
         (o) => this.manageCodes.indexOf(o.mailcode) >= 0
       );
 
-      this.manageNames = _.uniq(this.toManage.map((c) => c.mailcode)).join(", ");
+      this.manageNames = _.uniq(this.toManage.map((c) => c.mailcode)).join(
+        ", "
+      );
     }
   },
   methods: {
@@ -175,8 +179,8 @@ export default {
     },
     saveComplete(resp) {
       this.$refs.notifier.showAPIMessages(resp.data);
-      this.loadList(false)
-    }
+      this.loadList(false);
+    },
   },
 };
 </script>

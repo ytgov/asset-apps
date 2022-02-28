@@ -71,7 +71,7 @@ export default {
         make: "Pumpmaster / Superpump 1000",
         reasonAction: "Execute",
         unit_price: 4343.2,
-        category: 'Unknown'
+        category: "Unknown",
       },
       {
         date: "2021-08-09",
@@ -80,7 +80,7 @@ export default {
         make: "Pumpmaster / Superpump 9000",
         reasonAction: "Execute",
         unit_price: 6514,
-        category: 'Unknown'
+        category: "Unknown",
       },
       {
         date: "2021-02-22",
@@ -91,7 +91,7 @@ export default {
         make: "Lenovo / Laptop 123",
         reasonAction: "",
         unit_price: 123120.12,
-        category: 'Unknown'
+        category: "Unknown",
       },
     ],
   }),
@@ -102,9 +102,9 @@ export default {
       this.$refs.editor.show(item);
     },
     onSave(resp) {
-      console.log("TEING")
+      console.log("TEING");
       this.$refs.notifier.showAPIMessages(resp.data);
-    }
+    },
   },
 };
 </script>

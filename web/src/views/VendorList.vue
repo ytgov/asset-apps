@@ -83,7 +83,7 @@ export default {
       { text: "Dashboard", href: "/dashboard" },
       {
         text: "Vendors",
-        disabled: true
+        disabled: true,
       },
     ],
     search: "",

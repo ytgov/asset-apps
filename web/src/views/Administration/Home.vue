@@ -7,26 +7,19 @@
       <div class="col-md-4">
         <v-card class="mt-5 default">
           <v-card-title>Pending Transfers</v-card-title>
-          <v-card-text>
-          
-          </v-card-text>
+          <v-card-text> </v-card-text>
         </v-card>
       </div>
       <div class="col-md-4">
         <v-card class="mt-5 default">
           <v-card-title>Pending Tag Requests</v-card-title>
-          <v-card-text>
-          
-          </v-card-text>
+          <v-card-text> </v-card-text>
         </v-card>
       </div>
       <div class="col-md-4">
         <v-card class="mt-5 default">
           <v-card-title>Assets to Redistribute</v-card-title>
-          <v-card-text>
-            
-          
-          </v-card-text>
+          <v-card-text> </v-card-text>
         </v-card>
       </div>
     </div>
@@ -66,7 +59,7 @@ export default {
   }),
   created() {
     //this.loadList();
-    this.loadOwners()
+    this.loadOwners();
   },
   computed: {
     mailcodeOptions: function () {

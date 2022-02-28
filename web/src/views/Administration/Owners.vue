@@ -33,7 +33,6 @@
             <v-data-table
               :items="items"
               :search="search"
-              
               :headers="[
                 { text: 'Mail Code', value: 'mailcode' },
                 { text: 'Name', value: 'name' },

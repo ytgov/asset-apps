@@ -10,6 +10,6 @@ export default {
   name: "LoginComplete",
   created() {
     router.push("/");
-  }
+  },
 };
 </script>
