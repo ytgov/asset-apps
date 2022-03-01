@@ -2,49 +2,42 @@
 
 This repository contains the source for all projects related to internal Asset Management.
 
-## Contributors: 
+## Contributors:
 
-- Sean Pond
-- Michael Johnson
-
-## Projects
-
-### Asset Tracking : `/src/tracker`
-
----
+-   Sean Pond
+-   Michael Johnson
+-   Marlen Brunner
 
 ### Development
 
 ```
-cd src/tracker
-mv .env.example .env 
-# fill .env in relevant secrets
+docker-compose -f docker-compose.dev.yaml up
 
+# or if you can run bash
+bin/dev up
+```
+
+Old Way
+
+```
+# at top level folder
+docker-compose -f docker-compose.dev.yaml up
+
+cd api
+mv .env.example .env.development
+# fill .env in relevant secrets
+npm install
+npm run start
+
+cd ../web
 npm install
 npm run start
 ```
 
-### Test/Production
+### Production
 
 This application runs in a Docker container
 
 ```
 docker-compose up -d
 ```
-
---- 
-### Other App :  `/src/otherapp`
-
-### Development
-
-```
-npm run start
-```
-
-### Production
-
-```
-
-```
-
----
