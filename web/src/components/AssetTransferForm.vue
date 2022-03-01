@@ -112,7 +112,7 @@
           class="mt-2"
           dense
           outlined
-          :items="mailcodes"
+          :items="mailcodeOptions"
           label="What's your mail code?"
           item-text="display_name"
           item-value="id"
@@ -143,15 +143,14 @@
 
 <script>
 import axios from "axios";
-import store from "../store";
-import { OWNER_URL, TRANSFER_URL } from "../urls";
+import { mapGetters } from "vuex";
+
+import { TRANSFER_URL } from "@/urls";
 
 export default {
-  name: "UserEditor",
+  name: "AssetTransferForm",
   computed: {
-    assetTypeOptions: function () {
-      return store.getters.assetTypeOptions;
-    },
+    ...mapGetters(["assetTypeOptions", "mailcodeOptions"]),
   },
   props: ["onSave"],
   data: () => ({
@@ -164,16 +163,9 @@ export default {
     assetToTransfer: null,
     transferReason: "",
     descriptions: [{ quantity: 1, condition: "Good", type: 1 }],
-    mailcodes: [],
     conditionOptions: ["Good", "Obsolete", "Beyond repair"],
     fromMailcode: -1,
   }),
-  created() {
-    axios.get(OWNER_URL).then((resp) => {
-      this.mailcodes = resp.data.data;
-      this.is_loading = false;
-    });
-  },
   methods: {
     idYesClick() {
       this.hasIdentifier = "Yes";
