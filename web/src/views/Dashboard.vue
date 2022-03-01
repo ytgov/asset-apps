@@ -45,7 +45,7 @@
 
 <script>
 export default {
-  name: "Home",
+  name: "Dashboard",
   data: () => ({}),
 };
 </script>
