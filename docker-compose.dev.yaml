@@ -1,11 +1,39 @@
 version: "3"
 
 services:
-  db: 
+  web:
+    image: node:16-alpine
+    environment:
+      NODE_ENV: development
+    working_dir: /usr/src/web
+    command: ["sh", "-c", 'npm install -g @vue/cli; npm install ; npm run start']
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./web:/usr/src/web
+    depends_on:
+      - api
+      - db
+  api:
+    image: node:16-alpine
+    env_file:
+      - ./api/.env.development
+    environment:
+      NODE_ENV: development
+      DB_HOST: db
+    working_dir: /usr/src/api
+    command: ["sh", "-c", 'npm install ; npm run start']
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/usr/src/api
+    depends_on:
+      - db
+  db:
     image: mcr.microsoft.com/mssql/server:2019-latest
-    ports: 
+    ports:
       - "1433:1433"
-    env_file: 
+    env_file:
       - db/sqlserver.env
       - db/sapassword.env
     user: root
@@ -20,8 +48,3 @@ volumes:
   sqldata:
   sqllog:
   sqlbackup:
-
-#networks:
-#  default:
-#    external:
-#      name: data-net
