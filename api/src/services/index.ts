@@ -1,5 +1,5 @@
-
 export * from "./asset-service";
+export * from "./asset-tag-printer-service";
 export * from "./email-service";
 export * from "./transfer-service";
 export * from "./user-service";
@@ -18,5 +18,5 @@ export interface SortStatement {
 
 export enum SortDirection {
     ASCENDING = "asc",
-    DESCENDING = "desc"
+    DESCENDING = "desc",
 }

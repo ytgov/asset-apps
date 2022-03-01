@@ -6,6 +6,7 @@ import { API_PORT, FRONTEND_URL } from "./config";
 import { doHealthCheck } from "./utils/healthCheck";
 import {
   assetOwnerRouter,
+  assetPurchaseTypesRouter,
   assetTagRouter,
   v2Router,
   mailcodeRouter,
@@ -59,6 +60,7 @@ app.get("/api/healthCheck", (req: Request, res: Response) => {
 app.use("/api/user", userRouter);
 app.use("/api/asset-item", assetTagRouter);
 app.use("/api/asset-owner", assetOwnerRouter);
+app.use("/api/asset-purchase-types", assetPurchaseTypesRouter);
 app.use("/api/asset-transfer", transferRouter);
 app.use("/api/mailcode", mailcodeRouter);
 app.use("/api/scan", scanRouter);

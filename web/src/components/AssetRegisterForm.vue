@@ -54,7 +54,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
+                  v-model="purchaseDate"
                   label="Purchase date"
                   append-icon="mdi-calendar"
                   readonly
@@ -66,7 +66,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="date"
+                v-model="purchaseDate"
                 @input="menu = false"
               ></v-date-picker>
             </v-menu>
@@ -77,15 +77,19 @@
           dense
           outlined
           hide-details
-          :items="mailcodes"
+          :items="mailcodeOptions"
           label="What mail code do we send them to?"
           v-model="sendMailcode"
           item-text="display_name"
           item-value="mailcode"
         ></v-select>
 
-        <v-btn small color="primary" class="mb-0" @click="step1Click()"
-          >Generate tags</v-btn
+        <v-btn
+          small
+          color="primary"
+          class="mb-0"
+          @click="openAdditionalInformationMenu"
+          >Add individual item information</v-btn
         >
       </v-stepper-content>
 
@@ -97,28 +101,39 @@
             <v-select
               dense
               outlined
-              :items="[
-                'Purchase Order',
-                'RFP',
-                'Contract',
-                'Credit Card',
-                'Undefined',
-              ]"
+              :items="assetPurchaseTypeOptions"
+              item-text="description"
+              item-value="id"
               label="How were these items purchased?"
-              v-model="purchased"
+              v-model="purchasedTypeId"
             ></v-select>
           </div>
           <div class="col-sm-6">
-            <v-text-field label="Order number" dense outlined></v-text-field>
+            <v-text-field
+              v-model="orderNumber"
+              label="Order number"
+              dense
+              outlined
+            ></v-text-field>
           </div>
         </div>
+
+        <v-select
+          dense
+          outlined
+          :items="assetTypeOptions"
+          item-text="description"
+          item-value="id"
+          label="What type of item was purchased?"
+          v-model="assetTypeId"
+        ></v-select>
 
         <v-btn color="secondary" class="mb-0 mr-2" small @click="step = 1">
           Back
         </v-btn>
 
-        <v-btn color="primary" class="mb-0" small @click="finish()">
-          Add individual item information
+        <v-btn color="primary" class="mb-0" small @click="createTags">
+          Generate tags
         </v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -128,83 +143,69 @@
 </template>
 
 <script>
-import router from "../router";
-import { mapState } from "vuex";
-import axios from "axios";
-import { MAILCODE_URL } from "../urls";
+import { mapGetters } from "vuex";
+import { times } from "lodash";
+
+import { ASSET_URL } from "@/urls";
+import http from "@/utils/http-client";
 
 export default {
-  name: "UserEditor",
+  name: "AssetRegisterForm",
   computed: {
-    ...mapState("profile", ["mailcode"]),
+    ...mapGetters([
+      "assetTypeOptions",
+      "mailcodeOptions",
+      "assetPurchaseTypeOptions",
+    ]),
+    ...mapGetters("profile", {
+      defaultMailcode: "mailcode",
+      currentUserEmail: "email",
+    }),
   },
   props: ["onSave"],
-  data: () => ({
-    step: 1,
-
-    tagCount: 1,
-
-    search: null,
-    isLoading: null,
-    count: 0,
-    hasIdentifier: "",
-    step2Name: "Tell us about the item(s)",
-    assetToTransfer: null,
-    transferReason: "",
-    descriptions: [{ quantity: 1 }],
-
-    mailcodes: [],
-
-    menu: null,
-    date: null,
-    purchased: null,
-    sendMailcode: "",
-  }),
-  created() {
-    this.sendMailcode = this.mailcode;
-
-    axios.get(`${MAILCODE_URL}`).then((resp) => {
-      this.mailcodes = resp.data.data;
-    });
-
-    this.date = new Date().toISOString().slice(0, 10)
+  data() {
+    return {
+      assetTypeId: null,
+      menu: null,
+      orderNumber: null,
+      purchaseDate: null,
+      purchasedTypeId: null,
+      sendMailcode: "",
+      step: 1,
+      tagCount: 1,
+    };
+  },
+  mounted() {
+    this.step = 1;
+    this.sendMailcode = this.defaultMailcode;
+    this.purchaseDate = new Date().toISOString().slice(0, 10);
   },
   methods: {
-    step1Click() {
-      this.descriptions = new Array();
-
-      for (let i = 0; i < this.tagCount && i < 50; i++) {
-        this.descriptions.push({});
-      }
-
+    openAdditionalInformationMenu() {
       this.step = 2;
     },
+    createTags() {
+      const sendMailcodeId = this.mailcodeOptions.find(
+        ({ mailcode }) => mailcode == this.sendMailcode
+      ).id;
 
-    assetSelected(asset) {
-      this.assetToTransfer = asset;
-    },
+      const assetItemCreationPromises = times(this.tagCount, () =>
+        http.post(ASSET_URL, {
+          assetItem: {
+            asset_owner_id: sendMailcodeId,
+            asset_type_id: this.assetTypeId,
+            purchase_date: this.purchaseDate,
+            purchase_type_id: this.purchasedTypeId,
+            purchase_person: this.currentUserEmail,
+            purchase_order_number: this.orderNumber,
+          },
+        })
+      );
 
-    foundAsset() {
-      if (this.assetToTransfer) {
-        this.step = 3;
-      }
-    },
-
-    doComplete() {
-      this.$refs.notifier.showSuccess("Your transfer has been submitted");
-      this.resetForm();
-    },
-
-    finish() {
-      router.push("/asset-tags/recent");
-    },
-
-    resetForm() {
-      this.hasIdentifier = "";
-      this.step = 1;
-      this.step2Name = "Tell us about the item(s)";
-      this.assetToTransfer = null;
-      this.transferReason = "";
+      Promise.all(assetItemCreationPromises).then(() => {
+        this.$refs.notifier.showSuccess("Your tags have been generated.");
+        this.$router.push("/asset-tags/recent");
+      });
     },
   },
 };

@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
+# Helpers
 dc () {
 	docker-compose -f docker-compose.dev.yaml "$@"
 }
 
+function_exists () {
+	declare -F "$1" > /dev/null
+}
+
+# Docker Compose overrides
 build () {
 	echo "not yet implemented"
 }
@@ -20,6 +26,7 @@ logs () {
 	dc logs -f "$@"
 }
 
+# Custom helpers
 refresh () {
 	down
 	up
@@ -30,9 +37,22 @@ sqlcmd () {
 			-U sa \
 			-P Testing1122 \
 			-H localhost \
-			-d AssetControl
+			-d AssetControl \
+			"$@"
 }
 
+# Core logic
+main () {
+	local_function="$1"
+	if function_exists $1; then
+		shift
+		eval "$local_function" "$@"
+	else
+		dc "$@"
+	fi
+}
+
+# Only execute main function when file is executed
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	eval "$@"
+	main "$@"
 fi

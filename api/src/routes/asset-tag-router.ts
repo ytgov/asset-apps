@@ -1,18 +1,95 @@
 import express, { Request, Response } from "express";
 import { body, param } from "express-validator";
-import { ReturnValidationErrors } from "../middleware";
-import { AssetService, SortDirection, SortStatement } from "../services";
+import moment from "moment";
 import _ from "lodash";
 
-export const assetTagRouter = express.Router();
-const PAGE_SIZE = 10;
+import { ReturnValidationErrors } from "../middleware";
+import {
+  AssetService,
+  AssetTagPrinterService,
+  SortDirection,
+  SortStatement,
+} from "../services";
+import { db, DB_TRUE, MAXIMUM_DATE } from "../data";
 
-import { db, DB_TRUE } from "../data";
-import moment from "moment";
+export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
+const assetTagPrinterService = new AssetTagPrinterService(db);
+
+assetTagRouter.post("/", (req: Request, res: Response) => {
+  const { assetItem } = req.body;
+
+  return assetService
+    .create({
+      ...assetItem,
+      status: "Active",
+      condition: "Good",
+    })
+    .then(async (assetItemResult) => {
+      const {
+        id,
+        asset_owner_id,
+        asset_type_id,
+        purchase_date,
+        purchase_order_number,
+        purchase_person,
+        purchase_type_id,
+        tag,
+      } = assetItemResult;
+
+      const { mailcode } = await db
+        .select("mailcode")
+        .from("asset_owner")
+        .where({ id: asset_owner_id })
+        .first();
+
+      const { description } = await db
+        .select("description")
+        .from("asset_type")
+        .where({ id: asset_type_id })
+        .first();
+
+      const { description: purchase_type } = await db
+        .select("description")
+        .from("asset_purchase_type")
+        .where({ id: purchase_type_id })
+        .first();
+
+      const assetTagPrinter = await assetTagPrinterService.create({
+        DateTagRequestSubmitted: purchase_date,
+        DescriptionOfItem: description,
+        EmailOfRequestor: purchase_person,
+        EndTime: MAXIMUM_DATE,
+        Mailcode: mailcode,
+        PurchaseType: purchase_type,
+        StartTime: new Date(),
+        TagRequestID: id,
+        YTG_NUMBER: tag,
+      });
+
+      return { assetItem: assetItemResult, assetTagPrinter };
+    })
+    .then((result) => {
+      return res.status(201).json({
+        data: result,
+        messages: [{ variant: "success", text: "Asset created" }],
+      });
+    })
+    .catch(({ message: errorDetails }) =>
+      res.status(422).json({
+        messages: [
+          {
+            variant: "error",
+            text: "Asset failed to save",
+            details: errorDetails,
+          },
+        ],
+      })
+    );
+});
 
 assetTagRouter.post(
-  "/",
+  "/query",
   [body("page").isInt().default(1), body("itemsPerPage").isInt().default(10)],
   async (req: Request, res: Response) => {
     let { query, sortBy, sortDesc, page, itemsPerPage } = req.body;
