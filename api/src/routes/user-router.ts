@@ -11,10 +11,22 @@ export const userRouter = express.Router();
 const userService = new UserService(db);
 
 userRouter.get("/me", async (req: Request, res: Response) => {
-    let person = req.user;
-    let me = await userService.getByEmail(person.email);
+    const currentUser = req.user;
+    const user = await userService.getByEmail(currentUser.email);
+
+    const { id: mailcodeId } = await db
+        .select("id")
+        .from("asset_owner")
+        .where({ mailcode: user.mailcode })
+        .first();
+
+    const userProfile = await userService.makeDTO({
+        mailcodeId,
+        ...currentUser,
+        ...user,
+    });
     return res.json({
-        data: await userService.makeDTO(Object.assign(req.user, me)),
+        data: userProfile,
     });
 });
 
