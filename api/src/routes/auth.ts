@@ -1,13 +1,13 @@
 import { Express, NextFunction, Request, Response } from "express";
 import * as ExpressSession from "express-session";
 
-import { AuthUser } from "../data";
+import { db, AuthUser } from "../data";
 import { AUTH_REDIRECT, FRONTEND_URL, V2_API_KEY_REMOTE } from "../config";
 import { UserService } from "../services";
 
 import { auth } from "express-openid-connect";
 
-const db = new UserService();
+const userService = new UserService(db);
 
 const V2_API_REGEX = /^\/api\/v2\/.*/;
 
@@ -78,8 +78,10 @@ export function configureAuthentication(app: Express) {
             //(req.session as any).user = oidcUser;
             //req.user = oidcUser;
 
-            let dbUser = await db.getByEmail(oidcUser.email);
-            req.user = await db.makeDTO(Object.assign(oidcUser, dbUser));
+            let dbUser = await userService.getByEmail(oidcUser.email);
+            req.user = await userService.makeDTO(
+                Object.assign(oidcUser, dbUser)
+            );
         }
 
         next();
@@ -90,11 +92,11 @@ export function configureAuthentication(app: Express) {
             let user = AuthUser.fromOpenId(req.oidc.user) as AuthUser;
             req.user = user;
 
-            let dbUser = await db.getByEmail(req.user.email);
+            let dbUser = await userService.getByEmail(req.user.email);
 
             if (!dbUser) {
                 console.log("CREATING USER");
-                await db.create(
+                await userService.create(
                     user.email,
                     user.first_name,
                     user.last_name,
