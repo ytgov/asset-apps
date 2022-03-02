@@ -151,6 +151,9 @@ export default {
   name: "AssetTransferForm",
   computed: {
     ...mapGetters(["assetTypeOptions", "mailcodeOptions"]),
+    ...mapGetters("profile", {
+      currentUserMailcodeId: "mailcodeId",
+    }),
     onlyKnownMailcodeOptions() {
       return this.mailcodeOptions.filter(
         ({ mailcode }) => mailcode != "Unknown"
@@ -171,6 +174,11 @@ export default {
     conditionOptions: ["Good", "Obsolete", "Beyond repair"],
     fromOwnerId: -1,
   }),
+  watch: {
+    currentUserMailcodeId(value) {
+      this.fromOwnerId = value;
+    },
+  },
   methods: {
     idYesClick() {
       this.hasIdentifier = "Yes";
