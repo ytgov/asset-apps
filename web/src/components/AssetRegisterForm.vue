@@ -79,9 +79,9 @@
           hide-details
           :items="onlyKnownMailcodeOptions"
           label="What mail code do we send them to?"
-          v-model="sendMailcode"
+          v-model="sendMailcodeId"
           item-text="display_name"
-          item-value="mailcode"
+          item-value="id"
         ></v-autocomplete>
 
         <v-btn
@@ -158,7 +158,7 @@ export default {
       "assetPurchaseTypeOptions",
     ]),
     ...mapGetters("profile", {
-      defaultMailcode: "mailcode",
+      currentUserMailcodeId: "mailcodeId",
       currentUserEmail: "email",
     }),
     onlyKnownMailcodeOptions() {
@@ -175,29 +175,29 @@ export default {
       orderNumber: null,
       purchaseDate: null,
       purchasedTypeId: null,
-      sendMailcode: "",
+      sendMailcodeId: -1,
       step: 1,
       tagCount: 1,
     };
   },
   mounted() {
     this.step = 1;
-    this.sendMailcode = this.defaultMailcode;
     this.purchaseDate = new Date().toISOString().slice(0, 10);
+  },
+  watch: {
+    currentUserMailcodeId(value) {
+      this.sendMailcodeId = value;
+    },
   },
   methods: {
     openAdditionalInformationMenu() {
       this.step = 2;
     },
     createTags() {
-      const sendMailcodeId = this.mailcodeOptions.find(
-        ({ mailcode }) => mailcode == this.sendMailcode
-      ).id;
-
       const assetItemCreationPromises = times(this.tagCount, () =>
         http.post(ASSET_URL, {
           assetItem: {
-            asset_owner_id: sendMailcodeId,
+            asset_owner_id: this.sendMailcodeId,
             asset_type_id: this.assetTypeId,
             purchase_date: this.purchaseDate,
             purchase_type_id: this.purchasedTypeId,
