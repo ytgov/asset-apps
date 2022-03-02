@@ -112,7 +112,7 @@
           class="mt-2"
           dense
           outlined
-          :items="mailcodeOptions"
+          :items="onlyKnownMailcodeOptions"
           label="What's your mail code?"
           item-text="display_name"
           item-value="id"
@@ -151,6 +151,11 @@ export default {
   name: "AssetTransferForm",
   computed: {
     ...mapGetters(["assetTypeOptions", "mailcodeOptions"]),
+    onlyKnownMailcodeOptions() {
+      return this.mailcodeOptions.filter(
+        ({ mailcode }) => mailcode != "Unknown"
+      );
+    },
   },
   props: ["onSave"],
   data: () => ({
