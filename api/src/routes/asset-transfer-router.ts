@@ -69,7 +69,7 @@ transferRouter.post("/transfer", async (req: Request, res: Response) => {
 transferRouter.post(
   "/transfer-request",
   async (req: Request, res: Response) => {
-    let { asset, mailcode, rows, condition } = req.body;
+    let { asset, fromOwnerId, rows, condition } = req.body;
     const default_owner = await db("asset_owner")
       .where({ default_owner: DB_TRUE })
       .first();
@@ -81,7 +81,7 @@ transferRouter.post(
         request_date: new Date(),
         transfer_date: new Date(),
         condition: `REQUEST: ${condition}`,
-        from_owner_id: mailcode,
+        from_owner_id: fromOwnerId,
         to_owner_id: default_owner.id,
         quantity: 1,
       };
@@ -95,7 +95,7 @@ transferRouter.post(
           request_date: new Date(),
           transfer_date: new Date(),
           condition: `REQUEST: ${row.condition}`,
-          from_owner_id: mailcode,
+          from_owner_id: fromOwnerId,
           to_owner_id: default_owner.id,
           quantity: row.quantity,
         };

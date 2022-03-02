@@ -116,7 +116,7 @@
           label="What's your mail code?"
           item-text="display_name"
           item-value="id"
-          v-model="fromMailcode"
+          v-model="fromOwnerId"
         ></v-autocomplete>
 
         <v-select
@@ -169,7 +169,7 @@ export default {
     transferReason: "",
     descriptions: [{ quantity: 1, condition: "Good", type: 1 }],
     conditionOptions: ["Good", "Obsolete", "Beyond repair"],
-    fromMailcode: -1,
+    fromOwnerId: -1,
   }),
   methods: {
     idYesClick() {
@@ -198,7 +198,7 @@ export default {
       let body = {
         asset: this.assetToTransfer,
         rows: this.descriptions,
-        mailcode: this.fromMailcode,
+        fromOwnerId: this.fromOwnerId,
         condition: this.transferReason,
       };
 
