@@ -1,24 +1,28 @@
 import express, { Request, Response } from "express";
 import { body, param } from "express-validator";
+
+import { db } from "../data";
 import { ReturnValidationErrors } from "../middleware";
 import { UserService } from "../services";
 import _ from "lodash";
 
 export const userRouter = express.Router();
 
-const db = new UserService();
+const userService = new UserService(db);
 
 userRouter.get("/me", async (req: Request, res: Response) => {
     let person = req.user;
-    let me = await db.getByEmail(person.email);
-    return res.json({ data: await db.makeDTO(Object.assign(req.user, me)) });
+    let me = await userService.getByEmail(person.email);
+    return res.json({
+        data: await userService.makeDTO(Object.assign(req.user, me)),
+    });
 });
 
 userRouter.get("/", async (req: Request, res: Response) => {
-    let list = await db.getAll();
+    let list = await userService.getAll();
 
     for (let user of list) {
-        user = await db.makeDTO(user);
+        user = await userService.makeDTO(user);
     }
 
     return res.json({ data: list });
@@ -39,7 +43,7 @@ userRouter.put(
             manage_mailcodes: _.join(manage_mailcodes, ","),
         };
 
-        await db.update(email, user);
+        await userService.update(email, user);
 
         return res.json({
             messages: [{ variant: "success", text: "User saved" }],
@@ -55,11 +59,11 @@ userRouter.put(
         let { email } = req.params;
         let { mailcode } = req.body;
 
-        let user = await db.getByEmail(email);
+        let user = await userService.getByEmail(email);
 
         if (user) {
             user.mailcode = mailcode;
-            await db.update(email, user);
+            await userService.update(email, user);
             return res.json({
                 messages: [{ variant: "success", text: "Mail code saved" }],
             });
@@ -76,9 +80,9 @@ userRouter.delete(
     async (req: Request, res: Response) => {
         let { id } = req.params;
 
-        //await db.disable(id);
+        //await userService.disable(id);
 
-        let list = await db.getAll();
+        let list = await userService.getAll();
 
         return res.json({
             data: list,
@@ -90,7 +94,7 @@ userRouter.delete(
 userRouter.get(
     "/make-admin/:email/:key",
     async (req: Request, res: Response) => {
-        let user = await db.getByEmail(req.params.email);
+        let user = await userService.getByEmail(req.params.email);
 
         let { email, key } = req.params;
 
@@ -101,7 +105,7 @@ userRouter.get(
         if (user) {
             console.log(`KEY MATCHES, making ${email} an admin`);
             user.roles = ["Admin"];
-            await db.update(email, user);
+            await userService.update(email, user);
         }
 
         res.send("Done");
