@@ -20,12 +20,6 @@
         </v-card>
 
         <v-card class="mt-5 default">
-          <v-card-title>Mail Code Lookup</v-card-title>
-          <v-card-text>
-            <mailcode-lookup-form></mailcode-lookup-form>
-          </v-card-text>
-        </v-card>
-        <v-card class="mt-5 default">
           <v-card-title>Asset Tag Lookup</v-card-title>
           <v-card-text> <asset-lookup-form></asset-lookup-form></v-card-text>
         </v-card>
