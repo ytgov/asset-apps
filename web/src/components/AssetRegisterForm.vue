@@ -77,7 +77,7 @@
           dense
           outlined
           hide-details
-          :items="mailcodeOptions"
+          :items="onlyKnownMailcodeOptions"
           label="What mail code do we send them to?"
           v-model="sendMailcode"
           item-text="display_name"
@@ -161,6 +161,11 @@ export default {
       defaultMailcode: "mailcode",
       currentUserEmail: "email",
     }),
+    onlyKnownMailcodeOptions() {
+      return this.mailcodeOptions.filter(
+        ({ mailcode }) => mailcode != "Unknown"
+      );
+    },
   },
   props: ["onSave"],
   data() {
