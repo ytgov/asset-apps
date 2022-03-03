@@ -8,11 +8,12 @@
       dense
       :items="items"
       :headers="[
-        { text: 'Asset tag', value: 'value', width: '150px' },
-        { text: 'Purchase date', value: 'date', width: '160px' },
-        { text: 'Make / Model', value: 'make' },
+        { text: 'Asset tag', value: 'tag', width: '150px' },
+        { text: 'Purchase date', value: 'purchaseDate', width: '160px' },
+        { text: 'Description', value: 'description', width: '160px' },
+        { text: 'Make', value: 'make' },
+        { text: 'Model', value: 'model' },
         { text: 'Serial Number', value: 'serial' },
-        { text: 'Actions', value: 'actions', width: '120px' },
       ]"
       sort-by="['date']"
       @click:row="openEditor"
@@ -28,7 +29,7 @@
 import { ASSET_URL } from "../urls";
 import axios from "axios";
 export default {
-  name: "Home",
+  name: "MyTags",
   data: () => ({
     items: [],
   }),
