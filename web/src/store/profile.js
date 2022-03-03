@@ -8,6 +8,7 @@ const state = {
     id: "",
     lastName: "",
     mailcode: "",
+    mailcodeId: -1,
     manage_mailcodes: [],
     roles: [],
 };
@@ -19,6 +20,7 @@ const getters = {
     id: (state) => state.id,
     lastName: (state) => state.lastName,
     mailcode: (state) => state.mailcode,
+    mailcodeId: (state) => state.mailcodeId,
     manage_mailcodes: (state) => state.manage_mailcodes,
     roles: (state) => state.roles,
 };
@@ -41,6 +43,7 @@ const mutations = {
         state.fullName = profile.display_name;
         state.lastName = profile.last_name;
         state.mailcode = profile.mailcode;
+        state.mailcodeId = profile.mailcodeId;
         state.manage_mailcodes = profile.manage_mailcodes;
         state.roles = profile.roles;
         state.status = profile.status;
@@ -53,6 +56,7 @@ const mutations = {
             id: "",
             lastName: "",
             mailcode: "",
+            mailcodeId: -1,
             manage_mailcodes: [],
             roles: [],
         });
