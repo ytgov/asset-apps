@@ -37,7 +37,9 @@ export default {
   },
   methods: {
     loadList() {
-      axios.get(`${ASSET_URL}/my-requested-tags`).then((resp) => (this.items = resp.data.dat));
+      axios
+        .get(`${ASSET_URL}/my-requested-tags`)
+        .then((resp) => (this.items = resp.data.dat));
     },
 
     openEditor(item) {
