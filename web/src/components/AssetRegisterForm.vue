@@ -73,7 +73,7 @@
           </div>
         </div>
 
-        <v-select
+        <v-autocomplete
           dense
           outlined
           hide-details
@@ -82,7 +82,7 @@
           v-model="sendMailcode"
           item-text="display_name"
           item-value="mailcode"
-        ></v-select>
+        ></v-autocomplete>
 
         <v-btn
           small
