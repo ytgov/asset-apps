@@ -1,45 +1,68 @@
-import { db } from "../data";
+import { Knex } from "knex";
 import _ from "lodash";
 
 export class UserService {
+    readonly db: Knex;
 
-    async create(email: string, first_name: string, last_name: string, status: string, roles: string): Promise<any> {
-        let existing = await db("user").where({ email }).count("email as cnt");
+    constructor(db: Knex) {
+        this.db = db;
+    }
 
-        if (existing[0].cnt > 0)
-            return undefined;
+    async create(
+        email: string,
+        first_name: string,
+        last_name: string,
+        status: string,
+        roles: string
+    ): Promise<any> {
+        let existing = await this.db("user")
+            .where({ email })
+            .count("email as cnt");
 
-        let user = { email, first_name, last_name, status, roles, create_date: new Date() };
+        if (existing[0].cnt > 0) return undefined;
 
-        return await db("user").insert(user);
+        let user = {
+            email,
+            first_name,
+            last_name,
+            status,
+            roles,
+            create_date: new Date(),
+        };
+
+        return await this.db("user").insert(user);
     }
 
     async update(email: string, item: any) {
-        return db("user").where({ email }).update(item);
+        return this.db("user").where({ email }).update(item);
     }
 
     async getAll() {
-        return db("user");
+        return this.db("user");
     }
 
     async getByEmail(email: string): Promise<any | undefined> {
-        return db("user").where({ email }).first();
+        return this.db("user").where({ email }).first();
     }
 
     async getAccessFor(email: string): Promise<string[]> {
-        return ["asdf"]
+        return ["asdf"];
     }
 
     async setAccess(email: string, access: string[]) {
-        return ""
+        return "";
     }
 
     async makeDTO(userRaw: any) {
         let dto = userRaw;
         dto.display_name = `${userRaw.first_name} ${userRaw.last_name}`;
-        dto.roles = _.split(userRaw.roles, ",").filter((r: string) => r.length > 0);
-        dto.manage_mailcodes = _.split(userRaw.manage_mailcodes, ",").filter((r: string) => r.length > 0);
-        //dto.access = await db.getAccessFor(userRaw.email);
+        dto.roles = _.split(userRaw.roles, ",").filter(
+            (r: string) => r.length > 0
+        );
+        dto.manage_mailcodes = _.split(userRaw.manage_mailcodes, ",").filter(
+            (r: string) => r.length > 0
+        );
+        //dto.access = await this.db.getAccessFor(userRaw.email);
         //dto.display_access = _.join(dto.access.map((a: any) => a.level), ", ")
 
         return dto;

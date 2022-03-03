@@ -112,11 +112,11 @@
           class="mt-2"
           dense
           outlined
-          :items="mailcodes"
+          :items="onlyKnownMailcodeOptions"
           label="What's your mail code?"
           item-text="display_name"
           item-value="id"
-          v-model="fromMailcode"
+          v-model="fromOwnerId"
         ></v-autocomplete>
 
         <v-select
@@ -143,14 +143,21 @@
 
 <script>
 import axios from "axios";
-import store from "../store";
-import { OWNER_URL, TRANSFER_URL } from "../urls";
+import { mapGetters } from "vuex";
+
+import { TRANSFER_URL } from "@/urls";
 
 export default {
-  name: "UserEditor",
+  name: "AssetTransferForm",
   computed: {
-    assetTypeOptions: function () {
-      return store.getters.assetTypeOptions;
+    ...mapGetters(["assetTypeOptions", "mailcodeOptions"]),
+    ...mapGetters("profile", {
+      currentUserMailcodeId: "mailcodeId",
+    }),
+    onlyKnownMailcodeOptions() {
+      return this.mailcodeOptions.filter(
+        ({ mailcode }) => mailcode != "Unknown"
+      );
     },
   },
   props: ["onSave"],
@@ -164,15 +171,13 @@ export default {
     assetToTransfer: null,
     transferReason: "",
     descriptions: [{ quantity: 1, condition: "Good", type: 1 }],
-    mailcodes: [],
     conditionOptions: ["Good", "Obsolete", "Beyond repair"],
-    fromMailcode: -1,
+    fromOwnerId: -1,
   }),
-  created() {
-    axios.get(OWNER_URL).then((resp) => {
-      this.mailcodes = resp.data.data;
-      this.is_loading = false;
-    });
+  watch: {
+    currentUserMailcodeId(value) {
+      this.fromOwnerId = value;
+    },
   },
   methods: {
     idYesClick() {
@@ -201,7 +206,7 @@ export default {
       let body = {
         asset: this.assetToTransfer,
         rows: this.descriptions,
-        mailcode: this.fromMailcode,
+        fromOwnerId: this.fromOwnerId,
         condition: this.transferReason,
       };
 
