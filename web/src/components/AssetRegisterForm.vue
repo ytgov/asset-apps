@@ -204,7 +204,7 @@ export default {
 
       Promise.all(assetItemCreationPromises).then(() => {
         this.$refs.notifier.showSuccess("Your tags have been generated.");
-        this.$router.push("/asset-tags/recent");
+        this.$router.push({ name: "MyTags" });
       });
     },
   },

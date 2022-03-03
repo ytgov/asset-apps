@@ -44,7 +44,7 @@ const routes = [
     },
   },
   {
-    path: "/asset-tags/recent",
+    path: "/my-requested-tags",
     name: "MyTags",
     component: MyTags,
     meta: {
