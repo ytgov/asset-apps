@@ -25,60 +25,58 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
   },
   {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
     meta: {
-      requiresAuth: true
-    }
+      requiresAuth: true,
+    },
   },
   {
     path: "/my-scans",
     name: "MyScans",
     component: MyScans,
     meta: {
-      requiresAuth: true
-    }
+      requiresAuth: true,
+    },
   },
   {
-    path: "/asset-tags/recent",
+    path: "/my-requested-tags",
     name: "MyTags",
     component: MyTags,
     meta: {
-      requiresAuth: true
-    }
+      requiresAuth: true,
+    },
   },
   {
     path: "/scan",
     name: "NewScan",
     component: NewScan,
     meta: {
-      requiresAuth: true
-    }
+      requiresAuth: true,
+    },
   },
-
-
 
   {
     path: "/sign-in",
     name: "Login",
-    component: Login
+    component: Login,
   },
   {
     path: "/login-complete",
     name: "LoginComplete",
-    component: LoginComplete
+    component: LoginComplete,
   },
   {
     path: "/profile",
     name: "Profile",
     component: Profile,
     meta: {
-      requiresAuth: true
-    }
+      requiresAuth: true,
+    },
   },
 
   {
@@ -86,7 +84,7 @@ const routes = [
     name: "AdministrationHome",
     component: AdministrationHome,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -94,7 +92,7 @@ const routes = [
     name: "AdminUsers",
     component: AdministrationUsers,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -102,7 +100,7 @@ const routes = [
     name: "AdministrationOwners",
     component: AdministrationOwners,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -110,7 +108,7 @@ const routes = [
     name: "AdministrationTransfers",
     component: AdministrationTransfers,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
   {
@@ -118,7 +116,7 @@ const routes = [
     name: "AdministrationAssets",
     component: AdministrationAssets,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
 
@@ -127,22 +125,21 @@ const routes = [
     name: "ManageList",
     component: ManageList,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
   },
-
 
   {
     path: "*",
     name: "Not Found",
-    component: NotFound
-  }
+    component: NotFound,
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 import store from "../store";
@@ -158,7 +155,7 @@ router.beforeEach(async (to, from, next) => {
   var isAuthenticated = store.getters.isAuthenticated;
 
   if (requiresAuth && !isAuthenticated) {
-    console.log("You aren't authenticatd, redirecting to sign-in")
+    console.log("You aren't authenticatd, redirecting to sign-in");
     next("/sign-in");
     return;
   }
