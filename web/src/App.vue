@@ -115,6 +115,13 @@
               </v-list-item-icon>
               <v-list-item-title>My profile</v-list-item-title>
             </v-list-item>
+            
+            <v-list-item to="/my-requested-tags">
+              <v-list-item-icon>
+                <v-icon>mdi-tag-multiple</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>My requested tags</v-list-item-title>
+            </v-list-item>
 
             <v-list-item to="/administration" v-if="showAdmin">
               <v-list-item-icon>
