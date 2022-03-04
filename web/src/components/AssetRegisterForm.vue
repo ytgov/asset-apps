@@ -20,7 +20,7 @@
     <v-card class="white" outlined>
       <v-container class="py-4">
         <v-row>
-          <v-col cols="4">
+          <v-col cols="12" sm="4">
             <v-text-field
               v-model="tagCount"
               :rules="tagCountRules"
@@ -38,7 +38,7 @@
             </v-text-field>
           </v-col>
 
-          <v-col cols="8">
+          <v-col cols="12" sm="8">
             <v-menu
               v-model="datePickerMenu"
               :close-on-content-click="false"
@@ -75,7 +75,7 @@
         </v-row>
 
         <v-row>
-          <v-col cols="12">
+          <v-col cols="12" sm="12">
             <v-autocomplete
               v-model="sendMailcodeId"
               :items="onlyKnownMailcodeOptions"
@@ -96,7 +96,7 @@
         </v-row>
 
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12" sm="6">
             <v-select
               v-model="purchasedTypeId"
               :items="assetPurchaseTypeOptions"
@@ -114,7 +114,7 @@
               </template>
             </v-select>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12" sm="6">
             <v-text-field
               v-model="orderNumber"
               label="Order number"
