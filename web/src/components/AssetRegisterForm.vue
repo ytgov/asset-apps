@@ -17,32 +17,23 @@
       </li>
     </ol>
 
-    <v-stepper
-      flat
-      v-model="step"
-      vertical
-      non-linear
-      style="border: 1px #9e9e9e solid"
-    >
-      <v-stepper-step step="1" :complete="step > 1">
-        Let's get started
-      </v-stepper-step>
-
-      <v-stepper-content step="1">
-        <div class="row">
-          <div class="col-sm-4 pt-4">
+    <v-card class="white" outlined>
+      <v-container class="py-4">
+        <v-row>
+          <v-col cols="4">
             <v-text-field
               label="How many tags do you need?"
               dense
               outlined
+              hide-details
               type="number"
               min="1"
               max="50"
               v-model="tagCount"
             ></v-text-field>
-          </div>
+          </v-col>
 
-          <div class="col-sm-8 pt-4">
+          <v-col cols="8">
             <v-menu
               v-model="menu"
               :close-on-content-click="false"
@@ -59,6 +50,7 @@
                   append-icon="mdi-calendar"
                   readonly
                   outlined
+                  hide-details
                   dense
                   background-color="white"
                   v-bind="attrs"
@@ -70,74 +62,55 @@
                 @input="menu = false"
               ></v-date-picker>
             </v-menu>
-          </div>
-        </div>
+          </v-col>
+        </v-row>
 
-        <v-autocomplete
-          dense
-          outlined
-          hide-details
-          :items="onlyKnownMailcodeOptions"
-          label="What mail code do we send them to?"
-          v-model="sendMailcodeId"
-          item-text="display_name"
-          item-value="id"
-        ></v-autocomplete>
+        <v-row>
+          <v-col cols="12">
+            <v-autocomplete
+              dense
+              outlined
+              hide-details
+              :items="onlyKnownMailcodeOptions"
+              label="What mail code do we send them to?"
+              v-model="sendMailcodeId"
+              item-text="display_name"
+              item-value="id"
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
 
-        <v-btn
-          small
-          color="primary"
-          class="mb-0"
-          @click="openAdditionalInformationMenu"
-          >Add individual item information</v-btn
-        >
-      </v-stepper-content>
-
-      <v-stepper-step step="2">Tell us about the item(s)</v-stepper-step>
-
-      <v-stepper-content step="2" :complete="step > 2">
-        <div class="row pt-1">
-          <div class="col-sm-6">
+        <v-row>
+          <v-col cols="8">
             <v-select
               dense
               outlined
+              hide-details
               :items="assetPurchaseTypeOptions"
               item-text="description"
               item-value="id"
               label="How were these items purchased?"
               v-model="purchasedTypeId"
             ></v-select>
-          </div>
-          <div class="col-sm-6">
+          </v-col>
+          <v-col cols="4">
             <v-text-field
               v-model="orderNumber"
               label="Order number"
               dense
               outlined
+              hide-details
             ></v-text-field>
-          </div>
+          </v-col>
+        </v-row>
+
+        <div class="d-flex justify-end">
+          <v-btn class="mb-0" color="primary" @click="createTags">
+            Generate tags
+          </v-btn>
         </div>
-
-        <v-select
-          dense
-          outlined
-          :items="assetTypeOptions"
-          item-text="description"
-          item-value="id"
-          label="What type of item was purchased?"
-          v-model="assetTypeId"
-        ></v-select>
-
-        <v-btn color="secondary" class="mb-0 mr-2" small @click="step = 1">
-          Back
-        </v-btn>
-
-        <v-btn color="primary" class="mb-0" small @click="createTags">
-          Generate tags
-        </v-btn>
-      </v-stepper-content>
-    </v-stepper>
-
+      </v-container>
+    </v-card>
     <notifications ref="notifier"></notifications>
   </div>
 </template>
@@ -149,14 +122,12 @@ import { times } from "lodash";
 import { ASSET_URL } from "@/urls";
 import http from "@/utils/http-client";
 
+const UNSPECIFIED_ASSET_TYPE = -1;
+
 export default {
   name: "AssetRegisterForm",
   computed: {
-    ...mapGetters([
-      "assetTypeOptions",
-      "mailcodeOptions",
-      "assetPurchaseTypeOptions",
-    ]),
+    ...mapGetters(["mailcodeOptions", "assetPurchaseTypeOptions"]),
     ...mapGetters("profile", {
       currentUserMailcodeId: "mailcodeId",
       currentUserEmail: "email",
@@ -176,12 +147,10 @@ export default {
       purchaseDate: null,
       purchasedTypeId: null,
       sendMailcodeId: -1,
-      step: 1,
       tagCount: 1,
     };
   },
   mounted() {
-    this.step = 1;
     this.purchaseDate = new Date().toISOString().slice(0, 10);
   },
   watch: {
@@ -190,15 +159,12 @@ export default {
     },
   },
   methods: {
-    openAdditionalInformationMenu() {
-      this.step = 2;
-    },
     createTags() {
       const assetItemCreationPromises = times(this.tagCount, () =>
         http.post(ASSET_URL, {
           assetItem: {
             asset_owner_id: this.sendMailcodeId,
-            asset_type_id: this.assetTypeId,
+            asset_type_id: UNSPECIFIED_ASSET_TYPE,
             purchase_date: this.purchaseDate,
             purchase_type_id: this.purchasedTypeId,
             purchase_person: this.currentUserEmail,
