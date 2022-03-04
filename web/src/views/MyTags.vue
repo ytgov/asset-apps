@@ -6,40 +6,94 @@
 
     <v-data-table
       dense
-      :items="items"
+      class="row-clickable"
       :headers="[
         { text: 'Asset tag', value: 'tag', width: '150px' },
-        { text: 'Purchase date', value: 'purchaseDate', width: '160px' },
+        { text: 'Purchase date', value: 'purchase_date', width: '160px' },
         { text: 'Description', value: 'description', width: '160px' },
         { text: 'Make', value: 'make' },
         { text: 'Model', value: 'model' },
         { text: 'Serial Number', value: 'serial' },
       ]"
-      sort-by="['date']"
+      :items="items"
+      :loading="loading"
+      :options.sync="options"
+      :server-items-length="itemCount"
+      :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
       @click:row="openEditor"
     >
     </v-data-table>
 
     <notifications ref="notifier"></notifications>
+    <!-- <AssetEditorSuperLimited
+      ref="editor"
+      :onSave="onSave"
+    ></AssetEditorSuperLimited> -->
   </div>
 </template>
 
 <script>
-import { ASSET_URL } from "../urls";
-import axios from "axios";
+import { mapActions, mapGetters } from "vuex";
+import { cloneDeep } from "lodash";
+
+import http from "@/utils/http-client";
+import { ASSET_URL } from "@/urls";
+
+// import AssetEditorSuperLimited from "@/components/AssetEditorSuperLimited";
+
 export default {
   name: "MyTags",
+  components: {
+    // AssetEditorSuperLimited,
+  },
+  computed: {
+    ...mapGetters("profile", { currentUserEmail: "email" }),
+  },
   data: () => ({
+    options: {
+      page: 1,
+      itemsPerPage: 10,
+      sortBy: ["purchase_date"],
+      sortDesc: ["asc"],
+      groupBy: [],
+      groupDesc: [],
+      mustSort: false,
+      multiSort: false,
+    },
     items: [],
+    itemCount: 0,
+    loading: false,
   }),
-  async mounted() {
-    this.loadList();
+  mounted() {
+    this.loadProfile().then(() => {
+      this.loadMyRequestedTags();
+    });
   },
   methods: {
-    loadList() {
-      axios
-        .get(`${ASSET_URL}/my-requested-tags`)
-        .then((resp) => (this.items = resp.data.dat));
+    ...mapActions("profile", ["loadProfile"]),
+    loadMyRequestedTags() {
+      this.loading = true;
+
+      return http
+        .post(`${ASSET_URL}/query`, {
+          ...cloneDeep(this.options),
+          query: [
+            {
+              field: "purchase_person",
+              operator: "eq",
+              value: this.currentUserEmail,
+            },
+          ],
+        })
+        .then((resp) => {
+          this.itemCount = resp.data.meta.item_count;
+          this.items = resp.data.data;
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log("ERROR", error);
+        });
     },
 
     openEditor(item) {
