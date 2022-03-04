@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid">
+  <v-form v-model="isValid">
     <v-alert color="warning" border="left" outlined backround-color="#fffffdd">
       <h4 class="mb-2">YG assets valued over $1000 must have an asset tag</h4>
       <p class="mb-0">
@@ -23,7 +23,6 @@
           <v-col cols="4">
             <v-text-field
               v-model="tagCount"
-              label="How many tags do you need?"
               :rules="tagCountRules"
               hide-details="auto"
               dense
@@ -32,7 +31,11 @@
               min="1"
               max="50"
               required
-            ></v-text-field>
+            >
+              <template #label>
+                How many tags do you need? <strong class="red--text">*</strong>
+              </template>
+            </v-text-field>
           </v-col>
 
           <v-col cols="8">
@@ -44,13 +47,12 @@
               nudge-top="26"
               offset-y
               min-width="auto"
-              required
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="purchaseDate"
-                  label="Purchase date"
                   append-icon="mdi-calendar"
+                  required
                   readonly
                   outlined
                   hide-details="auto"
@@ -58,7 +60,11 @@
                   background-color="white"
                   v-bind="attrs"
                   v-on="on"
-                ></v-text-field>
+                >
+                  <template #label>
+                    Purchase date <strong class="red--text">*</strong>
+                  </template>
+                </v-text-field>
               </template>
               <v-date-picker
                 v-model="purchaseDate"
@@ -75,13 +81,17 @@
               :items="onlyKnownMailcodeOptions"
               item-text="display_name"
               item-value="id"
-              label="What mail code do we send them to?"
               :rules="sendMailcodeIdRules"
               hide-details="auto"
               dense
               outlined
               required
-            ></v-autocomplete>
+            >
+              <template #label>
+                What mail code do we send them to?
+                <strong class="red--text">*</strong>
+              </template>
+            </v-autocomplete>
           </v-col>
         </v-row>
 
@@ -92,36 +102,46 @@
               :items="assetPurchaseTypeOptions"
               item-text="description"
               item-value="id"
-              label="How were these items purchased?"
               :rules="assetPurchaseTypeIdRules"
               hide-details="auto"
               dense
               outlined
               required
-            ></v-select>
+            >
+              <template #label>
+                How were these items purchased?
+                <strong class="red--text">*</strong>
+              </template>
+            </v-select>
           </v-col>
           <v-col cols="6">
             <v-text-field
               v-model="orderNumber"
               label="Order number"
-              :rules="orderNumberRules"
-              hide-details="auto"
+              hide-details
               dense
               outlined
-              required
             ></v-text-field>
           </v-col>
         </v-row>
 
         <div class="d-flex justify-end">
-          <v-btn
-            class="mb-0"
-            color="primary"
-            :disabled="!valid"
-            @click="createTags"
-          >
-            Generate tags
-          </v-btn>
+          <v-tooltip left :disabled="isValid">
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  class="mb-0"
+                  color="primary"
+                  append-icon=""
+                  :disabled="!isValid"
+                  @click="createTags"
+                >
+                  Generate tags
+                </v-btn>
+              </div>
+            </template>
+            <span>Please fill in all required fields</span>
+          </v-tooltip>
         </div>
       </v-container>
     </v-card>
@@ -157,7 +177,6 @@ export default {
     return {
       datePickerMenu: false,
       orderNumber: null,
-      orderNumberRules: [(v) => !!v || "Order number is required"],
       purchaseDate: null,
       purchasedTypeId: null,
       assetPurchaseTypeIdRules: [(v) => !!v || "Purchase type is required"],
@@ -168,7 +187,7 @@ export default {
         (v) => !!v || "Must request at least one tag",
         (v) => v > 0 || "Must request at least one tag",
       ],
-      valid: false,
+      isValid: false,
     };
   },
   mounted() {
