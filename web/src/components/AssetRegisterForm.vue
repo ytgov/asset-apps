@@ -18,9 +18,9 @@
     </ol>
 
     <v-card class="white" outlined>
-      <v-container class="py-4">
+      <v-container class="py-4" style="border: 1px #9e9e9e solid">
         <v-row>
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="6">
             <v-text-field
               v-model="tagCount"
               :rules="tagCountRules"
@@ -38,7 +38,7 @@
             </v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="8">
+          <v-col cols="12" sm="6">
             <v-menu
               v-model="datePickerMenu"
               :close-on-content-click="false"
