@@ -50,8 +50,8 @@ export default {
     options: {
       page: 1,
       itemsPerPage: 10,
-      sortBy: ["purchase_date"],
-      sortDesc: ["asc"],
+      sortBy: ["tag"],
+      sortDesc: [false],
       groupBy: [],
       groupDesc: [],
       mustSort: false,
