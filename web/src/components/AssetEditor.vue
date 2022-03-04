@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" temporary absolute right width="600px">
+  <v-navigation-drawer v-model="drawer" temporary absolute right width="60%">
     <v-list-item>
       <v-list-item-avatar>
         <v-icon>mdi-dolly</v-icon>
@@ -9,148 +9,161 @@
         <v-list-item-title>Asset</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-
     <v-divider></v-divider>
+    <v-tabs>
+      <v-tabs-slider></v-tabs-slider>
 
-    <v-sheet class="mx-5 mt-5">
-      <v-row>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            label="Tag"
-            v-model="item.tag"
-            hide-details
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            label="Departmental tag"
-            v-model="item.dept_tag"
-            hide-details
-          ></v-text-field>
-        </v-col>
+      <v-tab> General </v-tab>
 
-        <v-col cols="12">
-          <v-autocomplete
-            dense
-            outlined
-            v-model="item.asset_owner_id"
-            rows="3"
-            label="Owner"
-            :items="ownerOptions"
-            item-text="display_name"
-            item-value="id"
-            hide-details
-            append-outer-icon="mdi-warehouse"
-            @click:append-outer="goToOwner"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12">
-          <v-textarea
-            dense
-            outlined
-            v-model="item.description"
-            rows="3"
-            label="Description"
-            hide-details
-          ></v-textarea>
-        </v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.make"
-            label="Make"
-            hide-details
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.model"
-            label="Model"
-            hide-details
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.serial"
-            label="Serial number"
-            hide-details
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.purchase_date"
-            label="Purchase date"
-            hide-details
-          ></v-text-field
-        ></v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.purchase_price"
-            label="Purchase price"
-            hide-details
-            v-currency
-          ></v-text-field
-        ></v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.purchase_person"
-            label="Purchaser"
-            hide-details
-          ></v-text-field
-        ></v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.purchase_order_number"
-            label="Purchase order"
-            hide-details
-          ></v-text-field
-        ></v-col>
-        <v-col cols="6">
-          <v-text-field
-            dense
-            outlined
-            v-model="item.purchase_order_line"
-            label="Purchase order line"
-            hide-details
-          ></v-text-field
-        ></v-col>
+      <v-tab> History </v-tab>
 
-        <v-col cols="6">
-          <v-select
-            dense
-            outlined
-            v-model="item.status"
-            :items="statusOptions"
-            label="Status"
-            hide-details
-            @change="statusChange"
-          ></v-select>
-        </v-col>
-      </v-row>
+      <v-tab-item>
+        <v-sheet class="mx-5 mt-5">
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                label="Tag"
+                v-model="item.tag"
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                label="Departmental tag"
+                v-model="item.dept_tag"
+                hide-details
+              ></v-text-field>
+            </v-col>
 
-      <div v-if="isTransfer" class="text-error float-left mt-4">
-        * Saving may generate transfer record(s)
-      </div>
+            <v-col cols="12">
+              <v-autocomplete
+                dense
+                outlined
+                v-model="item.asset_owner_id"
+                rows="3"
+                label="Owner"
+                :items="ownerOptions"
+                item-text="display_name"
+                item-value="id"
+                hide-details
+                append-outer-icon="mdi-warehouse"
+                @click:append-outer="goToOwner"
+              ></v-autocomplete>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                dense
+                outlined
+                v-model="item.description"
+                rows="3"
+                label="Description"
+                hide-details
+              ></v-textarea>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.make"
+                label="Make"
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.model"
+                label="Model"
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.serial"
+                label="Serial number"
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.purchase_date"
+                label="Purchase date"
+                hide-details
+              ></v-text-field
+            ></v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.purchase_price"
+                label="Purchase price"
+                hide-details
+                v-currency
+              ></v-text-field
+            ></v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.purchase_person"
+                label="Purchaser"
+                hide-details
+              ></v-text-field
+            ></v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.purchase_order_number"
+                label="Purchase order"
+                hide-details
+              ></v-text-field
+            ></v-col>
+            <v-col cols="6">
+              <v-text-field
+                dense
+                outlined
+                v-model="item.purchase_order_line"
+                label="Purchase order line"
+                hide-details
+              ></v-text-field
+            ></v-col>
 
-      <v-btn @click="save" color="primary" class="float-right">Save</v-btn>
-    </v-sheet>
+            <v-col cols="6">
+              <v-select
+                dense
+                outlined
+                v-model="item.status"
+                :items="statusOptions"
+                label="Status"
+                hide-details
+                @change="statusChange"
+              ></v-select>
+            </v-col>
+          </v-row>
+
+          <div v-if="isTransfer" class="text-error float-left mt-4">
+            * Saving may generate transfer record(s)
+          </div>
+
+          <v-btn @click="save" color="primary" class="float-right">Save</v-btn>
+        </v-sheet>
+      </v-tab-item>
+      <v-tab-item :eager="true"
+        ><HistoryList
+          :refreshAssetEditor="refreshAssetEditor"
+          ref="historyList"
+      /></v-tab-item>
+    </v-tabs>
   </v-navigation-drawer>
 </template>
 
@@ -161,8 +174,12 @@ import { mapGetters } from "vuex";
 
 import { OWNER_URL, ASSET_URL } from "../urls";
 import { formatDollar } from "../utils/formatters";
+import HistoryList from "../components/HistoryList.vue";
 
 export default {
+  components: {
+    HistoryList,
+  },
   computed: {
     ...mapGetters(["defaultAssetOwner", "mailcodeOptions"]),
     transferDirectionIcon: function () {
@@ -213,6 +230,8 @@ export default {
 
     oldOwner: -1,
     oldStatus: -1,
+
+    assetEditorRefresher: false,
   }),
   created() {
     this.loadList();
@@ -225,6 +244,10 @@ export default {
       this.oldStatus = this.item.status;
       this.item.purchase_price = formatDollar(this.item.purchase_price);
       this.drawer = true;
+      this.$refs.historyList.getAssetHistory(item.id);
+    },
+    refreshAssetEditor() {
+      this.$refs.historyList.getAssetHistory(this.item.id);
     },
     showInbound(item) {
       this.item = _.clone(item);
