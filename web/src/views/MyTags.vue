@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <h1>My Tags</h1>
-    <p>These are the tags that you have requested.</p>
+    <h1>My Requested Tags</h1>
+    <p>These are the tags that you have requested through the application. <br><em>* This page is available in the 'three dots' menu in the top right.</em></p>
     <hr />
 
     <v-data-table
