@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <v-form v-model="valid">
     <v-alert color="warning" border="left" outlined backround-color="#fffffdd">
       <h4 class="mb-2">YG assets valued over $1000 must have an asset tag</h4>
       <p class="mb-0">
@@ -22,26 +22,29 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
+              v-model="tagCount"
               label="How many tags do you need?"
+              :rules="tagCountRules"
+              hide-details="auto"
               dense
               outlined
-              hide-details
               type="number"
               min="1"
               max="50"
-              v-model="tagCount"
+              required
             ></v-text-field>
           </v-col>
 
           <v-col cols="8">
             <v-menu
-              v-model="menu"
+              v-model="datePickerMenu"
               :close-on-content-click="false"
               transition="scale-transition"
               left
               nudge-top="26"
               offset-y
               min-width="auto"
+              required
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -50,7 +53,7 @@
                   append-icon="mdi-calendar"
                   readonly
                   outlined
-                  hide-details
+                  hide-details="auto"
                   dense
                   background-color="white"
                   v-bind="attrs"
@@ -59,7 +62,7 @@
               </template>
               <v-date-picker
                 v-model="purchaseDate"
-                @input="menu = false"
+                @input="datePickerMenu = false"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -68,51 +71,62 @@
         <v-row>
           <v-col cols="12">
             <v-autocomplete
-              dense
-              outlined
-              hide-details
-              :items="onlyKnownMailcodeOptions"
-              label="What mail code do we send them to?"
               v-model="sendMailcodeId"
+              :items="onlyKnownMailcodeOptions"
               item-text="display_name"
               item-value="id"
+              label="What mail code do we send them to?"
+              :rules="sendMailcodeIdRules"
+              hide-details="auto"
+              dense
+              outlined
+              required
             ></v-autocomplete>
           </v-col>
         </v-row>
 
         <v-row>
-          <v-col cols="8">
+          <v-col cols="6">
             <v-select
-              dense
-              outlined
-              hide-details
+              v-model="purchasedTypeId"
               :items="assetPurchaseTypeOptions"
               item-text="description"
               item-value="id"
               label="How were these items purchased?"
-              v-model="purchasedTypeId"
+              :rules="assetPurchaseTypeIdRules"
+              hide-details="auto"
+              dense
+              outlined
+              required
             ></v-select>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model="orderNumber"
               label="Order number"
+              :rules="orderNumberRules"
+              hide-details="auto"
               dense
               outlined
-              hide-details
+              required
             ></v-text-field>
           </v-col>
         </v-row>
 
         <div class="d-flex justify-end">
-          <v-btn class="mb-0" color="primary" @click="createTags">
+          <v-btn
+            class="mb-0"
+            color="primary"
+            :disabled="!valid"
+            @click="createTags"
+          >
             Generate tags
           </v-btn>
         </div>
       </v-container>
     </v-card>
     <notifications ref="notifier"></notifications>
-  </div>
+  </v-form>
 </template>
 
 <script>
@@ -141,13 +155,20 @@ export default {
   props: ["onSave"],
   data() {
     return {
-      assetTypeId: null,
-      menu: null,
+      datePickerMenu: false,
       orderNumber: null,
+      orderNumberRules: [(v) => !!v || "Order number is required"],
       purchaseDate: null,
       purchasedTypeId: null,
+      assetPurchaseTypeIdRules: [(v) => !!v || "Purchase type is required"],
       sendMailcodeId: -1,
+      sendMailcodeIdRules: [(v) => !!v || "Mailcode is required"],
       tagCount: 1,
+      tagCountRules: [
+        (v) => !!v || "Must request at least one tag",
+        (v) => v > 0 || "Must request at least one tag",
+      ],
+      valid: false,
     };
   },
   mounted() {
