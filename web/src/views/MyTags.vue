@@ -21,7 +21,6 @@
     </v-data-table>
 
     <notifications ref="notifier"></notifications>
-    <asset-sidebar ref="editor" :onSave="onSave"></asset-sidebar>
   </div>
 </template>
 

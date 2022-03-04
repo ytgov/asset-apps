@@ -20,7 +20,6 @@ import AssetLookupForm from "./components/AssetLookupForm";
 import MailcodeLookupForm from "./components/MailcodeLookupForm";
 import MailcodeSelect from "./components/MailcodeSelect";
 
-import AssetTagSidebar from "./components/AssetTagSidebar";
 import AdministrationSidebar from "./components/AdministrationSidebar";
 
 Vue.config.productionTip = false;
@@ -40,7 +39,6 @@ Vue.component("asset-transfer-form", AssetTransferForm);
 Vue.component("asset-lookup-form", AssetLookupForm);
 Vue.component("mailcode-lookup-form", MailcodeLookupForm);
 Vue.component("mailcode-select", MailcodeSelect);
-Vue.component("asset-sidebar", AssetTagSidebar);
 Vue.component("admin-sidebar", AdministrationSidebar);
 
 Vue.use(VueCurrencyInput, { globalOptions: { currency: 'USD', locale: 'en' } });
