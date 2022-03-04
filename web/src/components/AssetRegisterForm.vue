@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <v-form v-model="isValid">
     <v-alert color="warning" border="left" outlined backround-color="#fffffdd">
       <h4 class="mb-2">YG assets valued over $1000 must have an asset tag</h4>
       <p class="mb-0">
@@ -17,34 +17,30 @@
       </li>
     </ol>
 
-    <v-stepper
-      flat
-      v-model="step"
-      vertical
-      non-linear
-      style="border: 1px #9e9e9e solid"
-    >
-      <v-stepper-step step="1" :complete="step > 1">
-        Let's get started
-      </v-stepper-step>
-
-      <v-stepper-content step="1">
-        <div class="row">
-          <div class="col-sm-4 pt-4">
+    <v-card class="white" outlined>
+      <v-container class="py-4">
+        <v-row>
+          <v-col cols="12" sm="4">
             <v-text-field
-              label="How many tags do you need?"
+              v-model="tagCount"
+              :rules="tagCountRules"
+              hide-details="auto"
               dense
               outlined
               type="number"
               min="1"
               max="50"
-              v-model="tagCount"
-            ></v-text-field>
-          </div>
+              required
+            >
+              <template #label>
+                How many tags do you need? <strong class="red--text">*</strong>
+              </template>
+            </v-text-field>
+          </v-col>
 
-          <div class="col-sm-8 pt-4">
+          <v-col cols="12" sm="8">
             <v-menu
-              v-model="menu"
+              v-model="datePickerMenu"
               :close-on-content-click="false"
               transition="scale-transition"
               left
@@ -55,91 +51,102 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="purchaseDate"
-                  label="Purchase date"
                   append-icon="mdi-calendar"
+                  required
                   readonly
                   outlined
+                  hide-details="auto"
                   dense
                   background-color="white"
                   v-bind="attrs"
                   v-on="on"
-                ></v-text-field>
+                >
+                  <template #label>
+                    Purchase date <strong class="red--text">*</strong>
+                  </template>
+                </v-text-field>
               </template>
               <v-date-picker
                 v-model="purchaseDate"
-                @input="menu = false"
+                @input="datePickerMenu = false"
               ></v-date-picker>
             </v-menu>
-          </div>
-        </div>
+          </v-col>
+        </v-row>
 
-        <v-autocomplete
-          dense
-          outlined
-          hide-details
-          :items="onlyKnownMailcodeOptions"
-          label="What mail code do we send them to?"
-          v-model="sendMailcodeId"
-          item-text="display_name"
-          item-value="id"
-        ></v-autocomplete>
-
-        <v-btn
-          small
-          color="primary"
-          class="mb-0"
-          @click="openAdditionalInformationMenu"
-          >Add individual item information</v-btn
-        >
-      </v-stepper-content>
-
-      <v-stepper-step step="2">Tell us about the item(s)</v-stepper-step>
-
-      <v-stepper-content step="2" :complete="step > 2">
-        <div class="row pt-1">
-          <div class="col-sm-6">
-            <v-select
+        <v-row>
+          <v-col cols="12" sm="12">
+            <v-autocomplete
+              v-model="sendMailcodeId"
+              :items="onlyKnownMailcodeOptions"
+              item-text="display_name"
+              item-value="id"
+              :rules="sendMailcodeIdRules"
+              hide-details="auto"
               dense
               outlined
+              required
+            >
+              <template #label>
+                What mail code do we send them to?
+                <strong class="red--text">*</strong>
+              </template>
+            </v-autocomplete>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="purchasedTypeId"
               :items="assetPurchaseTypeOptions"
               item-text="description"
               item-value="id"
-              label="How were these items purchased?"
-              v-model="purchasedTypeId"
-            ></v-select>
-          </div>
-          <div class="col-sm-6">
+              :rules="assetPurchaseTypeIdRules"
+              hide-details="auto"
+              dense
+              outlined
+              required
+            >
+              <template #label>
+                How were these items purchased?
+                <strong class="red--text">*</strong>
+              </template>
+            </v-select>
+          </v-col>
+          <v-col cols="12" sm="6">
             <v-text-field
               v-model="orderNumber"
               label="Order number"
+              hide-details
               dense
               outlined
             ></v-text-field>
-          </div>
+          </v-col>
+        </v-row>
+
+        <div class="d-flex justify-end">
+          <v-tooltip left :disabled="isValid">
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  class="mb-0"
+                  color="primary"
+                  append-icon=""
+                  :disabled="!isValid"
+                  @click="createTags"
+                >
+                  Generate tags
+                </v-btn>
+              </div>
+            </template>
+            <span>Please fill in all required fields</span>
+          </v-tooltip>
         </div>
-
-        <v-select
-          dense
-          outlined
-          :items="assetTypeOptions"
-          item-text="description"
-          item-value="id"
-          label="What type of item was purchased?"
-          v-model="assetTypeId"
-        ></v-select>
-
-        <v-btn color="secondary" class="mb-0 mr-2" small @click="step = 1">
-          Back
-        </v-btn>
-
-        <v-btn color="primary" class="mb-0" small @click="createTags">
-          Generate tags
-        </v-btn>
-      </v-stepper-content>
-    </v-stepper>
-
+      </v-container>
+    </v-card>
     <notifications ref="notifier"></notifications>
-  </div>
+  </v-form>
 </template>
 
 <script>
@@ -149,14 +156,12 @@ import { times } from "lodash";
 import { ASSET_URL } from "@/urls";
 import http from "@/utils/http-client";
 
+const UNSPECIFIED_ASSET_TYPE = -1;
+
 export default {
   name: "AssetRegisterForm",
   computed: {
-    ...mapGetters([
-      "assetTypeOptions",
-      "mailcodeOptions",
-      "assetPurchaseTypeOptions",
-    ]),
+    ...mapGetters(["mailcodeOptions", "assetPurchaseTypeOptions"]),
     ...mapGetters("profile", {
       currentUserMailcodeId: "mailcodeId",
       currentUserEmail: "email",
@@ -170,35 +175,39 @@ export default {
   props: ["onSave"],
   data() {
     return {
-      assetTypeId: null,
-      menu: null,
+      datePickerMenu: false,
       orderNumber: null,
       purchaseDate: null,
       purchasedTypeId: null,
+      assetPurchaseTypeIdRules: [(v) => !!v || "Purchase type is required"],
       sendMailcodeId: -1,
-      step: 1,
+      sendMailcodeIdRules: [(v) => !!v || "Mailcode is required"],
       tagCount: 1,
+      tagCountRules: [
+        (v) => !!v || "Must request at least one tag",
+        (v) => v > 0 || "Must request at least one tag",
+      ],
+      isValid: false,
     };
   },
   mounted() {
-    this.step = 1;
     this.purchaseDate = new Date().toISOString().slice(0, 10);
   },
   watch: {
-    currentUserMailcodeId(value) {
-      this.sendMailcodeId = value;
+    currentUserMailcodeId: {
+      handler(value) {
+        this.sendMailcodeId = value;
+      },
+      immediate: true,
     },
   },
   methods: {
-    openAdditionalInformationMenu() {
-      this.step = 2;
-    },
     createTags() {
       const assetItemCreationPromises = times(this.tagCount, () =>
         http.post(ASSET_URL, {
           assetItem: {
             asset_owner_id: this.sendMailcodeId,
-            asset_type_id: this.assetTypeId,
+            asset_type_id: UNSPECIFIED_ASSET_TYPE,
             purchase_date: this.purchaseDate,
             purchase_type_id: this.purchasedTypeId,
             purchase_person: this.currentUserEmail,
