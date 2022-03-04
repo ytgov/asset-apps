@@ -154,8 +154,11 @@ export default {
     this.purchaseDate = new Date().toISOString().slice(0, 10);
   },
   watch: {
-    currentUserMailcodeId(value) {
-      this.sendMailcodeId = value;
+    currentUserMailcodeId: {
+      handler(value) {
+        this.sendMailcodeId = value;
+      },
+      immediate: true,
     },
   },
   methods: {
