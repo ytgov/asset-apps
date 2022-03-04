@@ -22,132 +22,124 @@ import NewScan from '../views/NewScan.vue';
 Vue.use(VueRouter);
 
 const routes = [
-	{
-		path: '/',
-		name: 'Home',
-		component: Home,
-	},
-	{
-		path: '/dashboard',
-		name: 'Dashboard',
-		component: Dashboard,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/my-scans',
-		name: 'MyScans',
-		component: MyScans,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/asset-tags/recent',
-		name: 'MyTags',
-		component: MyTags,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/scan',
-		name: 'NewScan',
-		component: NewScan,
-		meta: {
-			requiresAuth: true,
-		},
-	},
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/my-scans",
+    name: "MyScans",
+    component: MyScans,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/my-requested-tags",
+    name: "MyTags",
+    component: MyTags,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/scan",
+    name: "NewScan",
+    component: NewScan,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
-	{
-		path: '/sign-in',
-		name: 'Login',
-		component: Login,
-	},
-	{
-		path: '/login-complete',
-		name: 'LoginComplete',
-		component: LoginComplete,
-	},
-	{
-		path: '/profile',
-		name: 'Profile',
-		component: Profile,
-		meta: {
-			requiresAuth: true,
-		},
-	},
+  {
+    path: "/sign-in",
+    name: "Login",
+    component: Login,
+  },
+  {
+    path: "/login-complete",
+    name: "LoginComplete",
+    component: LoginComplete,
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
-	{
-		path: '/administration',
-		name: 'AdministrationHome',
-		component: AdministrationHome,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/administration/users',
-		name: 'AdminUsers',
-		component: AdministrationUsers,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/administration/owners',
-		name: 'AdministrationOwners',
-		component: AdministrationOwners,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/administration/transfers',
-		name: 'AdministrationTransfers',
-		component: AdministrationTransfers,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/administration/assets',
-		name: 'AdministrationAssets',
-		component: AdministrationAssets,
-		meta: {
-			requiresAuth: true,
-		},
-	},
-	{
-		path: '/administration/assets',
-		name: 'AdministrationAssets',
-		component: AdministrationAssets,
-		meta: {
-			requiresAuth: true,
-		},
-	},
+  {
+    path: "/administration",
+    name: "AdministrationHome",
+    component: AdministrationHome,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/administration/users",
+    name: "AdminUsers",
+    component: AdministrationUsers,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/administration/owners",
+    name: "AdministrationOwners",
+    component: AdministrationOwners,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/administration/transfers",
+    name: "AdministrationTransfers",
+    component: AdministrationTransfers,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/administration/assets",
+    name: "AdministrationAssets",
+    component: AdministrationAssets,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
-	{
-		path: '/manage',
-		name: 'ManageList',
-		component: ManageList,
-		meta: {
-			requiresAuth: true,
-		},
-	},
+  {
+    path: "/manage",
+    name: "ManageList",
+    component: ManageList,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
-	{
-		path: '*',
-		name: 'Not Found',
-		component: NotFound,
-	},
+  {
+    path: "*",
+    name: "Not Found",
+    component: NotFound,
+  },
 ];
 
 const router = new VueRouter({
-	mode: 'history',
-	base: process.env.BASE_URL,
-	routes,
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes,
 });
 
 import store from '../store';
@@ -162,11 +154,11 @@ router.beforeEach(async (to, from, next) => {
 	await store.dispatch('checkAuthentication');
 	var isAuthenticated = store.getters.isAuthenticated;
 
-	if (requiresAuth && !isAuthenticated) {
-		console.log("You aren't authenticatd, redirecting to sign-in");
-		next('/sign-in');
-		return;
-	}
+  if (requiresAuth && !isAuthenticated) {
+    console.log("You aren't authenticatd, redirecting to sign-in");
+    next("/sign-in");
+    return;
+  }
 
 	return next();
 });
