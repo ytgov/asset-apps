@@ -66,6 +66,14 @@ export default {
       this.loadMyRequestedTags();
     });
   },
+  watch: {
+    options: {
+      handler() {
+        this.loadMyRequestedTags();
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions("profile", ["loadProfile"]),
     loadMyRequestedTags() {
