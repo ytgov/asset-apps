@@ -10,10 +10,10 @@
       :headers="[
         { text: 'Asset tag', value: 'tag', width: '150px' },
         { text: 'Purchase date', value: 'purchase_date', width: '160px' },
-        { text: 'Description', value: 'description', width: '160px' },
+        { text: 'Description', value: 'description' },
         { text: 'Make', value: 'make' },
         { text: 'Model', value: 'model' },
-        { text: 'Serial Number', value: 'serial' },
+        { text: 'Serial Number', value: 'serial', width: '160px' },
       ]"
       :items="items"
       :loading="loading"
@@ -25,10 +25,7 @@
     </v-data-table>
 
     <notifications ref="notifier"></notifications>
-    <!-- <AssetEditorSuperLimited
-      ref="editor"
-      :onSave="onSave"
-    ></AssetEditorSuperLimited> -->
+    <MyTagsAssetEditor ref="editor" :on-save="onSave"></MyTagsAssetEditor>
   </div>
 </template>
 
@@ -39,12 +36,12 @@ import { cloneDeep } from "lodash";
 import http from "@/utils/http-client";
 import { ASSET_URL } from "@/urls";
 
-// import AssetEditorSuperLimited from "@/components/AssetEditorSuperLimited";
+import MyTagsAssetEditor from "@/components/MyTagsAssetEditor";
 
 export default {
   name: "MyTags",
   components: {
-    // AssetEditorSuperLimited,
+    MyTagsAssetEditor,
   },
   computed: {
     ...mapGetters("profile", { currentUserEmail: "email" }),
@@ -100,8 +97,8 @@ export default {
       this.$refs.editor.show(item);
     },
     onSave(resp) {
-      console.log("Save");
       this.$refs.notifier.showAPIMessages(resp.data);
+      this.loadMyRequestedTags();
     },
   },
 };
