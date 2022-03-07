@@ -47,7 +47,8 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
         .select("description")
         .from("asset_type")
         .where({ id: asset_type_id })
-        .first();
+        .first()
+        .then((result) => result || { description: "Unknown" });
 
       const { description: purchase_type } = await db
         .select("description")
