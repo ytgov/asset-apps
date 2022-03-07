@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <v-form v-model="isValid">
     <v-stepper
       flat
       v-model="step"
@@ -131,14 +131,45 @@
           persistent-hint
         ></v-select>
 
-        <v-btn small class="mb-0" color="primary" @click="doComplete()"
-          >Complete</v-btn
+        <v-checkbox
+          v-model="approvalReceived"
+          :rules="approvalReceivedRules"
+          dense
+          hide-details
+          required
         >
+          <template v-slot:label>
+            <div>
+              My Director or financial officer approved this transfer/disposal.
+              <strong class="red--text">*</strong><br />
+              Deputy Minister approval may be required if asset value is over
+              <strong>$10,000</strong>
+            </div>
+          </template>
+        </v-checkbox>
+
+        <div class="d-flex">
+          <v-tooltip bottom :disabled="isValid">
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  small
+                  class="mb-0"
+                  color="primary"
+                  :disabled="!isValid"
+                  @click="doComplete"
+                  >Complete</v-btn
+                >
+              </div>
+            </template>
+            <span>Please fill in all required fields</span>
+          </v-tooltip>
+        </div>
       </v-stepper-content>
     </v-stepper>
 
     <notifications ref="notifier"></notifications>
-  </div>
+  </v-form>
 </template>
 
 <script>
@@ -162,9 +193,12 @@ export default {
   },
   props: ["onSave"],
   data: () => ({
+    approvalReceived: false,
+    approvalReceivedRules: [(v) => !!v || "Approval confirmation is required"],
     step: 1,
     search: null,
     isLoading: null,
+    isValid: false,
     count: 0,
     hasIdentifier: "",
     step2Name: "Tell us about the item(s)",
