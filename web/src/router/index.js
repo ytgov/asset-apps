@@ -1,23 +1,23 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Dashboard from "../views/Dashboard.vue";
-import NotFound from "../views/NotFound.vue";
-import Login from "../views/Login";
-import LoginComplete from "../views/LoginComplete";
-import Profile from "../views/Profile";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
+import Dashboard from '../views/Dashboard.vue';
+import NotFound from '../views/NotFound.vue';
+import Login from '../views/Login';
+import LoginComplete from '../views/LoginComplete';
+import Profile from '../views/Profile';
 
-import AdministrationHome from "../views/Administration/Home";
-import AdministrationUsers from "../views/Administration/Users";
-import AdministrationOwners from "../views/Administration/Owners";
-import AdministrationTransfers from "../views/Administration/Transfers";
-import AdministrationAssets from "../views/Administration/Assets";
+import AdministrationHome from '../views/Administration/Home';
+import AdministrationUsers from '../views/Administration/Users';
+import AdministrationOwners from '../views/Administration/Owners';
+import AdministrationTransfers from '../views/Administration/Transfers';
+import AdministrationAssets from '../views/Administration/Assets';
 
-import ManageList from "../views/Manage/List";
+import ManageList from '../views/Manage/List';
 
-import MyScans from "../views/MyScans.vue";
-import MyTags from "../views/MyTags.vue";
-import NewScan from "../views/NewScan.vue";
+import MyScans from '../views/MyScans.vue';
+import MyTags from '../views/MyTags.vue';
+import NewScan from '../views/NewScan.vue';
 
 Vue.use(VueRouter);
 
@@ -142,17 +142,17 @@ const router = new VueRouter({
   routes,
 });
 
-import store from "../store";
+import store from '../store';
 
 router.beforeEach(async (to, from, next) => {
-  var requiresAuth = to.meta.requiresAuth || false;
+	var requiresAuth = to.meta.requiresAuth || false;
 
-  if (!requiresAuth) {
-    return next();
-  }
+	if (!requiresAuth) {
+		return next();
+	}
 
-  await store.dispatch("checkAuthentication");
-  var isAuthenticated = store.getters.isAuthenticated;
+	await store.dispatch('checkAuthentication');
+	var isAuthenticated = store.getters.isAuthenticated;
 
   if (requiresAuth && !isAuthenticated) {
     console.log("You aren't authenticatd, redirecting to sign-in");
@@ -160,7 +160,7 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
-  return next();
+	return next();
 });
 
 export default router;
