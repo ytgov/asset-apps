@@ -216,10 +216,15 @@ export default {
         })
       );
 
-      Promise.all(assetItemCreationPromises).then(() => {
-        this.$refs.notifier.showSuccess("Your tags have been generated.");
-        this.$router.push({ name: "MyTags" });
-      });
+      Promise.all(assetItemCreationPromises)
+        .then(() => {
+          this.$refs.notifier.showSuccess("Your tags have been generated.");
+          this.$router.push({ name: "MyTags" });
+        })
+        .catch((error) => {
+          console.error(error);
+          this.$refs.notifier.showError("Could not generate your tags.");
+        });
     },
   },
 };
