@@ -4,6 +4,7 @@ import { MAIL_CONFIG, MAIL_FROM, NODE_ENV, FRONTEND_URL, APPLICATION_NAME, MAIL_
 import fs from "fs";
 import path from "path";
 
+import { AuthUser } from "../data";
 const BASE_TEMPLATE = "../templates/base.html";
 const TAG_REQUEST_NOTIFY_TEMPLATE = "../templates/tag_request_notify.html";
 const TAG_REQUEST_COMPLETE_TEMPLATE = "../templates/tag_request_complete.html";
