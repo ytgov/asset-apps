@@ -2,11 +2,11 @@ version: "3"
 
 services:
   web:
-    image: node:16-alpine
+    build:
+      context: ./web
+      dockerfile: development.Dockerfile
     environment:
       NODE_ENV: development
-    working_dir: /usr/src/web
-    command: ["sh", "-c", 'npm install -g @vue/cli; npm install ; npm run start']
     ports:
       - "8080:8080"
     volumes:
