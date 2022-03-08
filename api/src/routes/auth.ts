@@ -1,13 +1,13 @@
 import { Express, NextFunction, Request, Response } from "express";
 import * as ExpressSession from "express-session";
 
-import { db, AuthUser } from "../data";
+import { AuthUser } from "../data";
 import { AUTH_REDIRECT, FRONTEND_URL, V2_API_KEY_REMOTE } from "../config";
 import { UserService } from "../services";
 
 import { auth } from "express-openid-connect";
 
-const userService = new UserService(db);
+const userService = new UserService();
 
 const V2_API_REGEX = /^\/api\/v2\/.*/;
 
