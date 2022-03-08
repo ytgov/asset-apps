@@ -2,7 +2,8 @@ import { Knex } from "knex";
 import _ from "lodash";
 import moment from "moment";
 
-import { QueryStatement, SortStatement } from ".";
+import { QueryStatement, SortStatement, AssetTagPrinterService } from ".";
+import { MAXIMUM_DATE } from "../data";
 import { AssetItem } from "../data/models";
 
 export class AssetService {
@@ -12,8 +13,8 @@ export class AssetService {
         this.db = db;
     }
 
-    create(assetItem: AssetItem) {
-        return this.db.transaction(async (trx) => {
+    async create(assetItem: AssetItem): Promise<AssetItem & { id: number }> {
+        const assetItemResult = await this.db.transaction(async (trx) => {
             const next_y_number_result = await trx.raw(
                 "SELECT NEXT VALUE FOR dbo.y_numbers as y_number"
             );
@@ -30,6 +31,51 @@ export class AssetService {
                 .into("asset_item")
                 .then((result) => result[0]);
         });
+
+        const {
+            id,
+            asset_owner_id,
+            asset_type_id,
+            purchase_date,
+            purchase_order_number,
+            purchase_person,
+            purchase_type_id,
+            tag,
+        } = assetItemResult;
+
+        const { mailcode } = await this.db
+            .select("mailcode")
+            .from("asset_owner")
+            .where({ id: asset_owner_id })
+            .first();
+
+        const { description } = await this.db
+            .select("description")
+            .from("asset_type")
+            .where({ id: asset_type_id })
+            .first()
+            .then((result) => result || { description: "Unknown" });
+
+        const { description: purchase_type } = await this.db
+            .select("description")
+            .from("asset_purchase_type")
+            .where({ id: purchase_type_id })
+            .first();
+
+        const assetTagPrinterService = new AssetTagPrinterService(this.db);
+        await assetTagPrinterService.create({
+            DateTagRequestSubmitted: purchase_date,
+            DescriptionOfItem: description,
+            EmailOfRequestor: purchase_person,
+            EndTime: MAXIMUM_DATE,
+            Mailcode: mailcode,
+            PurchaseType: purchase_type,
+            StartTime: new Date(),
+            TagRequestID: id,
+            YTG_NUMBER: tag,
+        });
+
+        return assetItemResult;
     }
 
     async doSearch(

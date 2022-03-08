@@ -11,7 +11,9 @@ export class AssetTagPrinterService {
     this.db = db;
   }
 
-  create(assetTagPrinter: AssetTagPrinter) {
+  create(
+    assetTagPrinter: AssetTagPrinter
+  ): Promise<AssetTagPrinter & { id: number }> {
     return this.db
       .insert(assetTagPrinter, ["id", ...Object.keys(assetTagPrinter)])
       .into(ASSET_TAG_PRINTER_TABLE_NAME)
