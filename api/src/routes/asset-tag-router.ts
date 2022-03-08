@@ -7,6 +7,7 @@ import { ReturnValidationErrors } from "../middleware";
 import {
   AssetService,
   AssetTagPrinterService,
+  EmailService,
   SortDirection,
   SortStatement,
 } from "../services";
@@ -16,6 +17,7 @@ import { AssetItem } from "../data/models";
 export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
 const assetTagPrinterService = new AssetTagPrinterService(db);
+const emailService = new EmailService();
 
 assetTagRouter.post("/", (req: Request, res: Response) => {
   const { assetItem } = req.body;
@@ -67,11 +69,12 @@ assetTagRouter.post(
     );
 
     return Promise.all(assetCreationPromises)
-      .then((results: Array<AssetItem>) => {
-        // TODO sendEmails(<template-name>, { assetItems })
+      .then((assetItemResults: Array<AssetItem>) => {
+        const tags = assetItemResults.map((assetItem) => assetItem.tag);
+        emailService.sendTagRequestNotification(req.user, tags);
 
         return res.status(201).json({
-          data: results,
+          data: assetItemResults,
           messages: [{ variant: "success", text: "Assets created" }],
         });
       })
