@@ -7,10 +7,8 @@ import { MailOptions } from "nodemailer/lib/json-transport";
 import {
     MAIL_CONFIG,
     MAIL_FROM,
-    NODE_ENV,
     FRONTEND_URL,
     APPLICATION_NAME,
-    MAIL_CONFIG_DEV,
 } from "../config";
 import { AuthUser } from "../data";
 const BASE_TEMPLATE = "../templates/base.html";
@@ -18,17 +16,12 @@ const TAG_REQUEST_NOTIFY_TEMPLATE = "../templates/tag_request_notify.html";
 const TAG_REQUEST_COMPLETE_TEMPLATE = "../templates/tag_request_complete.html";
 
 export class EmailService {
-    TRANSPORT: Transporter;
+    readonly transport: Transporter;
 
     constructor() {
-        if (NODE_ENV != "development")
-            this.TRANSPORT = nodemailer.createTransport(
-                MAIL_CONFIG as TransportOptions
-            );
-        else
-            this.TRANSPORT = nodemailer.createTransport(
-                MAIL_CONFIG_DEV as TransportOptions
-            );
+        this.transport = nodemailer.createTransport(
+            MAIL_CONFIG as TransportOptions
+        );
     }
 
     async sendTagRequestNotification(
@@ -105,6 +98,6 @@ export class EmailService {
             return null;
         }
 
-        return this.TRANSPORT.sendMail(message);
+        return this.transport.sendMail(message);
     }
 }

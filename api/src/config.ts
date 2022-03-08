@@ -49,21 +49,26 @@ export const MAIL_PASS = process.env.MAIL_PASS || "";
 
 export const APPLICATION_NAME = "Asset Managment";
 
-export const MAIL_CONFIG_DEV = {
-	host: MAIL_HOST,
-	port: MAIL_PORT,
-	secure: false, // true for 465, false for other ports
-	auth: {
-		user: MAIL_USER,
-		pass: MAIL_PASS,
-	},
-};
+let mail_config = {};
+if (process.env.NODE_ENV === "production")
+	mail_config = {
+		host: MAIL_HOST,
+		port: MAIL_PORT,
+		secure: false, // true for 465, false for other ports
+	};
+else {
+	mail_config = {
+		host: MAIL_HOST,
+		port: MAIL_PORT,
+		secure: false, // true for 465, false for other ports
+		auth: {
+			user: MAIL_USER,
+			pass: MAIL_PASS,
+		},
+	};
+}
 
-export const MAIL_CONFIG = {
-	host: MAIL_HOST,
-	port: MAIL_PORT,
-	secure: false, // true for 465, false for other ports
-};
+export const MAIL_CONFIG = mail_config;
 
 // API access for Shaun
 export const V2_API_KEY_REMOTE = process.env.V2_API_KEY_REMOTE || "";
