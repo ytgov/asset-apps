@@ -4,12 +4,18 @@ import moment from "moment";
 import _ from "lodash";
 
 import { ReturnValidationErrors } from "../middleware";
-import { AssetService, SortDirection, SortStatement } from "../services";
+import {
+  AssetService,
+  AssetTagPrinterService,
+  SortDirection,
+  SortStatement,
+} from "../services";
 import { db, DB_TRUE } from "../data";
 import { AssetItem } from "../data/models";
 
 export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
+const assetTagPrinterService = new AssetTagPrinterService(db);
 
 assetTagRouter.post("/", (req: Request, res: Response) => {
   const { assetItem } = req.body;
@@ -46,16 +52,24 @@ assetTagRouter.post(
   (req: Request, res: Response) => {
     const { assetItems } = req.body;
 
-    const assetCreationPromises = assetItems.map((assetItem: AssetItem) => {
-      return assetService.create({
-        ...assetItem,
-        status: "Active",
-        condition: "Good",
-      });
-    });
+    const assetCreationPromises = assetItems.map(
+      async (assetItem: AssetItem) => {
+        const newAssetItem = await assetService.create({
+          ...assetItem,
+          status: "Active",
+          condition: "Good",
+        });
+
+        await assetTagPrinterService.createFromAssetItem(newAssetItem);
+
+        return newAssetItem;
+      }
+    );
 
     return Promise.all(assetCreationPromises)
       .then((results: Array<AssetItem>) => {
+        // TODO sendEmails(<template-name>, { assetItems })
+
         return res.status(201).json({
           data: results,
           messages: [{ variant: "success", text: "Assets created" }],
