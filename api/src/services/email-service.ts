@@ -10,7 +10,7 @@ import {
     FRONTEND_URL,
     APPLICATION_NAME,
 } from "../config";
-import { AuthUser } from "../data";
+import { AuthUser } from "../data/models";
 const BASE_TEMPLATE = "../templates/base.html";
 const TAG_REQUEST_NOTIFY_TEMPLATE = "../templates/tag_request_notify.html";
 const TAG_REQUEST_COMPLETE_TEMPLATE = "../templates/tag_request_complete.html";

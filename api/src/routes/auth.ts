@@ -1,7 +1,7 @@
 import { Express, NextFunction, Request, Response } from "express";
 import * as ExpressSession from "express-session";
 
-import { AuthUser } from "../data";
+import { AuthUser } from "../data/models";
 import { AUTH_REDIRECT, FRONTEND_URL, V2_API_KEY_REMOTE } from "../config";
 import { UserService } from "../services";
 
