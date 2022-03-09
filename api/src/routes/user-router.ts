@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { body, param } from "express-validator";
 
 import { db } from "../data";
@@ -10,25 +10,26 @@ export const userRouter = express.Router();
 
 const userService = new UserService(db);
 
-userRouter.get("/me", async (req: Request, res: Response) => {
-    const currentUser = req.user;
-    const user = await userService.getByEmail(currentUser.email);
-
-    const { id: mailcodeId } = await db
-        .select("id")
-        .from("asset_owner")
-        .where({ mailcode: user.mailcode })
-        .first();
-
-    const userProfile = await userService.makeDTO({
-        mailcodeId,
-        ...currentUser,
-        ...user,
-    });
-    return res.json({
-        data: userProfile,
-    });
-});
+userRouter.get(
+    "/me",
+    async (req: Request, res: Response, next: NextFunction) => {
+        const currentUser = req.user;
+        return userService
+            .getByEmail(currentUser.email)
+            .then((user) =>
+                userService.makeDTO({
+                    ...currentUser,
+                    ...user,
+                })
+            )
+            .then((userProfile) =>
+                res.json({
+                    data: userProfile,
+                })
+            )
+            .catch(next);
+    }
+);
 
 userRouter.get("/", async (req: Request, res: Response) => {
     let list = await userService.getAll();

@@ -44,7 +44,22 @@ export class UserService {
     }
 
     async getByEmail(email: string): Promise<any | undefined> {
-        return this.db("user").where({ email }).first();
+        return this.db("user")
+            .where({ email })
+            .first()
+            .then((user) => {
+                if (!user) return;
+
+                return this.db
+                    .select("id")
+                    .from("asset_owner")
+                    .where({ mailcode: user.mailcode })
+                    .first()
+                    .then((assetOwner) => {
+                        user.mailcodeId = assetOwner.mailcodeId || -1;
+                        return user;
+                    });
+            });
     }
 
     async getAccessFor(email: string): Promise<string[]> {
