@@ -113,16 +113,13 @@ export function configureAuthentication(app: Express) {
         }
     });
 
-    app.get(
-        "/api/auth/is-authenticated",
-        async (req: Request, res: Response) => {
-            if (req.oidc.isAuthenticated()) {
-                return res.json({ data: true });
-            }
-
-            return res.json({ data: false });
+    app.get("/api/auth/is-authenticated", (req: Request, res: Response) => {
+        if (req.oidc.isAuthenticated()) {
+            return res.json({ data: true });
         }
-    );
+
+        return res.json({ data: false });
+    });
 
     app.get("/api/auth/logout", async (req: any, res) => {
         req.session.destroy();
