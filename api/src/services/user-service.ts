@@ -1,7 +1,15 @@
+import { Knex } from "knex";
 import _ from "lodash";
+
 import { db } from "../data";
 
 export class UserService {
+    readonly db: Knex;
+
+    constructor(db: Knex) {
+        this.db = db;
+    }
+
     async create(
         email: string,
         first_name: string,
@@ -9,7 +17,9 @@ export class UserService {
         status: string,
         roles: string
     ): Promise<any> {
-        let existing = await db("user").where({ email }).count("email as cnt");
+        let existing = await this.db("user")
+            .where({ email })
+            .count("email as cnt");
 
         if (existing[0].cnt > 0) return undefined;
 
@@ -22,19 +32,19 @@ export class UserService {
             create_date: new Date(),
         };
 
-        return await db("user").insert(user);
+        return await this.db("user").insert(user);
     }
 
     async update(email: string, item: any) {
-        return db("user").where({ email }).update(item);
+        return this.db("user").where({ email }).update(item);
     }
 
     async getAll() {
-        return db("user");
+        return this.db("user");
     }
 
     async getByEmail(email: string): Promise<any | undefined> {
-        return db("user").where({ email }).first();
+        return this.db("user").where({ email }).first();
     }
 
     async getAccessFor(email: string): Promise<string[]> {
@@ -54,7 +64,7 @@ export class UserService {
         dto.manage_mailcodes = _.split(userRaw.manage_mailcodes, ",").filter(
             (r: string) => r.length > 0
         );
-        //dto.access = await db.getAccessFor(userRaw.email);
+        //dto.access = await this.db.getAccessFor(userRaw.email);
         //dto.display_access = _.join(dto.access.map((a: any) => a.level), ", ")
 
         return dto;

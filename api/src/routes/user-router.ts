@@ -7,7 +7,7 @@ import _ from "lodash";
 
 export const userRouter = express.Router();
 
-const userService = new UserService();
+const userService = new UserService(db);
 
 userRouter.get("/me", async (req: Request, res: Response) => {
     let person = req.user;
