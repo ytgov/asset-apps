@@ -2,7 +2,6 @@ import { Knex } from "knex";
 import _ from "lodash";
 import moment from "moment";
 import { QueryStatement, SortStatement } from ".";
-import { mailcodeData } from "../data";
 
 export class TransferService {
     readonly db: Knex;
@@ -177,44 +176,6 @@ export class TransferService {
             };
 
             resolve(results);
-        })
-    }
-
-    async clean() {
-        let owners = await this.db("asset_owner").whereRaw("mailcode is not null");
-        let transfers = await this.db("asset_transfer").whereRaw("from_owner_mailcode is not null OR to_owner_mailcode is not null");
-
-        for (let o of owners) {
-            let mcMatch = mailcodeData.filter((mc: any) => mc.department == o.department && mc.description == o.name);
-
-            if (mcMatch.length == 1 && o.mailcode != mcMatch[0].mailcode) {
-                await this.db("asset_owner").where({ id: o.id }).update({ mailcode: mcMatch[0].mailcode });
-            }
-        }
-
-        for (let t of transfers) {
-            let from = t.from_owner_mailcode;
-            let to = t.to_owner_mailcode;
-
-            let fOwn = owners.filter(o => o.mailcode == from);
-            let tOwn = owners.filter(o => o.mailcode == to);
-            let needSaved = false;
-            let body = { from_owner_id: t.from_owner_id, to_owner_id: t.to_owner_id };
-
-            if (fOwn.length > 0) {
-                body.from_owner_id = fOwn[0].id;
-                needSaved = true;
-            }
-
-            if (tOwn.length > 0) {
-                body.to_owner_id = tOwn[0].id;
-                needSaved = true;
-            }
-
-            if (needSaved) {
-                //console.log("SAVING", t.id)
-                await this.db("asset_transfer").where({ id: t.id }).update(body);
-            }
-        }
+        });
     }
 }
