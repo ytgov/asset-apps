@@ -10,7 +10,7 @@ import {
     FRONTEND_URL,
     APPLICATION_NAME,
 } from "../config";
-import { AuthUser } from "../data/models";
+import { SimpleUser } from "../data/models";
 const BASE_TEMPLATE = "../templates/base.html";
 const TAG_REQUEST_NOTIFY_TEMPLATE = "../templates/tag_request_notify.html";
 const TAG_REQUEST_COMPLETE_TEMPLATE = "../templates/tag_request_complete.html";
@@ -34,7 +34,7 @@ export class EmailService {
     }
 
     async sendTagRequestNotification(
-        user: AuthUser,
+        user: SimpleUser,
         tags: string[]
     ): Promise<any> {
         let templatePath = path.join(__dirname, TAG_REQUEST_NOTIFY_TEMPLATE);
@@ -53,7 +53,10 @@ export class EmailService {
         );
     }
 
-    async sendTagRequestComplete(user: AuthUser, tags: string[]): Promise<any> {
+    async sendTagRequestComplete(
+        user: SimpleUser,
+        tags: string[]
+    ): Promise<any> {
         let templatePath = path.join(__dirname, TAG_REQUEST_COMPLETE_TEMPLATE);
         let content = fs.readFileSync(templatePath).toString();
         let fullName = `${user.first_name} ${user.last_name}`;
