@@ -22,6 +22,15 @@ export class EmailService {
         this.transport = nodemailer.createTransport(
             MAIL_CONFIG as TransportOptions
         );
+        this.transport
+            .verify()
+            .then((response) => {
+                console.log("Mailer config is valid.");
+            })
+            .catch((error) => {
+                console.log("Mailer config is not valid.");
+                console.log(error);
+            });
     }
 
     async sendTagRequestNotification(

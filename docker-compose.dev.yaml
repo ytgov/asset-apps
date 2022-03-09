@@ -23,8 +23,12 @@ services:
     environment:
       NODE_ENV: development
       DB_HOST: db
+      MAIL_HOST: 'host.docker.internal'
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:172.17.0.1"
     volumes:
       - ./api:/usr/src/api
     depends_on:
