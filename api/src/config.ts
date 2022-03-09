@@ -41,15 +41,30 @@ export const DB_CONFIG = {
 	},
 };
 
-export const EMAIL_CONFIG = {
-	host: 'smtp.ethereal.email',
-	port: 587,
+export const MAIL_FROM = process.env.MAIL_FROM || "assets@yukon.ca";
+export const MAIL_HOST = process.env.MAIL_HOST || "smtp.gov.yk.ca";
+export const MAIL_PORT = process.env.MAIL_PORT || 25;
+export const MAIL_USER = process.env.MAIL_USER || "";
+export const MAIL_PASS = process.env.MAIL_PASS || "";
+
+export const APPLICATION_NAME = "Asset Managment";
+
+export const MAIL_CONFIG_DEV = {
+	host: MAIL_HOST,
+	port: MAIL_PORT,
 	secure: false, // true for 465, false for other ports
 	auth: {
-		user: '', // generated ethereal user
-		pass: '', // generated ethereal password
-	},
-};
+	  user: MAIL_USER,
+	  pass: MAIL_PASS,
+	}
+  };
+  
+  export const MAIL_CONFIG = {
+	host: MAIL_HOST,
+	port: MAIL_PORT,
+	secure: false, // true for 465, false for other ports
+  };
+  
 
 // API access for Shaun
 export const V2_API_KEY_REMOTE = process.env.V2_API_KEY_REMOTE || '';
