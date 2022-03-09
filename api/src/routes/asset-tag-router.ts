@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { body, param } from "express-validator";
 import moment from "moment";
 import _ from "lodash";
@@ -396,11 +396,14 @@ assetTagRouter.put(
   }
 );
 
-assetTagRouter.get("/asset-category", async (req: Request, res: Response) => {
-  let list = await db("asset_category");
+assetTagRouter.get(
+  "/asset-category",
+  async (req: Request, res: Response, next: NextFunction) => {
+    let list = await db("asset_category").catch(next);
 
-  return res.json({ data: list });
-});
+    return res.json({ data: list });
+  }
+);
 
 assetTagRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
