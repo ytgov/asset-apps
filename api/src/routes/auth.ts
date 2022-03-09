@@ -78,21 +78,23 @@ export function configureAuthentication(app: Express) {
             //(req.session as any).user = oidcUser;
             //req.user = oidcUser;
 
-            let dbUser = await userService.getByEmail(oidcUser.email);
-            req.user = await userService.makeDTO(
-                Object.assign(oidcUser, dbUser)
-            );
+            let dbUser = await userService
+                .getByEmail(oidcUser.email)
+                .catch(next);
+            req.user = userService.makeDTO(Object.assign(oidcUser, dbUser));
         }
 
         next();
     });
 
-    app.get("/", async (req: Request, res: Response) => {
+    app.get("/", async (req: Request, res: Response, next: NextFunction) => {
         if (req.oidc.isAuthenticated()) {
             let user = AuthUser.fromOpenId(req.oidc.user) as AuthUser;
             req.user = user;
 
-            let dbUser = await userService.getByEmail(req.user.email);
+            let dbUser = await userService
+                .getByEmail(req.user.email)
+                .catch(next);
 
             if (!dbUser) {
                 console.log("CREATING USER");
