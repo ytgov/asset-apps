@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { body, param } from "express-validator";
 
 import { db } from "../data";
@@ -10,24 +10,35 @@ export const userRouter = express.Router();
 
 const userService = new UserService(db);
 
-userRouter.get("/me", async (req: Request, res: Response) => {
-    const currentUser = req.user;
-    const user = await userService.getByEmail(currentUser.email);
+userRouter.get("/me", (req: Request, res: Response, next: NextFunction) => {
+    return userService
+        .getByEmail(req.user.email)
+        .then((user) => {
+            if (!user) {
+                return res.status(406).json({
+                    messages: [
+                        {
+                            variant: "error",
+                            text: `Could not find current user from email '${req.user.email}'.`,
+                        },
+                    ],
+                });
+            }
 
-    const { id: mailcodeId } = await db
-        .select("id")
-        .from("asset_owner")
-        .where({ mailcode: user.mailcode })
-        .first();
-
-    const userProfile = await userService.makeDTO({
-        mailcodeId,
-        ...currentUser,
-        ...user,
-    });
-    return res.json({
-        data: userProfile,
-    });
+            return db("asset_owner")
+                .where({ mailcode: user.mailcode })
+                .first()
+                .then((assetOwner) => {
+                    user.mailcodeId = assetOwner?.id || -1;
+                    return user;
+                });
+        })
+        .then((user) =>
+            res.json({
+                data: user,
+            })
+        )
+        .catch(next);
 });
 
 userRouter.get("/", async (req: Request, res: Response) => {
