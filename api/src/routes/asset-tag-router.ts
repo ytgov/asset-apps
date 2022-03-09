@@ -11,7 +11,7 @@ import {
   SortDirection,
   SortStatement,
 } from "../services";
-import { db, DB_TRUE } from "../data";
+import { db, DB_TRUE, APPLICATION_USER } from "../data";
 import { AssetItem } from "../data/models";
 
 export const assetTagRouter = express.Router();
@@ -70,8 +70,13 @@ assetTagRouter.post(
 
     return Promise.all(assetCreationPromises)
       .then((assetItemResults: Array<AssetItem>) => {
-        const tags = assetItemResults.map((assetItem) => assetItem.tag);
-        emailService.sendTagRequestNotification(req.user, tags);
+        const tags = assetItemResults
+          .map((assetItem) => assetItem.tag)
+          .sort((a: string, b: string) => a.localeCompare(b));
+
+        emailService.sendTagRequestComplete(req.user, tags);
+
+        emailService.sendTagRequestNotification(APPLICATION_USER, tags);
 
         return res.status(201).json({
           data: assetItemResults,
