@@ -69,14 +69,13 @@ assetTagRouter.post(
     );
 
     return Promise.all(assetCreationPromises)
-      .then((assetItemResults: Array<AssetItem>) => {
+      .then(async (assetItemResults: Array<AssetItem>) => {
         const tags = assetItemResults
           .map((assetItem) => assetItem.tag)
           .sort((a: string, b: string) => a.localeCompare(b));
 
-        emailService.sendTagRequestComplete(req.user, tags);
-
-        emailService.sendTagRequestNotification(APPLICATION_USER, tags);
+        await emailService.sendTagRequestComplete(req.user, tags);
+        await emailService.sendTagRequestNotification(APPLICATION_USER, tags);
 
         return res.status(201).json({
           data: assetItemResults,
