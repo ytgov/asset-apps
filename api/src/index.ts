@@ -9,7 +9,6 @@ import {
 	assetPurchaseTypesRouter,
 	assetTagRouter,
 	v2Router,
-	mailcodeRouter,
 	scanRouter,
 	transferRouter,
 	userRouter,
@@ -57,7 +56,6 @@ app.get("/api/healthCheck", (req: Request, res: Response) => {
 	doHealthCheck(req, res);
 });
 
-app.use('/api/mailcode', mailcodeRouter);
 app.use("/api/user", userRouter);
 app.use("/api/asset-item", assetTagRouter);
 app.use("/api/asset-owner", assetOwnerRouter);
