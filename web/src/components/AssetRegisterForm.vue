@@ -203,20 +203,17 @@ export default {
   },
   methods: {
     createTags() {
-      const assetItemCreationPromises = times(this.tagCount, () =>
-        http.post(ASSET_URL, {
-          assetItem: {
-            asset_owner_id: this.sendMailcodeId,
-            asset_type_id: UNSPECIFIED_ASSET_TYPE,
-            purchase_date: this.purchaseDate,
-            purchase_type_id: this.purchasedTypeId,
-            purchase_person: this.currentUserEmail,
-            purchase_order_number: this.orderNumber,
-          },
-        })
-      );
+      const assetItems = times(this.tagCount, () => ({
+        asset_owner_id: this.sendMailcodeId,
+        asset_type_id: UNSPECIFIED_ASSET_TYPE,
+        purchase_date: this.purchaseDate,
+        purchase_type_id: this.purchasedTypeId,
+        purchase_person: this.currentUserEmail,
+        purchase_order_number: this.orderNumber,
+      }));
 
-      Promise.all(assetItemCreationPromises)
+      http
+        .post(`${ASSET_URL}/bulk-creation`, { assetItems })
         .then(() => {
           this.$refs.notifier.showSuccess("Your tags have been generated.");
           this.$router.push({ name: "MyTags" });
