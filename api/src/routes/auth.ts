@@ -1,13 +1,13 @@
 import { Express, NextFunction, Request, Response } from "express";
 import * as ExpressSession from "express-session";
 
-import { AuthUser } from "../data";
+import { db, AuthUser } from "../data";
 import { AUTH_REDIRECT, FRONTEND_URL, V2_API_KEY_REMOTE } from "../config";
 import { UserService } from "../services";
 
 import { auth } from "express-openid-connect";
 
-const userService = new UserService();
+const userService = new UserService(db);
 
 const V2_API_REGEX = /^\/api\/v2\/.*/;
 
@@ -113,16 +113,13 @@ export function configureAuthentication(app: Express) {
         }
     });
 
-    app.get(
-        "/api/auth/is-authenticated",
-        async (req: Request, res: Response) => {
-            if (req.oidc.isAuthenticated()) {
-                return res.json({ data: true });
-            }
-
-            return res.json({ data: false });
+    app.get("/api/auth/is-authenticated", (req: Request, res: Response) => {
+        if (req.oidc.isAuthenticated()) {
+            return res.json({ data: true });
         }
-    );
+
+        return res.json({ data: false });
+    });
 
     app.get("/api/auth/logout", async (req: any, res) => {
         req.session.destroy();

@@ -12,7 +12,7 @@ export class AssetService {
         this.db = db;
     }
 
-    create(assetItem: AssetItem) {
+    async create(assetItem: AssetItem): Promise<AssetItem & { id: number }> {
         return this.db.transaction(async (trx) => {
             const next_y_number_result = await trx.raw(
                 "SELECT NEXT VALUE FOR dbo.y_numbers as y_number"

@@ -140,14 +140,3 @@ transferRouter.delete("/:id", async (req: Request, res: Response) => {
     messages: [{ variant: "success", text: "Transfer removed" }],
   });
 });
-
-transferRouter.get("/clean", async (req: Request, res: Response) => {
-  let { id } = req.params;
-
-  await transferService.clean();
-
-  return res.json({
-    data: {},
-    messages: [{ variant: "success", text: "Transfer removed" }],
-  });
-});
