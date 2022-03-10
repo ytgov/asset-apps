@@ -2,11 +2,11 @@ version: "3"
 
 services:
   web:
-    image: node:16-alpine
+    build:
+      context: ./web
+      dockerfile: development.Dockerfile
     environment:
       NODE_ENV: development
-    working_dir: /usr/src/web
-    command: ["sh", "-c", 'npm install -g @vue/cli; npm install ; npm run start']
     ports:
       - "8080:8080"
     volumes:
@@ -15,16 +15,20 @@ services:
       - api
       - db
   api:
-    image: node:16-alpine
+    build:
+      context: ./api
+      dockerfile: development.Dockerfile
     env_file:
       - ./api/.env.development
     environment:
       NODE_ENV: development
       DB_HOST: db
-    working_dir: /usr/src/api
-    command: ["sh", "-c", 'npm install ; npm run start']
+      MAIL_HOST: 'host.docker.internal'
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:172.17.0.1"
     volumes:
       - ./api:/usr/src/api
     depends_on:

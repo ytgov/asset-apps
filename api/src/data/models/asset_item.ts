@@ -6,6 +6,7 @@ export interface AssetItem {
     purchase_date: Date;
     purchase_order_number: string;
     purchase_person: string;
+    purchase_type_id?: number;
     status: string;
     tag: string;
 }
