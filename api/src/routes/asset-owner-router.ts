@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { body, param } from "express-validator";
 import { ReturnValidationErrors } from "../middleware";
 import _ from "lodash";
@@ -7,16 +7,21 @@ export const assetOwnerRouter = express.Router();
 
 import { db } from "../data";
 
-assetOwnerRouter.get("/",
-    async (req: Request, res: Response) => {
-        let list = await db("asset_owner").orderBy("mailcode").orderBy("name");
-
-        for (let item of list) {
-            item.display_name = `(${item.mailcode}) ${item.name}`
-        }
-
-        return res.json({ data: list });
-    });
+assetOwnerRouter.get(
+    "/",
+    async (req: Request, res: Response, next: NextFunction) => {
+        return db("asset_owner")
+            .orderBy("mailcode")
+            .orderBy("name")
+            .then((list) => {
+                for (let item of list) {
+                    item.display_name = `(${item.mailcode}) ${item.name}`;
+                }
+                return res.json({ data: list });
+            })
+            .catch(next);
+    }
+);
 
 assetOwnerRouter.get("/:id", [param("id").notEmpty().isInt()], ReturnValidationErrors,
     async (req: Request, res: Response) => {
