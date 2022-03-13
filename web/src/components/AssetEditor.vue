@@ -182,7 +182,7 @@ export default {
       return false;
     },
     isTransferDirection: function () {
-      if (this.item.asset_owner_id == this.defaultAssetOwner) return "incoming";
+      if (this.item.asset_owner_id == this.defaultAssetOwner.id) return "incoming";
       return "outgoing";
     },
   },
@@ -278,7 +278,7 @@ export default {
     },
     statusChange() {
       if (this.item.status != "Active" && this.item.status != "Unknown") {
-        this.item.asset_owner_id = this.defaultAssetOwner;
+        this.item.asset_owner_id = this.defaultAssetOwner.id;
       } else {
         this.item.asset_owner_id = this.oldOwner;
       }
