@@ -24,7 +24,7 @@ spec:
         io.kompose.service: assets
     spec:
       containers:
-        - image: 10.230.5.2/ict-dmz-ns/assets:latest
+        - image: 10.230.7.2/yg-dmz-ns/assets:latest
           name: assets
           ports:
             - containerPort: 3000
@@ -40,6 +40,6 @@ spec:
 
 
       imagePullSecrets:
-        - name: ict-dmz-ns-assets-default-image-pull-secret
+        - name: yg-dmz-ns-assets-image-pull-secret
       restartPolicy: Always
 status: {}
