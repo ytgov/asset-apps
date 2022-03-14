@@ -5,7 +5,7 @@ pipeline {
         NAME = "assets"
         VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
         IMAGE = "${NAME}:${VERSION}"
-        HARBOR_URL = "10.230.7.10"
+        HARBOR_URL = "10.230.7.2"
         HARBOR_PROJECT = "yg-dmz-ns"
     }
 
