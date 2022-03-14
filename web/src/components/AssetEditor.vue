@@ -264,6 +264,7 @@ export default {
         });
     },
     save() {
+      console.log("SAVING", this.item)
       axios
         .put(`${ASSET_URL}/${this.item.id}`, this.item)
         .then((resp) => {
@@ -282,6 +283,8 @@ export default {
       } else {
         this.item.asset_owner_id = this.oldOwner;
       }
+
+      console.log("CHANGED", this.item.asset_owner_id)
     },
   },
 };
