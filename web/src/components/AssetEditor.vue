@@ -264,6 +264,7 @@ export default {
         });
     },
     save() {
+      console.log("SAVING:", this.item)
       axios
         .put(`${ASSET_URL}/${this.item.id}`, this.item)
         .then((resp) => {
@@ -277,11 +278,14 @@ export default {
         });
     },
     statusChange() {
+      console.log("BEFORE STATUS", this.item.asset_owner_id)
+
       if (this.item.status != "Active" && this.item.status != "Unknown") {
         this.item.asset_owner_id = this.defaultAssetOwner.id;
       } else {
         this.item.asset_owner_id = this.oldOwner;
       }
+      console.log("CHANGED STATUS", this.item.asset_owner_id)
     },
   },
 };
