@@ -223,6 +223,7 @@ export default {
       this.oldStatus = this.item.status;
       this.item.purchase_price = formatDollar(this.item.purchase_price);
       this.drawer = true;
+      console.log("SHOWING ASSET EDITOR", this.item)
     },
     showInbound(item) {
       this.item = _.clone(item);
