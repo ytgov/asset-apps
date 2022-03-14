@@ -182,7 +182,7 @@ export default {
       return false;
     },
     isTransferDirection: function () {
-      if (this.item.asset_owner_id == this.defaultAssetOwner) return "incoming";
+      if (this.item.asset_owner_id == this.defaultAssetOwner.id) return "incoming";
       return "outgoing";
     },
   },
@@ -223,6 +223,7 @@ export default {
       this.oldStatus = this.item.status;
       this.item.purchase_price = formatDollar(this.item.purchase_price);
       this.drawer = true;
+      console.log("SHOWING ASSET EDITOR", this.item)
     },
     showInbound(item) {
       this.item = _.clone(item);
@@ -264,6 +265,7 @@ export default {
         });
     },
     save() {
+      console.log("SAVING:", this.item)
       axios
         .put(`${ASSET_URL}/${this.item.id}`, this.item)
         .then((resp) => {
@@ -277,11 +279,14 @@ export default {
         });
     },
     statusChange() {
+      console.log("BEFORE STATUS", this.item.asset_owner_id)
+
       if (this.item.status != "Active" && this.item.status != "Unknown") {
-        this.item.asset_owner_id = this.defaultAssetOwner;
+        this.item.asset_owner_id = this.defaultAssetOwner.id;
       } else {
         this.item.asset_owner_id = this.oldOwner;
       }
+      console.log("CHANGED STATUS", this.item.asset_owner_id)
     },
   },
 };
