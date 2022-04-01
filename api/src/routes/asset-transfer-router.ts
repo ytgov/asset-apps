@@ -121,21 +121,50 @@ transferRouter.patch('/:id', (req: Request, res: Response) => {
 		'to_owner_id',
 	]);
 
-	return transferService.update(id, attributes).then(() =>
-		res.json({
-			data: {},
-			messages: [{ variant: 'success', text: 'Transfer saved' }],
-		})
-	);
+	return transferService
+		.update(id, attributes)
+		.then(() =>
+			res.json({
+				data: {},
+				messages: [{ variant: 'success', text: 'Transfer saved' }],
+			})
+		)
+		.catch((error) =>
+			res.status(422).json({
+				messages: [
+					{
+						variant: 'error',
+						text: 'Failed to update transfer',
+						details: error.message,
+					},
+				],
+			})
+		);
 });
 
-transferRouter.delete('/:id', async (req: Request, res: Response) => {
-	const id = parseInt(req.params.id);
+transferRouter.delete(
+	'/:id',
+	async (req: Request, res: Response) => {
+		const id = parseInt(req.params.id);
 
-	return transferService.delete(id).then(() =>
-		res.json({
-			data: {},
-			messages: [{ variant: 'success', text: 'Transfer removed' }],
-		})
-	);
-});
+		return transferService
+			.delete(id)
+			.then(() =>
+				res.json({
+					data: {},
+					messages: [{ variant: 'success', text: 'Transfer removed' }],
+				})
+			)
+			.catch((error) =>
+				res.status(422).json({
+					messages: [
+						{
+							variant: 'error',
+							text: 'Failed to remove transfer',
+							details: error.message,
+						},
+					],
+				})
+			);
+	}
+);
