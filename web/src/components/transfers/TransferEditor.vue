@@ -136,7 +136,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="info" @click="cancelDelete">No</v-btn>
-            <v-btn color="error" @click="deleteConfirmed">Yes, Remove</v-btn>
+            <v-btn color="error" @click="deleteConfirmed">Yes, Revert</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
