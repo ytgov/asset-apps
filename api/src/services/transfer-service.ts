@@ -200,9 +200,9 @@ export class TransferService {
 	delete(id: number) {
 		return this.db
 			.select({
-				assetItemId: 'asset_item.id',
-				tag: 'asset_item.tag',
+				assetItemId: 'asset_transfer.asset_item_id',
 				fromOwnerId: 'asset_transfer.from_owner_id',
+				tag: 'asset_item.tag',
 			})
 			.where({ 'asset_transfer.id': id })
 			.from('asset_transfer')
@@ -211,10 +211,7 @@ export class TransferService {
 			.then(({ assetItemId, tag, fromOwnerId }) => {
 				if ([null, undefined, ''].includes(tag)) return;
 
-				return this.db.from('asset_item').where({ id: assetItemId }).update({
-					asset_owner_id: fromOwnerId,
-					status: 'Active',
-				});
+				return this.transferAsset(assetItemId, fromOwnerId);
 			})
 			.then(() => this.db('asset_transfer').where({ id }).delete());
 	}
