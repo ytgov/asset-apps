@@ -13,7 +13,7 @@ This repository contains the source for all projects related to internal Asset M
 ```
 docker-compose -f docker-compose.dev.yaml up
 
-# or if you can run bash
+# or if you can run ruby
 bin/dev up
 ```
 
