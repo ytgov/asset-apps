@@ -190,7 +190,10 @@ export class TransferService {
 				)
 					return;
 
-				return this.transferAsset(assetItemId, toOwnerId);
+				return this.db.from('asset_item').where({ id: assetItemId }).update({
+					asset_owner_id: toOwnerId,
+					status: newCondition,
+				});
 			})
 			.then(() =>
 				this.db.from('asset_transfer').where({ id }).update(newAttributes)
