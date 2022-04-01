@@ -106,7 +106,7 @@
       </div>
 
       <v-btn color="error" :loading="loading" @click="confirmDelete"
-        >Remove</v-btn
+        >Revert</v-btn
       >
       <v-btn
         color="primary"
@@ -118,16 +118,17 @@
 
       <v-dialog v-model="isShowingDeleteDialog" max-width="400">
         <v-card>
-          <v-card-title>Remove Transfer</v-card-title>
+          <v-card-title>Revert Transfer</v-card-title>
           <v-card-text>
             <p>
-              Are you sure you want to permanently remove this transfer record?
+              Are you sure you want to revert and permanently remove this
+              transfer record?
             </p>
 
             <p class="text-error mb-0">
               <em
-                >* This action does not change the ownership of any attached
-                asset or its condition.</em
+                >* This action returns the attached tagged asset to its original
+                owner and sets its status to active.</em
               >
             </p>
           </v-card-text>
