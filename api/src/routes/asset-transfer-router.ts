@@ -131,12 +131,12 @@ transferRouter.patch("/:id", async (req: Request, res: Response) => {
 });
 
 transferRouter.delete("/:id", async (req: Request, res: Response) => {
-  let { id } = req.params;
+  const id = parseInt(req.params.id);
 
-  await db("asset_transfer").where({ id }).delete();
-
-  return res.json({
-    data: {},
-    messages: [{ variant: "success", text: "Transfer removed" }],
-  });
+  return transferService.delete(id).then(() =>
+    res.json({
+      data: {},
+      messages: [{ variant: "success", text: "Transfer removed" }],
+    })
+  );
 });

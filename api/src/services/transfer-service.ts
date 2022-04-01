@@ -178,4 +178,33 @@ export class TransferService {
             resolve(results);
         });
     }
+
+    delete(id: number) {
+        return this.db
+            .select({
+                assetItemId: "asset_item.id",
+                tag: "asset_item.tag",
+                fromOwnerId: "asset_transfer.from_owner_id",
+            })
+            .where({ "asset_transfer.id": id })
+            .from("asset_transfer")
+            .innerJoin(
+                "asset_item",
+                "asset_item.id",
+                "asset_transfer.asset_item_id"
+            )
+            .first()
+            .then(({ assetItemId, tag, fromOwnerId }) => {
+                if ([null, undefined, ""].includes(tag)) return;
+
+                return this.db
+                    .from("asset_item")
+                    .where({ id: assetItemId })
+                    .update({
+                        asset_owner_id: fromOwnerId,
+                        status: "Active",
+                    });
+            })
+            .then(() => this.db("asset_transfer").where({ id }).delete());
+    }
 }
