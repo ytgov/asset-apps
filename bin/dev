@@ -54,6 +54,7 @@ class DevHelper
       *%W[-P #{db_pass}],
       *%W[-H #{db_host}],
       *%W[-d #{db_name}],
+      '-I', # enable quoted identifiers, e.g. "table"."column"
       *args,
     )
   end
