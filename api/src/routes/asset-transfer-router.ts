@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { SortDirection, SortStatement, TransferService } from '../services';
 import { ReturnValidationErrors } from '../middleware';
-import _ from 'lodash';
+import { pick } from 'lodash';
 
 export const transferRouter = express.Router();
 const PAGE_SIZE = 10;
@@ -110,24 +110,23 @@ transferRouter.post(
 	}
 );
 
-transferRouter.patch('/:id', async (req: Request, res: Response) => {
-	const { id } = req.params;
+transferRouter.patch('/:id', (req: Request, res: Response) => {
+	const id = parseInt(req.params.id);
 
-	const { asset_category_id, condition, from_owner_id, quantity, to_owner_id } =
-		req.body;
+	const attributes = pick(req.body, [
+		'asset_category_id',
+		'condition',
+		'from_owner_id',
+		'quantity',
+		'to_owner_id',
+	]);
 
-	await db('asset_transfer').where({ id }).update({
-		asset_category_id,
-		condition,
-		from_owner_id,
-		quantity,
-		to_owner_id,
-	});
-
-	return res.json({
-		data: {},
-		messages: [{ variant: 'success', text: 'Transfer saved' }],
-	});
+	return transferService.update(id, attributes).then(() =>
+		res.json({
+			data: {},
+			messages: [{ variant: 'success', text: 'Transfer saved' }],
+		})
+	);
 });
 
 transferRouter.delete('/:id', async (req: Request, res: Response) => {

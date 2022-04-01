@@ -1,7 +1,8 @@
 import { Knex } from 'knex';
-import _ from 'lodash';
+import { uniq } from 'lodash';
 import moment from 'moment';
 import { QueryStatement, SortStatement } from '.';
+import { AssetTransferUpdate } from '../data/models';
 
 export class TransferService {
 	readonly db: Knex;
@@ -104,7 +105,7 @@ export class TransferService {
 			//console.log(selectStmt.toSQL().toNative())
 
 			let fullData = await selectStmt;
-			let uniqIds = _.uniq(fullData.map((i) => i.id));
+			let uniqIds = uniq(fullData.map((i) => i.id));
 			let count = uniqIds.length;
 			let page_count = Math.ceil(count / page_size);
 
@@ -170,6 +171,32 @@ export class TransferService {
 		});
 	}
 
+	update(id: number, newAttributes: AssetTransferUpdate) {
+		const { condition: newCondition } = newAttributes;
+
+		return this.db
+			.select({
+				assetItemId: 'asset_item_id',
+				toOwnerId: 'to_owner_id',
+				oldCondition: 'condition',
+			})
+			.from('asset_transfer')
+			.where({ id })
+			.first()
+			.then(({ assetItemId, oldCondition, toOwnerId }) => {
+				if (
+					!oldCondition.startsWith('REQUEST') ||
+					newCondition.startsWith('REQUEST')
+				)
+					return;
+
+				return this.transferAsset(assetItemId, toOwnerId);
+			})
+			.then(() =>
+				this.db.from('asset_transfer').where({ id }).update(newAttributes)
+			);
+	}
+
 	delete(id: number) {
 		return this.db
 			.select({
@@ -190,5 +217,13 @@ export class TransferService {
 				});
 			})
 			.then(() => this.db('asset_transfer').where({ id }).delete());
+	}
+
+	// helpers
+	transferAsset(assetItemId: number, assetOwnerId: number) {
+		this.db.from('asset_item').where({ id: assetItemId }).update({
+			asset_owner_id: assetOwnerId,
+			status: 'Active',
+		});
 	}
 }
