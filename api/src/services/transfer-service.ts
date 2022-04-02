@@ -190,13 +190,13 @@ export class TransferService {
 				)
 					return;
 
-				return this.db.from('asset_item').where({ id: assetItemId }).update({
+				return this.db('asset_item').where({ id: assetItemId }).update({
 					asset_owner_id: toOwnerId,
 					status: newCondition,
 				});
 			})
 			.then(() =>
-				this.db.from('asset_transfer').where({ id }).update(newAttributes)
+				this.db('asset_transfer').where({ id }).update(newAttributes)
 			);
 	}
 
@@ -214,16 +214,11 @@ export class TransferService {
 			.then(({ assetItemId, tag, fromOwnerId }) => {
 				if ([null, undefined, ''].includes(tag)) return;
 
-				return this.transferAsset(assetItemId, fromOwnerId);
+				return this.db('asset_item').where({ id: assetItemId }).update({
+					asset_owner_id: fromOwnerId,
+					status: 'Active',
+				});
 			})
 			.then(() => this.db('asset_transfer').where({ id }).delete());
-	}
-
-	// helpers
-	transferAsset(assetItemId: number, assetOwnerId: number) {
-		this.db.from('asset_item').where({ id: assetItemId }).update({
-			asset_owner_id: assetOwnerId,
-			status: 'Active',
-		});
 	}
 }
