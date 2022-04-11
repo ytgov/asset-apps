@@ -1,0 +1,13 @@
+# .prettierrc or .prettierrc.yaml
+arrowParens: 'always'
+embeddedLanguageFormatting: 'auto'
+jsxSingleQuote: true
+pugAttributeSeparator: 'as-needed'
+pugSingleQuote: false
+pugWrapAttributesThreshold: 1
+semi: true
+singleAttributePerLine: true
+singleQuote: true
+tabWidth: 2
+trailingComma: 'es5'
+useTabs: true
