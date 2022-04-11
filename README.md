@@ -34,6 +34,15 @@ npm install
 npm run start
 ```
 
+#### Testing emails
+
+1. Install the [nodemailer app](https://nodemailer.com/app/).
+2. Boot the app and observer view the connection error for the mailer.
+    > You can do this by saving the `api/src/services/email-service.ts` file.
+3. Start a local server via the NodemailerApp and listen on the IP your app
+   tried to connect to e.g. `172.17.0.1`
+    > On my Ubuntu system this is the second field returned by `hostname -I`
+
 ### Production
 
 This application runs in a Docker container
