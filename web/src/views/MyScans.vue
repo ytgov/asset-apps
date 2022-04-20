@@ -19,15 +19,6 @@
           to="/scan"
           ><v-icon class="mr-2">mdi-camera</v-icon> New scan</v-btn
         >
-        <v-text-field
-          style="width: 100%"
-          label="Manual tag entry"
-          outlined
-          dense
-          class="float-right"
-          v-model="manualAsset"
-          v-on:keyup.enter="addAsset"
-        ></v-text-field>
       </div>
     </div>
 
@@ -108,21 +99,11 @@ export default {
   name: "Home",
   data: () => ({
     scans: [],
-    manualAsset: "",
   }),
   async created() {
     this.loadScans();
   },
   methods: {
-    addAsset() {
-      axios
-        .post(`${SCAN_URL}`, { value: this.manualAsset.toUpperCase() })
-        .then((resp) => {
-          console.log(resp);
-        });
-      this.manualAsset = "";
-      this.loadScans();
-    },
     loadScans() {
       axios.get(`${SCAN_URL}`).then((resp) => {
         this.scans = resp.data.data;

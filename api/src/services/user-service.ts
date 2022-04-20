@@ -1,6 +1,8 @@
 import { Knex } from "knex";
 import _ from "lodash";
 
+import { db } from "../data";
+
 export class UserService {
     readonly db: Knex;
 

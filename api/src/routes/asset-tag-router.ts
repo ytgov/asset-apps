@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { body, param } from "express-validator";
 import moment from "moment";
 import _ from "lodash";
@@ -7,14 +7,17 @@ import { ReturnValidationErrors } from "../middleware";
 import {
   AssetService,
   AssetTagPrinterService,
+  EmailService,
   SortDirection,
   SortStatement,
 } from "../services";
-import { db, DB_TRUE, MAXIMUM_DATE } from "../data";
+import { db, DB_TRUE, APPLICATION_USER } from "../data";
+import { AssetItem } from "../data/models";
 
 export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
 const assetTagPrinterService = new AssetTagPrinterService(db);
+const emailService = new EmailService();
 
 assetTagRouter.post("/", (req: Request, res: Response) => {
   const { assetItem } = req.body;
@@ -25,69 +28,73 @@ assetTagRouter.post("/", (req: Request, res: Response) => {
       status: "Active",
       condition: "Good",
     })
-    .then(async (assetItemResult) => {
-      const {
-        id,
-        asset_owner_id,
-        asset_type_id,
-        purchase_date,
-        purchase_order_number,
-        purchase_person,
-        purchase_type_id,
-        tag,
-      } = assetItemResult;
-
-      const { mailcode } = await db
-        .select("mailcode")
-        .from("asset_owner")
-        .where({ id: asset_owner_id })
-        .first();
-
-      const { description } = await db
-        .select("description")
-        .from("asset_type")
-        .where({ id: asset_type_id })
-        .first()
-        .then((result) => result || { description: "Unknown" });
-
-      const { description: purchase_type } = await db
-        .select("description")
-        .from("asset_purchase_type")
-        .where({ id: purchase_type_id })
-        .first();
-
-      const assetTagPrinter = await assetTagPrinterService.create({
-        DateTagRequestSubmitted: purchase_date,
-        DescriptionOfItem: description,
-        EmailOfRequestor: purchase_person,
-        EndTime: MAXIMUM_DATE,
-        Mailcode: mailcode,
-        PurchaseType: purchase_type,
-        StartTime: new Date(),
-        TagRequestID: id,
-        YTG_NUMBER: tag,
-      });
-
-      return { assetItem: assetItemResult, assetTagPrinter };
-    })
     .then((result) => {
       return res.status(201).json({
         data: result,
         messages: [{ variant: "success", text: "Asset created" }],
       });
     })
-    .catch(({ message: errorDetails }) =>
-      res.status(422).json({
+    .catch((error) => {
+      return res.status(422).json({
         messages: [
           {
             variant: "error",
             text: "Asset failed to save",
-            details: errorDetails,
+            details: error.message,
           },
         ],
-      })
-    );
+      });
+    });
 });
+
+assetTagRouter.post(
+  "/bulk-creation",
+  [body("assetItems").isArray({ min: 1 })],
+  ReturnValidationErrors,
+  (req: Request, res: Response) => {
+    const { assetItems } = req.body;
+
+    const assetCreationPromises = assetItems.map(
+      async (assetItem: AssetItem) => {
+        const newAssetItem = await assetService.create({
+          ...assetItem,
+          status: "Active",
+          condition: "Good",
+        });
+
+        await assetTagPrinterService.createFromAssetItem(newAssetItem);
+
+        return newAssetItem;
+      }
+    );
+
+    return Promise.all(assetCreationPromises)
+      .then(async (assetItemResults: Array<AssetItem>) => {
+        const tags = assetItemResults
+          .map((assetItem) => assetItem.tag)
+          .sort((a: string, b: string) => a.localeCompare(b));
+
+        await emailService.sendTagRequestComplete(req.user, tags);
+        await emailService.sendTagRequestNotification(APPLICATION_USER, tags);
+
+        return res.status(201).json({
+          data: assetItemResults,
+          messages: [{ variant: "success", text: "Assets created" }],
+        });
+      })
+      .catch((error: { message: string }) => {
+        return res.status(422).json({
+          messages: [
+            {
+              variant: "error",
+              text: "Assets failed to save",
+              details: error.message,
+            },
+          ],
+        });
+      });
+  }
+);
 
 assetTagRouter.post(
   "/query",
@@ -396,11 +403,14 @@ assetTagRouter.put(
   }
 );
 
-assetTagRouter.get("/asset-category", async (req: Request, res: Response) => {
-  let list = await db("asset_category");
+assetTagRouter.get(
+  "/asset-category",
+  async (req: Request, res: Response, next: NextFunction) => {
+    let list = await db("asset_category").catch(next);
 
-  return res.json({ data: list });
-});
+    return res.json({ data: list });
+  }
+);
 
 assetTagRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;

@@ -49,12 +49,35 @@ pipeline {
 
     }
     post {
+        always {
+            echo 'This will always run'
+            emailext (
+                to: 'shu-jun.lin@yukon.ca',
+                replyTo: 'shu-jun.lin@yukon.ca',
+                subject: '$DEFAULT_SUBJECT',
+                body: '$DEFAULT_CONTENT , ${GIT_REVISION} is the git commit ID, build number ${BUILD_NUMBER} ',
+                mimeType: 'text/html'
+            );
+        }
         success {
+            emailext (
+                to: 'michael@icefoganalytics.com',
+                subject: '$DEFAULT_SUBJECT',
+                body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has succeeded',
+                mimeType: 'text/html'
+            );
             echo 'Build complete'
         }
         failure {
+            emailext (
+                to: 'michael@icefoganalytics.com',
+                subject: '$DEFAULT_SUBJECT',
+                body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has failed',
+                mimeType: 'text/html'
+            );
             echo 'Build failed'
         }
     }
+
 }
 

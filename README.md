@@ -13,7 +13,7 @@ This repository contains the source for all projects related to internal Asset M
 ```
 docker-compose -f docker-compose.dev.yaml up
 
-# or if you can run bash
+# or if you can run ruby
 bin/dev up
 ```
 
@@ -33,6 +33,15 @@ cd ../web
 npm install
 npm run start
 ```
+
+#### Testing emails
+
+1. Install the [nodemailer app](https://nodemailer.com/app/).
+2. Boot the app and observer view the connection error for the mailer.
+    > You can do this by saving the `api/src/services/email-service.ts` file.
+3. Start a local server via the NodemailerApp and listen on the IP your app
+   tried to connect to e.g. `172.17.0.1`
+    > On my Ubuntu system this is the second field returned by `hostname -I`
 
 ### Production
 
