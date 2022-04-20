@@ -31,20 +31,21 @@ export class AssetTagPrinterService {
       purchase_person,
       purchase_type_id,
       tag,
+      description
     } = assetItem;
 
-    const { mailcode } = await this.db
-      .select("mailcode")
+    const { mailcode, department } = await this.db
+      .select("mailcode", "department")
       .from("asset_owner")
       .where({ id: asset_owner_id })
       .first();
 
-    const { description } = await this.db
+   /*  const { description } = await this.db
       .select("description")
       .from("asset_type")
       .where({ id: asset_type_id })
       .first()
-      .then((result) => result || { description: "Unknown" });
+      .then((result) => result || { description: "Unknown" }); */
 
     const { description: purchase_type } = await this.db
       .select("description")
@@ -62,6 +63,7 @@ export class AssetTagPrinterService {
       StartTime: new Date(),
       TagRequestID: id,
       YTG_NUMBER: tag,
+      Department: department
     });
   }
 }
