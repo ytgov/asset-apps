@@ -115,11 +115,23 @@
                 { text: 'From', value: 'from_owner.display_name' },
                 { text: 'To', value: 'to_owner.display_name' },
                 { text: 'Condition', value: 'condition' },
+                { text: 'Requester', value: 'request_user' },
               ]"
               @click:row="rowClick"
               class="row-clickable"
               :footer-props="{ 'items-per-page-options': [10, 30, 100] }"
-            ></v-data-table>
+            >
+            
+							<template v-slot:item.request_user="{ item }">
+								<a
+									:href="'mailto:' + item.request_user"
+									@click.stop="ignore"
+									>{{ item.request_user }}</a
+								>
+							</template>
+            
+            
+            </v-data-table>
           </v-card-text>
         </v-card>
       </div>
@@ -244,6 +256,8 @@ export default {
     rowClick(item) {
       this.$refs.transferEditor.show(item);
     },
+    
+		ignore() {},
 
     loadOwners() {
       axios
