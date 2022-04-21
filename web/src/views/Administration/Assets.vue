@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <admin-sidebar></admin-sidebar>
-    <h1>Administration: <small>Home</small></h1>
+    <h1>Administration: <small>Assets</small></h1>
 
     <div class="row">
       <div class="col-md-12">

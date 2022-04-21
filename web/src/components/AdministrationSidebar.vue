@@ -18,6 +18,10 @@
         <v-list-item to="/administration/transfers" exact>
           <v-list-item-title>Transfers</v-list-item-title>
         </v-list-item>
+        
+        <v-list-item to="/administration/tags" exact>
+          <v-list-item-title>Tags</v-list-item-title>
+        </v-list-item>
 
         <v-list-item to="/administration/users" exact>
           <v-list-item-title>Manage Users</v-list-item-title>

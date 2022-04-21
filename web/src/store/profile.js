@@ -40,7 +40,7 @@ const mutations = {
     setProfile(state, profile) {
         state.email = profile.email;
         state.firstName = profile.first_name;
-        state.fullName = profile.display_name;
+        state.fullName = `${profile.first_name} ${profile.last_name}`;
         state.lastName = profile.last_name;
         state.mailcode = profile.mailcode;
         state.mailcodeId = profile.mailcodeId;
