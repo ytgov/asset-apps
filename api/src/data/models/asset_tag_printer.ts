@@ -9,4 +9,5 @@ export interface AssetTagPrinter {
     StartTime: Date;
     TagRequestID: number;
     YTG_NUMBER: string;
+    Department: string;
 }

@@ -9,4 +9,5 @@ export interface AssetItem {
     purchase_type_id?: number;
     status: string;
     tag: string;
+    description: string;
 }

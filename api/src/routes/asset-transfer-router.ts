@@ -89,6 +89,7 @@ transferRouter.post(
 			await db('asset_transfer').insert(transfer);
 		} else {
 			for (let row of rows) {
+				console.log("ROW0", row)
 				let transfer = {
 					asset_category_id: row.type,
 					request_user: req.user.email,
@@ -98,6 +99,7 @@ transferRouter.post(
 					from_owner_id: fromOwnerId,
 					to_owner_id: default_owner.id,
 					quantity: row.quantity,
+					description: row.dept_tag
 				};
 
 				await db('asset_transfer').insert(transfer);
