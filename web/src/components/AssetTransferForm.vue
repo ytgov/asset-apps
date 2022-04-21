@@ -254,8 +254,7 @@ export default {
 				asset: this.assetToTransfer,
 				rows: this.descriptions,
 				fromOwnerId: this.fromOwnerId,
-				condition: this.transferReason,
-        dept_tag: this.dept_tag
+				condition: this.transferReason
 			};
 
 			console.log(body);

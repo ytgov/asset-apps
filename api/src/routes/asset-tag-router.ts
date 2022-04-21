@@ -212,9 +212,9 @@ assetTagRouter.put(
         // do a transfer to the new owner
         console.log(
           "Generating a transfer from " +
-            item.asset_owner_id +
-            " to " +
-            asset_owner_id
+          item.asset_owner_id +
+          " to " +
+          asset_owner_id
         );
 
         if (asset_owner_id == default_owner.id) {
@@ -411,6 +411,32 @@ assetTagRouter.get(
     return res.json({ data: list });
   }
 );
+
+assetTagRouter.post("/print-tags",
+  [body("tags").isArray()], ReturnValidationErrors,
+  async (req: Request, res: Response) => {
+    let currentUser = req.user;
+    let { tags } = req.body;
+
+    let printed = 0;
+
+
+    for (let tag of tags) {
+      let { purchase_date, description, department, mailcode, purchase_person } = await db("asset_item").join("asset_owner", "asset_item.asset_owner_id", "asset_owner.id")
+        .where({ tag })
+        .select(["asset_item.purchase_date", "asset_item.description", "asset_owner.department", "asset_owner.mailcode", "asset_item.purchase_person"])
+        .first();
+
+      if (purchase_date) {
+        let toInsert = { tag, purchase_date, description, department, mailcode, print_date: new Date(), print_person: currentUser.email, purchase_person };
+        console.log(toInsert);
+        await db("asset_tag_print_queue").insert(toInsert);
+        printed++;
+      }
+    }
+
+    res.json({ messages: [{ text: `Sent ${printed} tags to the printer queue`, variant: "success" }] });
+  });
 
 assetTagRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
