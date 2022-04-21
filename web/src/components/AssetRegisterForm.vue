@@ -98,16 +98,17 @@
 					<v-col cols="12" sm="12">
 						<v-text-field
 							v-model="description"
-              required
+							required
 							dense
 							outlined
 							hide-details
-              :rules="descriptionRules"
+							:rules="descriptionRules"
 						>
 							<template #label>
-								Brief description of items
+								Brief description of item(s)
 								<strong class="red--text">*</strong>
-							</template></v-text-field>
+							</template></v-text-field
+						>
 					</v-col>
 				</v-row>
 

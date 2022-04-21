@@ -12,6 +12,7 @@ import AdministrationUsers from '../views/Administration/Users';
 import AdministrationOwners from '../views/Administration/Owners';
 import AdministrationTransfers from '../views/Administration/Transfers';
 import AdministrationAssets from '../views/Administration/Assets';
+import AdministrationTags from '../views/Administration/Tags';
 
 import ManageList from '../views/Manage/List';
 
@@ -120,6 +121,14 @@ const routes = [
     },
   },
 
+  {
+    path: "/administration/tags",
+    name: "AdministrationTags",
+    component: AdministrationTags,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   {
     path: "/manage",
     name: "ManageList",

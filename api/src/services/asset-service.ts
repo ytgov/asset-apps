@@ -104,9 +104,9 @@ export class AssetService {
                             break;
                         }
                         default: {
-                            console.log(
+                            /* console.log(
                                 `IGNORING ${stmt.field} on ${stmt.value}`
-                            );
+                            ); */
                         }
                     }
                 });
