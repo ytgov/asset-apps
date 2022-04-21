@@ -89,7 +89,6 @@ transferRouter.post(
 			await db('asset_transfer').insert(transfer);
 		} else {
 			for (let row of rows) {
-				console.log("ROW0", row)
 				let transfer = {
 					asset_category_id: row.type,
 					request_user: req.user.email,
