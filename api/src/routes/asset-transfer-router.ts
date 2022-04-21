@@ -62,7 +62,7 @@ transferRouter.post('/transfer', async (req: Request, res: Response) => {
 	}
 
 	return res.json({
-		messages: { variant: 'success', text: 'Transfer saved' },
+		messages: [{ variant: 'success', text: 'Transfer saved' }],
 	});
 });
 
@@ -106,7 +106,7 @@ transferRouter.post(
 		}
 
 		return res.json({
-			messages: { variant: 'success', text: 'Transfer saved' },
+			messages: [{ variant: 'success', text: 'Transfer saved' }],
 		});
 	}
 );

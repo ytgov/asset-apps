@@ -420,8 +420,10 @@ assetTagRouter.post("/print-tags",
 
     let printed = 0;
 
-
     for (let tag of tags) {
+
+      await db("asset_tag_print_queue").where({tag}).delete();
+
       let { purchase_date, description, department, mailcode, purchase_person } = await db("asset_item").join("asset_owner", "asset_item.asset_owner_id", "asset_owner.id")
         .where({ tag })
         .select(["asset_item.purchase_date", "asset_item.description", "asset_owner.department", "asset_owner.mailcode", "asset_item.purchase_person"])
@@ -429,7 +431,6 @@ assetTagRouter.post("/print-tags",
 
       if (purchase_date) {
         let toInsert = { tag, purchase_date, description, department, mailcode, print_date: new Date(), print_person: currentUser.email, purchase_person };
-        console.log(toInsert);
         await db("asset_tag_print_queue").insert(toInsert);
         printed++;
       }

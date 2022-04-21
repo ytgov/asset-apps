@@ -200,7 +200,7 @@ export class TransferService {
 			);
 	}
 
-	delete(id: number) {
+	async delete(id: number) {
 		return this.db
 			.select({
 				assetItemId: 'asset_transfer.asset_item_id',
@@ -209,7 +209,7 @@ export class TransferService {
 			})
 			.where({ 'asset_transfer.id': id })
 			.from('asset_transfer')
-			.innerJoin('asset_item', 'asset_item.id', 'asset_transfer.asset_item_id')
+			.leftOuterJoin('asset_item', 'asset_item.id', 'asset_transfer.asset_item_id')
 			.first()
 			.then(({ assetItemId, tag, fromOwnerId }) => {
 				if ([null, undefined, ''].includes(tag)) return;
