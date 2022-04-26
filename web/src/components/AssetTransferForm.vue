@@ -25,8 +25,10 @@
 
 			<v-stepper-content step="2" :complete="step > 2">
 				<div v-if="hasIdentifier == 'Yes'" class="py-2">
-					<a @click="idNoClick">Click here</a> if you don't find the item to add a departmental tag
-					<asset-lookup-form class="mt-1"
+					<a @click="idNoClick">Click here</a> if you don't find the item to add
+					a departmental tag
+					<asset-lookup-form
+						class="mt-1"
 						showActions="false"
 						:doItemSelected="assetSelected"
 					></asset-lookup-form>
@@ -125,20 +127,23 @@
 					class="mt-2"
 					dense
 					outlined
+					required
 					:items="onlyKnownMailcodeOptions"
 					label="What's your mail code?"
 					item-text="display_name"
 					item-value="id"
 					v-model="fromOwnerId"
+					:rules="mailcodeRules"
 				></v-autocomplete>
 
 				<v-select
 					v-if="hasIdentifier == 'Yes'"
+					:items="conditionOptions"
+					v-model="transferReason"
+					required
 					class="mt-2"
 					rows="2"
-					v-model="transferReason"
 					dense
-					:items="conditionOptions"
 					outlined
 					label="What condition is this item in?"
 					persistent-hint
@@ -150,17 +155,14 @@
 					dense
 					hide-details
 					required
+					label="My director approved this transfer/disposal."
 				>
-					<template v-slot:label>
-						<div>
-							My Director or financial officer approved this transfer/disposal.
-							<strong class="red--text">*</strong><br />
-							Deputy Minister approval may be required if asset value is over
-							<strong>$10,000</strong>
-						</div>
-					</template>
 				</v-checkbox>
 
+				<p class="mt-3">
+					Deputy Minister approval may be required if asset value is over
+					<strong>$10,000</strong>
+				</p>
 				<div class="d-flex">
 					<v-tooltip bottom :disabled="isValid">
 						<template v-slot:activator="{ on }">
@@ -208,6 +210,7 @@ export default {
 	data: () => ({
 		approvalReceived: false,
 		approvalReceivedRules: [(v) => !!v || 'Approval confirmation is required'],
+		mailcodeRules: [(v) => !!v || 'Mail code is required'],
 		step: 1,
 		search: null,
 		isLoading: null,
@@ -254,7 +257,7 @@ export default {
 				asset: this.assetToTransfer,
 				rows: this.descriptions,
 				fromOwnerId: this.fromOwnerId,
-				condition: this.transferReason
+				condition: this.transferReason,
 			};
 
 			console.log(body);
@@ -271,6 +274,7 @@ export default {
 			this.step2Name = 'Tell us about the item(s)';
 			this.assetToTransfer = null;
 			this.transferReason = '';
+			this.approvalReceived = false;
 		},
 	},
 };
