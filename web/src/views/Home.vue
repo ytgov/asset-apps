@@ -36,8 +36,6 @@ export default {
     if (isAuthenticated) {
       router.push("/dashboard");
     }
-
-    console.log(config.apiBaseUrl);
   },
 };
 </script>
