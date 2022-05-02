@@ -442,10 +442,8 @@ assetTagRouter.post("/print-tags",
 assetTagRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
 
-  console.log("IN DELTE ROUTE", id)
-
   await db("asset_item").where({ id }).delete();
-  await db("asset_transfer").where({ asset_item_id: id }).first();
+  await db("asset_transfer").where({ asset_item_id: id }).delete();
 
   return res.json({
     data: {},
