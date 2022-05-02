@@ -311,8 +311,6 @@ export default {
 			} else {
 				this.item.asset_owner_id = this.oldOwner;
 			}
-
-			console.log('CHANGED', this.item.asset_owner_id);
 		},
 		showDelete() {
 			this.showDeleteDialog = true;
