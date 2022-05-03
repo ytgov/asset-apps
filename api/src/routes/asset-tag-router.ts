@@ -422,7 +422,7 @@ assetTagRouter.post("/print-tags",
 
     for (let tag of tags) {
 
-      await db("asset_tag_print_queue").where({tag}).delete();
+      await db("asset_tag_print_queue").where({ tag }).delete();
 
       let { purchase_date, description, department, mailcode, purchase_person } = await db("asset_item").join("asset_owner", "asset_item.asset_owner_id", "asset_owner.id")
         .where({ tag })
@@ -442,8 +442,11 @@ assetTagRouter.post("/print-tags",
 assetTagRouter.delete("/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
 
+  await db("asset_item").where({ id }).delete();
+  await db("asset_transfer").where({ asset_item_id: id }).delete();
+
   return res.json({
     data: {},
-    messages: [{ variant: "success", text: "Location removed" }],
+    messages: [{ variant: "success", text: "Asset deleted" }],
   });
 });

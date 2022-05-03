@@ -21,6 +21,49 @@
 			<v-container class="py-4" style="border: 1px #9e9e9e solid">
 				<v-row>
 					<v-col cols="12" sm="6">
+						<v-select
+							v-model="purchasedTypeId"
+							:items="assetPurchaseTypeOptions"
+							item-text="description"
+							item-value="id"
+							:rules="assetPurchaseTypeIdRules"
+							hide-details="auto"
+							dense
+							outlined
+							required
+						>
+							<template #label>
+								How were these items purchased?
+								<strong class="red--text">*</strong>
+							</template>
+						</v-select>
+					</v-col>
+					<v-col cols="12" sm="6">
+						<v-text-field
+							v-model="orderNumber"
+							label="Order number"
+							hide-details
+							dense
+							outlined
+						></v-text-field>
+					</v-col>
+
+					<v-col cols="12" sm="12">
+						<v-text-field
+							v-model="description"
+							required
+							dense
+							outlined
+							hide-details
+							:rules="descriptionRules"
+						>
+							<template #label>
+								Brief description of item
+								<strong class="red--text">*</strong>
+							</template></v-text-field
+						>
+					</v-col>
+					<v-col cols="12" sm="6">
 						<v-text-field
 							v-model="tagCount"
 							:rules="tagCountRules"
@@ -33,10 +76,23 @@
 							required
 						>
 							<template #label>
-								How many tags do you need? <strong class="red--text">*</strong>
+								Quantity <strong class="red--text">*</strong>
 							</template>
 						</v-text-field>
 					</v-col>
+
+
+					<v-col cols="12" sm="6">
+						<v-text-field
+							v-model="purchasePrice"
+							label="Cost per unit"
+							hide-details
+							dense
+							outlined
+						></v-text-field>
+					</v-col>
+
+
 
 					<v-col cols="12" sm="6">
 						<v-menu
@@ -72,10 +128,8 @@
 							></v-date-picker>
 						</v-menu>
 					</v-col>
-				</v-row>
 
-				<v-row>
-					<v-col cols="12" sm="12">
+					<v-col cols="12" sm="6">
 						<v-autocomplete
 							v-model="sendMailcodeId"
 							:items="onlyKnownMailcodeOptions"
@@ -93,53 +147,38 @@
 							</template>
 						</v-autocomplete>
 					</v-col>
-				</v-row>
-				<v-row>
-					<v-col cols="12" sm="12">
-						<v-text-field
-							v-model="description"
-							required
-							dense
-							outlined
-							hide-details
-							:rules="descriptionRules"
-						>
-							<template #label>
-								Brief description of item(s)
-								<strong class="red--text">*</strong>
-							</template></v-text-field
-						>
-					</v-col>
-				</v-row>
+				
 
-				<v-row>
-					<v-col cols="12" sm="6">
-						<v-select
-							v-model="purchasedTypeId"
-							:items="assetPurchaseTypeOptions"
-							item-text="description"
-							item-value="id"
-							:rules="assetPurchaseTypeIdRules"
-							hide-details="auto"
-							dense
-							outlined
-							required
-						>
-							<template #label>
-								How were these items purchased?
-								<strong class="red--text">*</strong>
-							</template>
-						</v-select>
-					</v-col>
+<!-- 
 					<v-col cols="12" sm="6">
 						<v-text-field
 							v-model="orderNumber"
-							label="Order number"
+							label="Item line number"
+							hide-details
+							dense
+							outlined
+						></v-text-field>
+					</v-col> -->
+					<v-col cols="12" sm="6">
+						<v-text-field
+							v-model="make"
+							label="Make"
 							hide-details
 							dense
 							outlined
 						></v-text-field>
 					</v-col>
+					<v-col cols="12" sm="6">
+						<v-text-field
+							v-model="model"
+							label="Model"
+							hide-details
+							dense
+							outlined
+						></v-text-field>
+					</v-col>
+
+
 				</v-row>
 
 				<div class="d-flex justify-end">
@@ -207,6 +246,9 @@ export default {
 			description: '',
 			descriptionRules: [(v) => !!v || 'Description is required'],
 			isValid: false,
+			purchasePrice: null,
+			make: "",
+			model: "",
 		};
 	},
 	mounted() {
@@ -230,6 +272,9 @@ export default {
 				purchase_person: this.currentUserEmail,
 				purchase_order_number: this.orderNumber,
 				description: this.description,
+				purchase_price: this.purchasePrice,
+				make: this.make,
+				model: this.model
 			}));
 
 			http
