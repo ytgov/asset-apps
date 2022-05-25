@@ -50,9 +50,8 @@ pipeline {
     }
     post {
         always {
-            echo 'This will always run'
             emailext (
-                to: 'shu-jun.lin@yukon.ca',
+                to: 'mailto:alert-cd@yukon.ca',
                 replyTo: 'shu-jun.lin@yukon.ca',
                 subject: '$DEFAULT_SUBJECT',
                 body: '$DEFAULT_CONTENT , ${GIT_REVISION} is the git commit ID, build number ${BUILD_NUMBER} ',
