@@ -27,6 +27,8 @@ spec:
       port: 3000
     - port: 443
       protocol: TCP
+    - protocol: TCP
+      port: 25
   egress:
   - to:
     ports:
