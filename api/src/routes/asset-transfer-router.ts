@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { SortDirection, SortStatement, TransferService } from '../services';
+import { EmailService, SortDirection, SortStatement, TransferService } from '../services';
 import { ReturnValidationErrors } from '../middleware';
 import { pick } from 'lodash';
 
@@ -9,6 +9,7 @@ const PAGE_SIZE = 10;
 
 import { db, DB_TRUE } from '../data';
 const transferService = new TransferService(db);
+const emailService = new EmailService();
 
 transferRouter.post(
 	'/',
@@ -69,7 +70,7 @@ transferRouter.post('/transfer', async (req: Request, res: Response) => {
 transferRouter.post(
 	'/transfer-request',
 	async (req: Request, res: Response) => {
-		let { asset, fromOwnerId, rows, condition } = req.body;
+		let { asset, fromOwnerId, rows, condition, likelyTCA } = req.body;
 		const default_owner = await db('asset_owner')
 			.where({ default_owner: DB_TRUE })
 			.first();
@@ -84,6 +85,7 @@ transferRouter.post(
 				from_owner_id: fromOwnerId,
 				to_owner_id: default_owner.id,
 				quantity: 1,
+				is_tca: likelyTCA,
 			};
 
 			await db('asset_transfer').insert(transfer);
@@ -98,12 +100,15 @@ transferRouter.post(
 					from_owner_id: fromOwnerId,
 					to_owner_id: default_owner.id,
 					quantity: row.quantity,
-					description: row.dept_tag
+					description: row.dept_tag,
+					is_tca: likelyTCA,
 				};
 
 				await db('asset_transfer').insert(transfer);
 			}
 		}
+
+		await emailService.sendTransferRequest(req.user);
 
 		return res.json({
 			messages: [{ variant: 'success', text: 'Transfer saved' }],
@@ -120,6 +125,7 @@ transferRouter.patch('/:id', (req: Request, res: Response) => {
 		'from_owner_id',
 		'quantity',
 		'to_owner_id',
+		'is_tca'
 	]);
 
 	return transferService

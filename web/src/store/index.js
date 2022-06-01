@@ -22,9 +22,11 @@ export default new Vuex.Store({
       "Donation",
       "Destruction",
       "Unknown",
+      "Missing / stolen",
       "REQUEST: Obsolete",
       "REQUEST: Good",
       "REQUEST: Beyond repair",
+      "REQUEST: Missing / stolen"
     ],
     assetPurchaseTypeOptions: (state) => state.assetPurchaseTypeOptions,
     mailcodeOptions: (state) => state.mailcodeOptions,

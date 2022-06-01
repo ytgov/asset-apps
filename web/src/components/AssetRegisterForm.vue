@@ -1,7 +1,9 @@
 <template>
 	<v-form v-model="isValid">
 		<v-alert color="warning" border="left" outlined backround-color="#fffffdd">
-			<h4 class="mb-2">YG assets valued over $1000 must have an asset tag</h4>
+			<h4 class="mb-2">
+				Yukon Government assets valued over $1000 require an asset tag
+			</h4>
 			<p class="mb-0">
 				When you receive an your items such as furniture, equipment, tools etc…
 				you must request an asset tag so that we can maintain YG's asset
@@ -11,9 +13,13 @@
 
 		<h4>Requesting asset tags is a simple two step process:</h4>
 		<ol class="mb-4 mt-2">
-			<li>Tell us how many tags you need and we will send them to you</li>
 			<li>
-				Add identifying information to each tag, some now and some later is okay
+				Fill in the <span style="color: red">*</span> mandatory fields below and
+				any of the others you can
+			</li>
+			<li>
+				You will receive an email link to add in additional information such as
+				serial numbers, model, etc
 			</li>
 		</ol>
 
@@ -81,7 +87,6 @@
 						</v-text-field>
 					</v-col>
 
-
 					<v-col cols="12" sm="6">
 						<v-text-field
 							v-model="purchasePrice"
@@ -91,8 +96,6 @@
 							outlined
 						></v-text-field>
 					</v-col>
-
-
 
 					<v-col cols="12" sm="6">
 						<v-menu
@@ -147,9 +150,8 @@
 							</template>
 						</v-autocomplete>
 					</v-col>
-				
 
-<!-- 
+					<!-- 
 					<v-col cols="12" sm="6">
 						<v-text-field
 							v-model="orderNumber"
@@ -177,8 +179,6 @@
 							outlined
 						></v-text-field>
 					</v-col>
-
-
 				</v-row>
 
 				<div class="d-flex justify-end">
@@ -247,8 +247,8 @@ export default {
 			descriptionRules: [(v) => !!v || 'Description is required'],
 			isValid: false,
 			purchasePrice: null,
-			make: "",
-			model: "",
+			make: '',
+			model: '',
 		};
 	},
 	mounted() {
@@ -274,7 +274,7 @@ export default {
 				description: this.description,
 				purchase_price: this.purchasePrice,
 				make: this.make,
-				model: this.model
+				model: this.model,
 			}));
 
 			http

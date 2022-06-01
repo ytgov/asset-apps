@@ -155,7 +155,15 @@
 					dense
 					hide-details
 					required
-					label="My director approved this transfer/disposal."
+					label="My director approved this transfer/disposal"
+				>
+				</v-checkbox>
+				<v-checkbox
+					v-model="likelyTCA"
+					dense
+					hide-details
+					required
+					label="The purchase price of this item was likely over $10,000 (TCA)"
 				>
 				</v-checkbox>
 
@@ -167,14 +175,21 @@
 					<v-tooltip bottom :disabled="isValid">
 						<template v-slot:activator="{ on }">
 							<div v-on="on">
-								<v-btn
-									small
-									class="mb-0"
-									color="primary"
-									:disabled="!isValid"
-									@click="doComplete"
-									>Complete</v-btn
-								>
+								<v-row>
+									<v-col cols="3">
+										<v-btn
+											small
+											class="mb-0"
+											color="primary"
+											:disabled="!isValid"
+											@click="doComplete"
+											>Complete</v-btn
+										>
+									</v-col>
+									<v-col cols="9" class="pt-7" style="vertical-align: middle">
+										<em>*You will receive an email shortly with next step</em>
+									</v-col>
+								</v-row>
 							</div>
 						</template>
 						<span>Please fill in all required fields</span>
@@ -221,8 +236,9 @@ export default {
 		assetToTransfer: null,
 		transferReason: '',
 		descriptions: [{ quantity: 1, condition: 'Good', type: 1 }],
-		conditionOptions: ['Good', 'Obsolete', 'Beyond repair'],
+		conditionOptions: ['Good', 'Obsolete', 'Beyond repair', "Missing / stolen"],
 		fromOwnerId: -1,
+		likelyTCA: false,
 	}),
 	watch: {
 		currentUserMailcodeId(value) {
@@ -258,9 +274,8 @@ export default {
 				rows: this.descriptions,
 				fromOwnerId: this.fromOwnerId,
 				condition: this.transferReason,
+				likelyTCA: this.likelyTCA,
 			};
-
-			console.log(body);
 
 			axios.post(`${TRANSFER_URL}/transfer-request`, body).then(() => {
 				this.$refs.notifier.showSuccess('Your transfer has been submitted');
@@ -275,6 +290,7 @@ export default {
 			this.assetToTransfer = null;
 			this.transferReason = '';
 			this.approvalReceived = false;
+			this.likelyTCA = false;
 		},
 	},
 };

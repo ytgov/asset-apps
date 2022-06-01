@@ -103,6 +103,15 @@
 						:items="assetConditionOptions"
 					></v-select>
 				</div>
+				<div class="col-sm-5">
+					<v-checkbox
+						dense
+						outlined
+						label="Is TCA?"
+						hide-details
+						v-model="item.is_tca"
+					></v-checkbox>
+				</div>
 			</div>
 
 			<v-btn
@@ -231,6 +240,7 @@ export default {
 				from_owner_id,
 				quantity,
 				to_owner_id,
+				is_tca,
 			} = this.item;
 
 			this.loading = true;
@@ -241,6 +251,7 @@ export default {
 					from_owner_id,
 					quantity,
 					to_owner_id,
+					is_tca,
 				})
 				.then((resp) => {
 					if (this.onSave) {
