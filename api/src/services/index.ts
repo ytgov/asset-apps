@@ -5,8 +5,8 @@ export * from "./transfer-service";
 export * from "./user-service";
 
 export interface QueryStatement {
-    field: string;
-    fields: [];
+    field?: string;
+    fields?: [];
     operator: string;
     value: any;
 }

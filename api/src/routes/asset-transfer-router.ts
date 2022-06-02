@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
-import { EmailService, SortDirection, SortStatement, TransferService } from '../services';
+import { body, query } from 'express-validator';
+import { AssetService, EmailService, SortDirection, SortStatement, TransferService } from '../services';
 import { ReturnValidationErrors } from '../middleware';
 import { pick } from 'lodash';
+import { unparse } from "papaparse";
 
 export const transferRouter = express.Router();
 const PAGE_SIZE = 10;
@@ -10,6 +11,80 @@ const PAGE_SIZE = 10;
 import { db, DB_TRUE } from '../data';
 const transferService = new TransferService(db);
 const emailService = new EmailService();
+const assetService = new AssetService(db);
+
+
+transferRouter.get("/transfer-report-export",
+	[query('startDate').isDate(), query('endDate').isDate()], ReturnValidationErrors,
+	async (req: Request, res: Response) => {
+		const { startDate, endDate, conditions, fromOwnerIds, toOwnerIds, tcaStatus } = req.query;
+
+		let query = [
+			{ field: "transfer_date", operator: "gt", value: startDate },
+			{ field: "transfer_date", operator: "lt", value: endDate }
+		];
+
+		if (conditions) {
+			query.push({ field: "asset_transfer.condition", operator: "in", value: conditions })
+		}
+		if (fromOwnerIds) {
+			query.push({ field: "from_owner_id", operator: "in", value: fromOwnerIds })
+		}
+		if (toOwnerIds) {
+			query.push({ field: "to_owner_id", operator: "in", value: toOwnerIds })
+		}
+		if (tcaStatus && tcaStatus != "Any") {
+			query.push({ field: "is_tca", operator: "eq", value: (tcaStatus == "Yes" ? "1" : "0") })
+		}
+
+		let searchResults = await transferService.doSearch(query, [], 1, 100000, 0, 100000);
+		let list = searchResults.data
+		let output = new Array();
+
+		for (let item of list) {
+			let direction = "Unknown";
+
+			if (item.from_owner.default_owner)
+				direction = "Outbound";
+			if (item.to_owner.default_owner)
+				direction = "Inbound";
+
+			const disposalStatus = ["Recycle", "Sold", "CFS", "Donation", "Destruction", "Missing / stolen"];
+
+			if (disposalStatus.indexOf(item.condition) >= 0)
+				direction = "Disposal";
+
+			let tag = "";
+
+			if (item.asset_item_id) {
+				let asset = await assetService.getById(item.asset_item_id);
+
+				if (asset)
+					tag = asset.tag;
+			}
+
+			output.push({
+				category: tag.length > 0 ? "Tagged" : "Non-Tagged",
+				direction,
+				asset_type: item.description,
+				status: item.condition,
+				quantity: item.quantity,
+				request_date: item.request_date,
+				from_owner_id: item.from_owner_id,
+				from_mailcode: item.from_owner.mailcode,
+				from_department: item.from_owner.department,
+				to_owner_id: item.to_owner_id,
+				to_mailcode: item.to_owner.mailcode,
+				to_department: item.to_owner.department,
+				tag,
+				requested_by: item.request_user,
+				is_tca: item.is_tca,
+			})
+		}
+
+		res.set('Content-Type', 'text/csv');
+		return res.send(unparse(output));
+	});
 
 transferRouter.post(
 	'/',

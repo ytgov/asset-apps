@@ -30,6 +30,9 @@
         <v-list-item to="/administration/owners" exact>
           <v-list-item-title>Manage Owners</v-list-item-title>
         </v-list-item>
+        <v-list-item to="/administration/reports" exact>
+          <v-list-item-title>Reports</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </div>

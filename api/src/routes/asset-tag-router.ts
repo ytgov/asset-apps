@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import { body, param } from "express-validator";
+import { unparse } from "papaparse";
 import moment from "moment";
 import _ from "lodash";
 
@@ -402,6 +403,49 @@ assetTagRouter.put(
     res.status(404).send();
   }
 );
+
+assetTagRouter.get("/asset-report-export",
+  async (req: Request, res: Response) => {
+    const { owners, statuses } = req.query;
+
+    let query = [];
+
+    if (owners) {
+      query.push({ field: "asset_owner_id", operator: "in", value: owners })
+    }
+    if (statuses) {
+      query.push({ field: "status", operator: "in", value: statuses })
+    }
+
+    let searchResults = await assetService.doSearch(query, [], 1, 100000, 0, 100000);
+    let list = searchResults.data
+    let output = new Array();
+    let allTypes = await assetService.db("asset_type");
+
+    for (let item of list) {
+      let type = allTypes.filter(t => t.id == item.asset_type_id)[0];
+
+      output.push({
+        tag: item.tag,
+        status: item.status,
+        type: type.description,
+        description: item.description,
+        make: item.make,
+        model: item.model,
+        serial: item.serial,
+        purchase_person: item.purchase_person,
+        purchase_price: item.purchase_price,
+        purchase_date: item.purchase_date,
+        owner_mailcode: item.owner.mailcode,
+        owner_department: item.owner.department,
+        owner_name: item.owner.name
+      });
+    }
+
+    res.set('Content-Type', 'text/csv');
+    return res.send(unparse(output));
+  });
+
 
 assetTagRouter.get(
   "/asset-category",
