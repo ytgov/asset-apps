@@ -164,4 +164,9 @@ export class AssetService {
             .orderBy("tag")
             .limit(50);
     }
+
+    async getById(id: number): Promise<any> {
+        return this.db("asset_item")
+            .where({ id }).first();
+    }
 }
