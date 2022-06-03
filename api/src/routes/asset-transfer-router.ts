@@ -55,12 +55,17 @@ transferRouter.get("/transfer-report-export",
 				direction = "Disposal";
 
 			let tag = "";
+			let purchase_price = "";
+			let dept_tag = "";
 
 			if (item.asset_item_id) {
 				let asset = await assetService.getById(item.asset_item_id);
 
-				if (asset)
+				if (asset) {
 					tag = asset.tag;
+					purchase_price = asset.purchase_price;
+					dept_tag = asset.dept_tag
+				}
 			}
 
 			output.push({
@@ -77,6 +82,8 @@ transferRouter.get("/transfer-report-export",
 				to_mailcode: item.to_owner.mailcode,
 				to_department: item.to_owner.department,
 				tag,
+				dept_tag,
+				purchase_price,
 				requested_by: item.request_user,
 				is_tca: item.is_tca,
 			})

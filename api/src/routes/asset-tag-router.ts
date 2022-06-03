@@ -438,7 +438,8 @@ assetTagRouter.get("/asset-report-export",
         purchase_date: item.purchase_date,
         owner_mailcode: item.owner.mailcode,
         owner_department: item.owner.department,
-        owner_name: item.owner.name
+        owner_name: item.owner.name,
+        dept_tag: item.dept_tag,
       });
     }
 
