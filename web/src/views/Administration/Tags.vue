@@ -85,7 +85,7 @@ export default {
 		options: {
 			page: 1,
 			itemsPerPage: 10,
-			sortBy: ['purchase_date'],
+			sortBy: ['tag'],
 			sortDesc: [false],
 			groupBy: [],
 			groupDesc: [],
