@@ -15,6 +15,7 @@ const BASE_TEMPLATE = "../templates/base.html";
 const TAG_REQUEST_NOTIFY_TEMPLATE = "../templates/tag_request_notify.html";
 const TAG_REQUEST_COMPLETE_TEMPLATE = "../templates/tag_request_complete.html";
 const TRANSFER_REQUEST_TEMPLATE = "../templates/transfer_request.html";
+const TAG_PRINT_REQUEST_TEMPLATE = "../templates/tag_print_request.html";
 
 export class EmailService {
     readonly transport: Transporter;
@@ -45,6 +46,24 @@ export class EmailService {
             fullName,
             user.email,
             "Request to transfer or dispose of assets",
+            content
+        );
+    }
+
+    async sendTagPrintRequest(
+        user: SimpleUser,
+        tagContent: string
+    ): Promise<any> {
+        let templatePath = path.join(__dirname, TAG_PRINT_REQUEST_TEMPLATE);
+        let content = fs.readFileSync(templatePath).toString();
+        let fullName = `${user.first_name} ${user.last_name}`;
+
+        content = content.replace(/``TAG_LIST``/g, tagContent);
+
+        return this.sendEmail(
+            fullName,
+            user.email,
+            "Asset Tag Print Request",
             content
         );
     }

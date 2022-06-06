@@ -22,6 +22,7 @@
 							class="row-clickable"
 							:headers="[
 								{ text: 'Asset tag', value: 'tag', width: '150px' },
+								{ text: 'Printed?', value: 'is_printed', width: '115px' },
 								{
 									text: 'Purchase date',
 									value: 'purchase_date',
@@ -85,8 +86,8 @@ export default {
 		options: {
 			page: 1,
 			itemsPerPage: 10,
-			sortBy: ['tag'],
-			sortDesc: [false],
+			sortBy: ['is_printed', 'tag'],
+			sortDesc: [true, false],
 			groupBy: [],
 			groupDesc: [],
 			mustSort: false,
@@ -164,6 +165,8 @@ export default {
 					/* this.$refs.notifier.showSuccess(
 						`${tags.join(', ')} sent to the printer queue (not really)`
 					); */
+					this.selected = [];
+					this.loadMyRequestedTags();
 				})
 				.catch((err) => {
 					console.log(err);

@@ -465,20 +465,38 @@ assetTagRouter.post("/print-tags",
 
     let printed = 0;
 
-    for (let tag of tags) {
+    let toEmail = [];
 
+    for (let tag of tags) {
       await db("asset_tag_print_queue").where({ tag }).delete();
 
-      let { purchase_date, description, department, mailcode, purchase_person } = await db("asset_item").join("asset_owner", "asset_item.asset_owner_id", "asset_owner.id")
+      let { asset_id, purchase_date, description, department, mailcode, purchase_person } = await db("asset_item").join("asset_owner", "asset_item.asset_owner_id", "asset_owner.id")
         .where({ tag })
-        .select(["asset_item.purchase_date", "asset_item.description", "asset_owner.department", "asset_owner.mailcode", "asset_item.purchase_person"])
+        .select(["asset_item.id as asset_id", "asset_item.purchase_date", "asset_item.description", "asset_owner.department", "asset_owner.mailcode", "asset_item.purchase_person"])
         .first();
 
       if (purchase_date) {
         let toInsert = { tag, purchase_date, description, department, mailcode, print_date: new Date(), print_person: currentUser.email, purchase_person };
+        toEmail.push(toInsert)
         await db("asset_tag_print_queue").insert(toInsert);
+
+        await db("asset_item").where({ id: asset_id }).update({ is_printed: true });
         printed++;
       }
+    }
+
+    let emailList = `<table cellspacing="0" cellpadding="0" border="0" style='width:100%; border: 1px #323232 solid; border-radius: 3px'>`;
+    emailList += `<tr><th>Tag</th><th>Mailcode</th><th>Department</th><th>Purchaser</th><th>Description</th></tr>`;
+
+    if (toEmail.length > 0) {
+      for (let item of toEmail) {
+        emailList += `<tr><td>${item.tag}</td><td>${item.mailcode}</td><td>${item.department}</td><td>${item.purchase_person}</td><td>${item.description}</td></tr>`
+      }
+
+      emailList = emailList.replace(/<td>/g, "<td style='border: 1px #323232 solid; text-align:left; padding: 3px'>")
+      emailList = emailList.replace(/<th>/g, "<th style='border: 1px #323232 solid; text-align:left; padding: 3px'>")
+      emailList = `${emailList}</table>`;
+      emailService.sendTagPrintRequest({ email: "mail.room@yukon.ca", first_name: "Mail", last_name: "Room" }, emailList);
     }
 
     res.json({ messages: [{ text: `Sent ${printed} tags to the printer queue`, variant: "success" }] });
