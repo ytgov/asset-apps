@@ -145,7 +145,7 @@
 							required
 						>
 							<template #label>
-								What mail code do we send them to?
+								What mailcode do we send them to?
 								<strong class="red--text">*</strong>
 							</template>
 						</v-autocomplete>
@@ -236,7 +236,7 @@ export default {
 			purchaseDate: null,
 			purchasedTypeId: null,
 			assetPurchaseTypeIdRules: [(v) => !!v || 'Purchase type is required'],
-			sendMailcodeId: -1,
+			sendMailcodeId: null,
 			sendMailcodeIdRules: [(v) => !!v || 'Mailcode is required'],
 			tagCount: 1,
 			tagCountRules: [

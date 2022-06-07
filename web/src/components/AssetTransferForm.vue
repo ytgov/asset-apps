@@ -26,7 +26,7 @@
 			<v-stepper-content step="2" :complete="step > 2">
 				<div v-if="hasIdentifier == 'Yes'" class="py-2">
 					<a @click="idNoClick">Click here</a> if you don't find the item to add
-					a departmental tag
+					a departmental tracking ID
 					<asset-lookup-form
 						class="mt-1"
 						showActions="false"
@@ -79,9 +79,10 @@
 							<v-text-field
 								dense
 								outlined
-								label="Departmental tag"
-								hide-details
+								label="Departmental tracking ID"
 								v-model="desc.dept_tag"
+								persistent-hint
+								hint="* Optional"
 							></v-text-field>
 						</div>
 						<div class="col-sm-4">
@@ -237,7 +238,7 @@ export default {
 		transferReason: '',
 		descriptions: [{ quantity: 1, condition: 'Good', type: 1 }],
 		conditionOptions: ['Good', 'Obsolete', 'Beyond repair', "Missing / stolen"],
-		fromOwnerId: -1,
+		fromOwnerId: null,
 		likelyTCA: false,
 	}),
 	watch: {
