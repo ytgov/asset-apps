@@ -1,62 +1,99 @@
 import express, { Request, Response } from 'express';
 import { body, query } from 'express-validator';
-import { AssetService, EmailService, SortDirection, SortStatement, TransferService } from '../services';
+import {
+	AssetService,
+	EmailService,
+	SortDirection,
+	SortStatement,
+	TransferService,
+} from '../services';
 import { ReturnValidationErrors } from '../middleware';
 import { pick } from 'lodash';
-import { unparse } from "papaparse";
+import { unparse } from 'papaparse';
 
 export const transferRouter = express.Router();
 const PAGE_SIZE = 10;
 
-import { db, DB_TRUE } from '../data';
+import { APPLICATION_USER, db, DB_TRUE } from '../data';
 const transferService = new TransferService(db);
 const emailService = new EmailService();
 const assetService = new AssetService(db);
 
-
-transferRouter.get("/transfer-report-export",
-	[query('startDate').isDate(), query('endDate').isDate()], ReturnValidationErrors,
+transferRouter.get(
+	'/transfer-report-export',
+	[query('startDate').isDate(), query('endDate').isDate()],
+	ReturnValidationErrors,
 	async (req: Request, res: Response) => {
-		const { startDate, endDate, conditions, fromOwnerIds, toOwnerIds, tcaStatus } = req.query;
+		const {
+			startDate,
+			endDate,
+			conditions,
+			fromOwnerIds,
+			toOwnerIds,
+			tcaStatus,
+		} = req.query;
 
 		let query = [
-			{ field: "transfer_date", operator: "gt", value: startDate },
-			{ field: "transfer_date", operator: "lt", value: endDate }
+			{ field: 'transfer_date', operator: 'gt', value: startDate },
+			{ field: 'transfer_date', operator: 'lt', value: endDate },
 		];
 
 		if (conditions) {
-			query.push({ field: "asset_transfer.condition", operator: "in", value: conditions })
+			query.push({
+				field: 'asset_transfer.condition',
+				operator: 'in',
+				value: conditions,
+			});
 		}
 		if (fromOwnerIds) {
-			query.push({ field: "from_owner_id", operator: "in", value: fromOwnerIds })
+			query.push({
+				field: 'from_owner_id',
+				operator: 'in',
+				value: fromOwnerIds,
+			});
 		}
 		if (toOwnerIds) {
-			query.push({ field: "to_owner_id", operator: "in", value: toOwnerIds })
+			query.push({ field: 'to_owner_id', operator: 'in', value: toOwnerIds });
 		}
-		if (tcaStatus && tcaStatus != "Any") {
-			query.push({ field: "is_tca", operator: "eq", value: (tcaStatus == "Yes" ? "1" : "0") })
+		if (tcaStatus && tcaStatus != 'Any') {
+			query.push({
+				field: 'is_tca',
+				operator: 'eq',
+				value: tcaStatus == 'Yes' ? '1' : '0',
+			});
 		}
 
-		let searchResults = await transferService.doSearch(query, [], 1, 100000, 0, 100000);
-		let list = searchResults.data
+		let searchResults = await transferService.doSearch(
+			query,
+			[],
+			1,
+			100000,
+			0,
+			100000
+		);
+		let list = searchResults.data;
 		let output = new Array();
 
 		for (let item of list) {
-			let direction = "Unknown";
+			let direction = 'Unknown';
 
-			if (item.from_owner.default_owner)
-				direction = "Outbound";
-			if (item.to_owner.default_owner)
-				direction = "Inbound";
+			if (item.from_owner.default_owner) direction = 'Outbound';
+			if (item.to_owner.default_owner) direction = 'Inbound';
 
-			const disposalStatus = ["Recycle", "Sold", "CFS", "Donation", "Destruction", "Missing / stolen"];
+			const disposalStatus = [
+				'Recycle',
+				'Sold',
+				'CFS',
+				'Donation',
+				'Destruction',
+				'Missing / stolen',
+			];
 
-			if (disposalStatus.indexOf(item.condition) >= 0)
-				direction = "Disposal";
+			if (disposalStatus.indexOf(item.condition) >= 0) direction = 'Disposal';
 
-			let tag = "";
-			let purchase_price = "";
-			let dept_tag = "";
+			let tag = '';
+			let purchase_price = '';
+			let dept_tag = '';
 
 			if (item.asset_item_id) {
 				let asset = await assetService.getById(item.asset_item_id);
@@ -64,12 +101,12 @@ transferRouter.get("/transfer-report-export",
 				if (asset) {
 					tag = asset.tag;
 					purchase_price = asset.purchase_price;
-					dept_tag = asset.dept_tag
+					dept_tag = asset.dept_tag;
 				}
 			}
 
 			output.push({
-				category: tag.length > 0 ? "Tagged" : "Non-Tagged",
+				category: tag.length > 0 ? 'Tagged' : 'Non-Tagged',
 				direction,
 				asset_type: item.description,
 				status: item.condition,
@@ -86,12 +123,13 @@ transferRouter.get("/transfer-report-export",
 				purchase_price,
 				requested_by: item.request_user,
 				is_tca: item.is_tca,
-			})
+			});
 		}
 
 		res.set('Content-Type', 'text/csv');
 		return res.send(unparse(output));
-	});
+	}
+);
 
 transferRouter.post(
 	'/',
@@ -191,6 +229,7 @@ transferRouter.post(
 		}
 
 		await emailService.sendTransferRequest(req.user);
+		await emailService.sendTransferRequestNotify(APPLICATION_USER, req.user);
 
 		return res.json({
 			messages: [{ variant: 'success', text: 'Transfer saved' }],
@@ -207,7 +246,7 @@ transferRouter.patch('/:id', (req: Request, res: Response) => {
 		'from_owner_id',
 		'quantity',
 		'to_owner_id',
-		'is_tca'
+		'is_tca',
 	]);
 
 	return transferService
@@ -231,29 +270,26 @@ transferRouter.patch('/:id', (req: Request, res: Response) => {
 		);
 });
 
-transferRouter.delete(
-	'/:id',
-	async (req: Request, res: Response) => {
-		const id = parseInt(req.params.id);
+transferRouter.delete('/:id', async (req: Request, res: Response) => {
+	const id = parseInt(req.params.id);
 
-		return transferService
-			.delete(id)
-			.then(() =>
-				res.json({
-					data: {},
-					messages: [{ variant: 'success', text: 'Transfer removed' }],
-				})
-			)
-			.catch((error) =>
-				res.status(422).json({
-					messages: [
-						{
-							variant: 'error',
-							text: 'Failed to remove transfer',
-							details: error.message,
-						},
-					],
-				})
-			);
-	}
-);
+	return transferService
+		.delete(id)
+		.then(() =>
+			res.json({
+				data: {},
+				messages: [{ variant: 'success', text: 'Transfer removed' }],
+			})
+		)
+		.catch((error) =>
+			res.status(422).json({
+				messages: [
+					{
+						variant: 'error',
+						text: 'Failed to remove transfer',
+						details: error.message,
+					},
+				],
+			})
+		);
+});
