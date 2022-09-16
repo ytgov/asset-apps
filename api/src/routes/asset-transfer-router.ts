@@ -247,6 +247,7 @@ transferRouter.patch('/:id', (req: Request, res: Response) => {
 		'quantity',
 		'to_owner_id',
 		'is_tca',
+		'is_contacted'
 	]);
 
 	return transferService

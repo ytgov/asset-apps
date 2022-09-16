@@ -115,17 +115,49 @@
 								{ text: 'From', value: 'from_owner.display_name' },
 								{ text: 'To', value: 'to_owner.display_name' },
 								{ text: 'Condition', value: 'condition' },
-								{ text: 'Requester', value: 'request_user' },
+								{
+									text: '',
+									value: 'is_contacted',
+									width: '1px',
+									class: 'px-0',
+									cellClass: 'px-0',
+									sortable: false,
+								},
+								{
+									text: 'Requester',
+									value: 'request_user',
+									class: 'pl-0',
+									cellClass: 'pl-0',
+								},
 								{ text: 'TCA', value: 'is_tca' },
 							]"
 							@click:row="rowClick"
 							class="row-clickable"
 							:footer-props="{ 'items-per-page-options': [10, 30, 100] }"
 						>
+							<template v-slot:item.is_contacted="{ item }">
+								<v-icon
+									small
+									class="mr-2"
+									v-if="item.is_contacted"
+									color="success"
+									>mdi-email-check</v-icon
+								>
+								<v-icon
+									small
+									class="mr-2"
+									v-else
+									@click.stop="markIsContacted(item)"
+									>mdi-email-plus</v-icon
+								>
+							</template>
+
 							<template v-slot:item.request_user="{ item }">
-								<a :href="'mailto:' + item.request_user" @click.stop="ignore">{{
-									item.request_user
-								}}</a>
+								<a
+									:href="'mailto:' + item.request_user"
+									@click.stop="ignore(item)"
+									>{{ item.request_user }}</a
+								>
 							</template>
 							<template v-slot:item.is_tca="{ item }">
 								{{ item.is_tca ? 'Yes' : 'No' }}
@@ -256,7 +288,28 @@ export default {
 			this.$refs.transferEditor.show(item);
 		},
 
-		ignore() {},
+		ignore(item) {
+			this.markIsContacted(item);
+		},
+		markIsContacted(item) {
+			this.loading = true;
+
+			axios
+				.patch(`${TRANSFER_URL}/${item.id}`, {
+					is_contacted: true,
+					condition: item.condition,
+				})
+				.then((resp) => {
+					this.$refs.notifier.showAPIMessages(resp.data);
+					this.loadList(false);
+				})
+				.catch((error) => {
+					console.log('ERROR: ', error);
+				})
+				.finally(() => {
+					this.loading = false;
+				});
+		},
 
 		loadOwners() {
 			axios
@@ -268,7 +321,6 @@ export default {
 					console.log('ERROR', error);
 				});
 		},
-
 		addInbound() {
 			this.$refs.transferCreator.showInbound({
 				to_owner_id: this.defaultAssetOwner.id,
