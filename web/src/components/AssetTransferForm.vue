@@ -26,7 +26,7 @@
 			<v-stepper-content step="2" :complete="step > 2">
 				<div v-if="hasIdentifier == 'Yes'" class="py-2">
 					<a @click="idNoClick">Click here</a> if you don't find the item to add
-					a departmental tracking ID
+					an inventory number
 					<asset-lookup-form
 						class="mt-1"
 						showActions="false"
@@ -79,7 +79,7 @@
 							<v-text-field
 								dense
 								outlined
-								label="Departmental tracking ID"
+								label="Inventory number"
 								v-model="desc.dept_tag"
 								persistent-hint
 								hint="* Optional"
