@@ -37,10 +37,12 @@ export class EmailService {
 			});
 	}
 
-	async sendTransferRequest(user: SimpleUser): Promise<any> {
+	async sendTransferRequest(user: SimpleUser, items: string): Promise<any> {
 		let templatePath = path.join(__dirname, TRANSFER_REQUEST_TEMPLATE);
 		let content = fs.readFileSync(templatePath).toString();
 		let fullName = `${user.first_name} ${user.last_name}`;
+
+		content = content.replace(/``CONTENT``/g, items);
 
 		return this.sendEmail(
 			fullName,
@@ -52,13 +54,19 @@ export class EmailService {
 
 	async sendTransferRequestNotify(
 		user: SimpleUser,
-		requester: SimpleUser
+		requester: SimpleUser,
+		items: string,
+		mailcode: string
 	): Promise<any> {
 		let templatePath = path.join(__dirname, TRANSFER_REQUEST_NOTIFY_TEMPLATE);
 		let content = fs.readFileSync(templatePath).toString();
 		let fullName = `${user.first_name} ${user.last_name}`;
 
-		content = content.replace(/``REQUEST``/g, requester.email);
+		content = content.replace(
+			/``REQUEST``/g,
+			`${requester.email} at ${mailcode}`
+		);
+		content = content.replace(/``CONTENT``/g, items);
 
 		return this.sendEmail(
 			fullName,

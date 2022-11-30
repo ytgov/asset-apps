@@ -195,6 +195,9 @@ transferRouter.post(
 			.where({ default_owner: DB_TRUE })
 			.first();
 
+		let owner = await db('asset_owner').where({ id: fromOwnerId }).first();
+		let items = '';
+
 		if (asset) {
 			let transfer = {
 				asset_item_id: asset.id,
@@ -207,9 +210,12 @@ transferRouter.post(
 				quantity: 1,
 				is_tca: likelyTCA,
 			};
+			items = `<li>Asset: ${asset.tag} - ${asset.description}</li>`;
 
 			await db('asset_transfer').insert(transfer);
 		} else {
+			let categories = await db('asset_category');
+
 			for (let row of rows) {
 				let transfer = {
 					asset_category_id: row.type,
@@ -223,13 +229,21 @@ transferRouter.post(
 					description: row.dept_tag,
 					is_tca: likelyTCA,
 				};
+				let category = categories.filter((c) => c.id == row.type)[0];
+
+				items += `<li>${category.description} (${row.quantity})</li>`;
 
 				await db('asset_transfer').insert(transfer);
 			}
 		}
 
-		await emailService.sendTransferRequest(req.user);
-		await emailService.sendTransferRequestNotify(APPLICATION_USER, req.user);
+		await emailService.sendTransferRequest(req.user, items);
+		await emailService.sendTransferRequestNotify(
+			APPLICATION_USER,
+			req.user,
+			items,
+			owner.mailcode
+		);
 
 		return res.json({
 			messages: [{ variant: 'success', text: 'Transfer saved' }],
@@ -247,7 +261,7 @@ transferRouter.patch('/:id', (req: Request, res: Response) => {
 		'quantity',
 		'to_owner_id',
 		'is_tca',
-		'is_contacted'
+		'is_contacted',
 	]);
 
 	return transferService
