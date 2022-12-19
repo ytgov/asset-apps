@@ -102,6 +102,8 @@ transferRouter.get(
 					tag = asset.tag;
 					purchase_price = asset.purchase_price;
 					dept_tag = asset.dept_tag;
+				} else {
+					dept_tag = item.tag;
 				}
 			}
 
