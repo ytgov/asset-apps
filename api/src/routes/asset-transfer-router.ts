@@ -93,7 +93,7 @@ transferRouter.get(
 
 			let tag = '';
 			let purchase_price = '';
-			let dept_tag = '';
+			let dept_tag = item.tag;
 
 			if (item.asset_item_id) {
 				let asset = await assetService.getById(item.asset_item_id);
@@ -102,8 +102,6 @@ transferRouter.get(
 					tag = asset.tag;
 					purchase_price = asset.purchase_price;
 					dept_tag = asset.dept_tag;
-				} else {
-					dept_tag = item.tag;
 				}
 			}
 
