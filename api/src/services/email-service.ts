@@ -26,6 +26,9 @@ export class EmailService {
 		this.transport = nodemailer.createTransport(
 			MAIL_CONFIG as TransportOptions
 		);
+
+		console.log('MAIL_CONFIG=', MAIL_CONFIG);
+
 		this.transport
 			.verify()
 			.then((response) => {
@@ -33,7 +36,7 @@ export class EmailService {
 			})
 			.catch((error) => {
 				console.log('Mailer config is not valid.');
-				console.log(error);
+				console.log('Mailer verify error:', error);
 			});
 	}
 
