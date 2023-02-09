@@ -1,4 +1,4 @@
-FROM node:16-alpine3.15
+FROM node:18.14-alpine3.17
 
 RUN mkdir /home/node/web && chown -R node:node /home/node/web
 WORKDIR /home/node/web
@@ -21,6 +21,7 @@ RUN npm run build
 
 WORKDIR /home/node/web
 ENV NODE_ENV=production
+ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN npm run build:docker
 
 WORKDIR /home/node/app
