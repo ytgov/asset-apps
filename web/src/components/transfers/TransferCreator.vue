@@ -178,7 +178,7 @@ export default {
 	props: ['onSave'],
 	data: () => ({
 		disposalOptions: [
-			'Recycle',
+			'Recycled',
 			'Sold',
 			'CFS',
 			'Donation',
@@ -186,8 +186,8 @@ export default {
 			'Missing / stolen',
 		],
 		conditionOptions: [
-			'Redistribute',
-			'Recycle',
+			'Active',
+			'Recycled',
 			'Sold',
 			'CFS',
 			'Donation',

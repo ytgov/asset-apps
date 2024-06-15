@@ -15,8 +15,7 @@ export default new Vuex.Store({
       state.mailcodeOptions.find((o) => o.default_owner === true),
     assetConditionOptions: () => [
       "Active",
-      "Redistribute",
-      "Recycle",
+      "Recycled",
       "Sold",
       "CFS",
       "Donation",

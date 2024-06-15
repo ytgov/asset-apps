@@ -170,12 +170,11 @@ export default {
   },
   props: ["onSave"],
   data: () => ({
-    disposalOptions: ["Recycle", "Sale", "To be sold", "CFS", "Donation"],
+    disposalOptions: ["Recycled", "Sale", "To be sold", "CFS", "Donation"],
     ownerOptions: [],
     statusOptions: [
       "Active",
       "Recycled",
-      "Redistribute",
       "CFS",
       "Sold",
       "To be sold",

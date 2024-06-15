@@ -10,4 +10,5 @@ export interface AssetItem {
     status: string;
     tag: string;
     description: string;
+    sold_date?: Date
 }

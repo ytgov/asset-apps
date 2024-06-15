@@ -328,7 +328,7 @@ export default {
 					{
 						quantity: 1,
 						type: 1,
-						condition: 'Redistribute',
+						condition: 'Active',
 						icon: 'mdi-inbox-multiple',
 					},
 				],
@@ -354,7 +354,7 @@ export default {
 					{
 						quantity: 1,
 						type: 1,
-						condition: 'Recycle',
+						condition: 'Recycled',
 						icon: 'mdi-inbox-multiple',
 					},
 				],

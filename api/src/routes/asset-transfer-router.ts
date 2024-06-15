@@ -69,7 +69,8 @@ transferRouter.get(
 			1,
 			100000,
 			0,
-			100000
+			100000,
+			false
 		);
 		let list = searchResults.data;
 		let output = new Array();
@@ -81,7 +82,7 @@ transferRouter.get(
 			if (item.to_owner.default_owner) direction = 'Inbound';
 
 			const disposalStatus = [
-				'Recycle',
+				'Recycled',
 				'Sold',
 				'CFS',
 				'Donation',
@@ -93,6 +94,7 @@ transferRouter.get(
 
 			let tag = '';
 			let purchase_price = '';
+			let purchase_date = '';
 			let dept_tag = '';
 
 			if (item.asset_item_id) {
@@ -101,6 +103,7 @@ transferRouter.get(
 				if (asset) {
 					tag = asset.tag;
 					purchase_price = asset.purchase_price;
+					purchase_date = asset.purchase_date;
 					dept_tag = asset.dept_tag;
 				}
 			} else if (item.asset_item) {
@@ -125,6 +128,7 @@ transferRouter.get(
 				purchase_price,
 				requested_by: item.request_user,
 				is_tca: item.is_tca,
+				purchase_date,
 			});
 		}
 

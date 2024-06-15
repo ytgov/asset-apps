@@ -48,7 +48,6 @@ export default {
     statusOptions: [
       "Active",
       "Recycled",
-      "Redistribute",
       "CFS",
       "Sold",
       "To be sold",

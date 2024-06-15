@@ -141,14 +141,62 @@
 						@change="statusChange"
 					></v-select>
 				</v-col>
+				<v-col cols="6">
+					<v-autocomplete
+						dense
+						outlined
+						v-model="item.asset_category_id"
+						:items="assetTypeOptions"
+						item-value="id"
+						item-text="description"
+						label="Category (required)"
+						hide-details
+						@change="statusChange"
+					></v-autocomplete>
+				</v-col>
+				<v-col cols="6">
+					<v-menu
+						v-model="soldDateMenu"
+						:close-on-content-click="false"
+						transition="scale-transition"
+						left
+						nudge-top="26"
+						offset-y
+						min-width="auto"
+					>
+						<template v-slot:activator="{ on, attrs }">
+							<v-text-field
+								v-model="item.sold_date"
+								label="Sold date"
+								append-icon="mdi-calendar"
+								hide-details
+								readonly
+								outlined
+								dense
+								background-color="white"
+								v-bind="attrs"
+								v-on="on"
+							></v-text-field>
+						</template>
+						<v-date-picker
+							v-model="item.sold_date"
+							@input="soldDateMenu = false"
+						></v-date-picker>
+					</v-menu>
+				</v-col>
 			</v-row>
 
-			<div v-if="isTransfer" class="text-error float-left mt-4">
+			<v-btn @click="showDelete" color="error">Delete</v-btn>
+			<v-btn
+				@click="save"
+				color="primary"
+				class="float-right"
+				:disabled="!canSave"
+				>Save</v-btn
+			>
+			<div v-if="isTransfer" class="text-error float-right mt-5 mr-5">
 				* Saving may generate transfer record(s)
 			</div>
-
-			<v-btn @click="showDelete" color="error">Delete</v-btn>
-			<v-btn @click="save" color="primary" class="float-right">Save</v-btn>
 		</v-sheet>
 
 		<v-dialog v-model="showDeleteDialog" max-width="400">
@@ -188,16 +236,16 @@ import { formatDollar } from '../utils/formatters';
 
 export default {
 	computed: {
-		...mapGetters(['defaultAssetOwner', 'mailcodeOptions']),
-		transferDirectionIcon: function () {
+		...mapGetters(['defaultAssetOwner', 'mailcodeOptions', 'assetTypeOptions']),
+		transferDirectionIcon: function() {
 			if (this.transferDirection) return 'mdi-redo';
 			return 'mdi-undo';
 		},
-		transferDirectionName: function () {
+		transferDirectionName: function() {
 			if (this.transferDirection) return 'Inbound transfer';
 			return 'Outbound transfer';
 		},
-		isTransfer: function () {
+		isTransfer: function() {
 			if (this.oldOwner != this.item.asset_owner_id) {
 				return true;
 			}
@@ -207,20 +255,22 @@ export default {
 
 			return false;
 		},
-		isTransferDirection: function () {
+		isTransferDirection: function() {
 			if (this.item.asset_owner_id == this.defaultAssetOwner.id)
 				return 'incoming';
 			return 'outgoing';
 		},
+		canSave() {
+			return this.item.asset_category_id != null;
+		},
 	},
 	props: ['onSave'],
 	data: () => ({
-		disposalOptions: ['Recycle', 'Sale', 'To be sold', 'CFS', 'Donation'],
+		disposalOptions: ['Recycled', 'Sale', 'To be sold', 'CFS', 'Donation'],
 		ownerOptions: [],
 		statusOptions: [
 			'Active',
 			'Recycled',
-			'Redistribute',
 			'CFS',
 			'Sold',
 			'To be sold',
@@ -240,6 +290,7 @@ export default {
 		oldStatus: -1,
 
 		showDeleteDialog: false,
+		soldDateMenu: null,
 	}),
 	created() {
 		this.loadList();

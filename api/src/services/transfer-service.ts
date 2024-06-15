@@ -17,7 +17,8 @@ export class TransferService {
 		page: number,
 		page_size: number,
 		skip: number,
-		take: number
+		take: number,
+		showQuantity = true
 	): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let selectStmt = this.db('asset_transfer')
@@ -128,7 +129,9 @@ export class TransferService {
 							item.asset_item = { tag: item.description };
 						}
 
-						item.description = `${category[0].description} (${item.quantity} items)`;
+						if (showQuantity)
+							item.description = `${category[0].description} (${item.quantity} items)`;
+						else item.description = `${category[0].description}`;
 					}
 				}
 
@@ -137,8 +140,7 @@ export class TransferService {
 						.where({ id: item.asset_item_id })
 						.first();
 
-					if (item.asset_item)
-						item.description = item.asset_item.description;
+					if (item.asset_item) item.description = item.asset_item.description;
 				}
 
 				if (item.from_owner_id) {
@@ -211,7 +213,11 @@ export class TransferService {
 			})
 			.where({ 'asset_transfer.id': id })
 			.from('asset_transfer')
-			.leftOuterJoin('asset_item', 'asset_item.id', 'asset_transfer.asset_item_id')
+			.leftOuterJoin(
+				'asset_item',
+				'asset_item.id',
+				'asset_transfer.asset_item_id'
+			)
 			.first()
 			.then(({ assetItemId, tag, fromOwnerId }) => {
 				if ([null, undefined, ''].includes(tag)) return;
