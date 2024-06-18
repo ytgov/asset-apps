@@ -182,7 +182,7 @@
 											small
 											class="mb-0"
 											color="primary"
-											:disabled="!isValid"
+											:disabled="!isValid || formIsValid != true"
 											@click="doComplete"
 											>Complete</v-btn
 										>
@@ -206,6 +206,7 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
+import { isEmpty, isNull } from 'lodash';
 
 import { TRANSFER_URL } from '@/urls';
 
@@ -220,6 +221,18 @@ export default {
 			return this.mailcodeOptions.filter(
 				({ mailcode }) => mailcode != 'Unknown'
 			);
+		},
+		formIsValid() {
+			if (this.hasIdentifier == 'No') {
+				return this.fromOwnerId && this.approvalReceived;
+			} else if (this.hasIdentifier == 'Yes') {
+				return (
+					!isNull(this.fromOwnerId) &&
+					this.approvalReceived == true &&
+					!isEmpty(this.transferReason)
+				);
+			}
+			return false;
 		},
 	},
 	props: ['onSave'],
@@ -237,7 +250,7 @@ export default {
 		assetToTransfer: null,
 		transferReason: '',
 		descriptions: [{ quantity: 1, condition: 'Good', type: 1 }],
-		conditionOptions: ['Good', 'Obsolete', 'Beyond repair', "Missing / stolen"],
+		conditionOptions: ['Good', 'Obsolete', 'Beyond repair', 'Missing / stolen'],
 		fromOwnerId: null,
 		likelyTCA: false,
 	}),
