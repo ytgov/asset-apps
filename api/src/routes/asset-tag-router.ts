@@ -435,14 +435,19 @@ assetTagRouter.get(
 		let list = searchResults.data;
 		let output = new Array();
 		let allTypes = await assetService.db('asset_type');
+		let allCategories = await assetService.db('asset_category');
 
 		for (let item of list) {
 			let type = allTypes.filter((t) => t.id == item.asset_type_id)[0];
+			let category = allCategories.filter(
+				(t) => t.id == item.asset_category_id
+			)[0];
 
 			output.push({
 				tag: item.tag,
 				status: item.status,
 				type: type.description,
+				category: category ? category.description : '',
 				description: item.description,
 				make: item.make,
 				model: item.model,

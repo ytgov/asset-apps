@@ -75,6 +75,8 @@ transferRouter.get(
 		let list = searchResults.data;
 		let output = new Array();
 
+		let allCategories = await assetService.db('asset_category');
+
 		for (let item of list) {
 			let direction = 'Unknown';
 
@@ -97,6 +99,10 @@ transferRouter.get(
 			let purchase_date = '';
 			let dept_tag = '';
 
+			let category = allCategories.filter(
+				(t) => t.id == item.asset_category_id
+			)[0];
+
 			if (item.asset_item_id) {
 				let asset = await assetService.getById(item.asset_item_id);
 
@@ -113,7 +119,8 @@ transferRouter.get(
 			output.push({
 				category: tag.length > 0 ? 'Tagged' : 'Non-Tagged',
 				direction,
-				asset_type: item.description,
+				description: item.description,
+				asset_category: category ? category.description : '',
 				status: item.condition,
 				quantity: item.quantity,
 				request_date: item.request_date,
