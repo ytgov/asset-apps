@@ -46,7 +46,7 @@
 					<v-divider></v-divider>
 				</div>
 				<template v-if="hasAssetCategory">
-					<div class="col-sm-6">
+					<div class="col-sm-12">
 						<v-autocomplete
 							dense
 							outlined
@@ -59,6 +59,7 @@
 						></v-autocomplete>
 					</div>
 				</template>
+
 				<template v-else>
 					<div class="col-sm-6">
 						<v-text-field
@@ -82,6 +83,7 @@
 						></v-text-field>
 					</div>
 				</template>
+
 				<div class="col-sm-3">
 					<v-text-field
 						dense
@@ -93,7 +95,7 @@
 						min="1"
 					></v-text-field>
 				</div>
-				<div class="col-sm-7">
+				<div class="col-sm-9">
 					<v-select
 						dense
 						outlined
@@ -103,7 +105,7 @@
 						:items="assetConditionOptions"
 					></v-select>
 				</div>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 					<v-checkbox
 						dense
 						outlined
@@ -111,6 +113,19 @@
 						hide-details
 						v-model="item.is_tca"
 					></v-checkbox>
+				</div>
+				<div class="col-sm-9" v-if="assetItem && !hasAssetCategory">
+					<v-autocomplete
+						dense
+						outlined
+						:items="assetTypeOptions"
+						item-text="description"
+						item-value="id"
+						label="Type of item"
+						hide-details
+						required
+						v-model="assetItem.asset_category_id"
+					></v-autocomplete>
 				</div>
 			</div>
 
@@ -233,7 +248,7 @@ export default {
 				});
 		},
 		save() {
-			const {
+			let {
 				id,
 				asset_category_id,
 				condition,
@@ -242,6 +257,9 @@ export default {
 				to_owner_id,
 				is_tca,
 			} = this.item;
+
+			if (this.assetItem && this.assetItem.asset_category_id)
+				asset_category_id = this.assetItem.asset_category_id;
 
 			this.loading = true;
 			axios

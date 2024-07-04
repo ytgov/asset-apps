@@ -187,7 +187,12 @@ export class TransferService {
 			.from('asset_transfer')
 			.where({ id })
 			.first()
-			.then(({ assetItemId, oldCondition, toOwnerId }) => {
+			.then(async ({ assetItemId, oldCondition, toOwnerId }) => {
+				await this.db('asset_item').where({ id: assetItemId }).update({
+					asset_owner_id: toOwnerId,
+					asset_category_id: newAttributes.asset_category_id,
+				});
+
 				if (
 					!oldCondition.startsWith('REQUEST') ||
 					newCondition.startsWith('REQUEST')
@@ -195,7 +200,6 @@ export class TransferService {
 					return;
 
 				return this.db('asset_item').where({ id: assetItemId }).update({
-					asset_owner_id: toOwnerId,
 					status: newCondition,
 				});
 			})
