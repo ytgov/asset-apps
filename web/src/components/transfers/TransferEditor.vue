@@ -148,6 +148,7 @@
 				class="float-right"
 				:loading="loading"
 				@click="save"
+				:disabled="!canSave"
 				>Save</v-btn
 			>
 
@@ -193,6 +194,19 @@ export default {
 		...mapGetters(['assetTypeOptions', 'assetConditionOptions']),
 		hasAssetCategory() {
 			return !isNil(this.item.asset_category_id);
+		},
+		canSave() {
+			if (this.assetItem && !this.hasAssetCategory) {
+				return !isNil(this.assetItem.asset_category_id) && this.item.condition;
+			} else if (this.item) {
+				return (
+					!isNil(this.item.asset_category_id) &&
+					this.item.asset_category_id > 0 &&
+					this.item.condition
+				);
+			}
+
+			return false;
 		},
 	},
 	props: ['onSave'],
