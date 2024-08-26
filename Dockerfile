@@ -27,5 +27,6 @@ RUN npm run build:docker
 WORKDIR /home/node/app
 
 COPY --chown=node:node api/src/templates/* /home/node/app/dist/templates/
+COPY --chown=node:node api/src/data/*.csv /home/node/app/dist/data/
 
 CMD ["node", "./dist/index.js"]

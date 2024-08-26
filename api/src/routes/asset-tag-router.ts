@@ -1,8 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
-import { unparse } from 'papaparse';
+import { join } from 'path';
+import { unparse, parse } from 'papaparse';
 import moment from 'moment';
-import _ from 'lodash';
+import _, { isArray, isInteger, isNumber } from 'lodash';
 
 import { ReturnValidationErrors } from '../middleware';
 import {
@@ -14,11 +15,14 @@ import {
 } from '../services';
 import { db, DB_TRUE, APPLICATION_USER } from '../data';
 import { AssetItem } from '../data/models';
+import { UploadedFile } from 'express-fileupload';
 
 export const assetTagRouter = express.Router();
 const assetService = new AssetService(db);
 const assetTagPrinterService = new AssetTagPrinterService(db);
 const emailService = new EmailService();
+
+const ASSET_TEMPLATE = join(__dirname, '../data/asset_template.csv');
 
 assetTagRouter.post('/', (req: Request, res: Response) => {
 	const { assetItem } = req.body;
@@ -94,6 +98,92 @@ assetTagRouter.post(
 					],
 				});
 			});
+	}
+);
+
+assetTagRouter.get('/csv-template', async (req: Request, res: Response) => {
+	res.sendFile(ASSET_TEMPLATE);
+});
+
+assetTagRouter.post(
+	'/csv-import',
+	[body('mailcode').notEmpty()],
+	ReturnValidationErrors,
+	async (req: Request, res: Response) => {
+		let { mailcode } = req.body;
+
+		if (!req.files || !req.files.file)
+			return res.status(400).send('Missing file');
+		let file = req.files.file;
+		if (isArray(file)) file = file[0];
+
+		const upload = file as UploadedFile;
+
+		const value = (await new Promise((resolve, reject) => {
+			const parsedData = new Array<any>();
+			parse(upload.data.toString().trim(), {
+				header: true,
+				step: (row) => {
+					parsedData.push(row);
+				},
+				complete: () => {
+					resolve(parsedData);
+				},
+				error: (e: any) => {
+					console.log('ERROR LOADING CSV', e);
+					reject([]);
+				},
+			});
+		})) as any[];
+
+		const errors = value.flatMap((v) => v.errors);
+
+		if (errors && errors.length > 0) {
+			return res.status(400).send(errors);
+		}
+
+		const trx = await db.transaction();
+
+		const asset_owner_id = await trx('asset_owner').where({ mailcode }).first();
+		if (!asset_owner_id) return res.status(400).send('Owner not found');
+
+		const allCategories = await trx('asset_category');
+
+		try {
+			for (const row of value) {
+				let asset_category_id = null;
+
+				const cat = row.data.CATEGORY;
+
+				if (cat) {
+					let catId = parseInt(cat);
+
+					if (isInteger(catId)) {
+						asset_category_id = allCategories.find((c) => c.id == catId);
+					} else {
+						asset_category_id = allCategories.find((c) =>
+							c.description.startsWith(cat)
+						);
+					}
+				}
+
+				const assetItem = makeFromCSV(
+					row.data,
+					asset_owner_id.id,
+					asset_category_id?.id
+				);
+
+				await trx.insert(assetItem).into('asset_item');
+			}
+
+			await trx.commit();
+			res.status(200).send(`Successfully loaded ${value.length} assets`);
+		} catch (error) {
+			await trx.rollback();
+			res
+				.status(400)
+				.send('Data format issue, please use template and validate data entry');
+		}
 	}
 );
 
@@ -577,3 +667,26 @@ assetTagRouter.delete('/:id', async (req: Request, res: Response) => {
 		messages: [{ variant: 'success', text: 'Asset deleted' }],
 	});
 });
+
+function makeFromCSV(
+	item: any,
+	asset_owner_id: number,
+	asset_category_id: number
+) {
+	return {
+		tag: item.TAG,
+		status: 'Active',
+		condition: 'Good',
+		asset_owner_id,
+		make: item.MAKE.length == 0 ? null : item.MAKE,
+		model: item.MODEL.length == 0 ? null : item.MODEL,
+		serial: item.SERIAL.length == 0 ? null : item.SERIAL,
+		description: item.DESCRIPTION,
+		purchase_price: item.PRICE.length == 0 ? null : item.PRICE,
+		purchase_date: item.DATE.length == 0 ? null : item.DATE,
+		purchase_order_number: item.ORDER.length == 0 ? null : item.ORDER,
+		entry_date: new Date(),
+		asset_category_id,
+		asset_type_id: -1,
+	};
+}
