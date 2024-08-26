@@ -682,9 +682,10 @@ function makeFromCSV(
 		model: item.MODEL.length == 0 ? null : item.MODEL,
 		serial: item.SERIAL.length == 0 ? null : item.SERIAL,
 		description: item.DESCRIPTION,
-		purchase_price: item.PRICE.length == 0 ? null : item.PRICE,
-		purchase_date: item.DATE.length == 0 ? null : item.DATE,
-		purchase_order_number: item.ORDER.length == 0 ? null : item.ORDER,
+		purchase_price: item.PURCH_PRICE.length == 0 ? null : item.PURCH_PRICE,
+		purchase_date: item.PURCH_DATE.length == 0 ? null : item.PURCH_DATE,
+		purchase_order_number:
+			item.PURCH_ORDER.length == 0 ? null : item.PURCH_ORDER,
 		entry_date: new Date(),
 		asset_category_id,
 		asset_type_id: -1,
