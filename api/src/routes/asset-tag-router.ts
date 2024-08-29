@@ -179,6 +179,7 @@ assetTagRouter.post(
 			await trx.commit();
 			res.status(200).send(`Successfully loaded ${value.length} assets`);
 		} catch (error) {
+			console.log('IMPORT ERROR', error);
 			await trx.rollback();
 			res
 				.status(400)
@@ -678,14 +679,16 @@ function makeFromCSV(
 		status: 'Active',
 		condition: 'Good',
 		asset_owner_id,
-		make: item.MAKE.length == 0 ? null : item.MAKE,
-		model: item.MODEL.length == 0 ? null : item.MODEL,
-		serial: item.SERIAL.length == 0 ? null : item.SERIAL,
-		description: item.DESCRIPTION,
-		purchase_price: item.PURCH_PRICE.length == 0 ? null : item.PURCH_PRICE,
-		purchase_date: item.PURCH_DATE.length == 0 ? null : item.PURCH_DATE,
+		make: item['MAKE#'].length == 0 ? null : item['MAKE#'],
+		model: item['MODEL#'].length == 0 ? null : item['MODEL#'],
+		serial: item['SERIAL#'].length == 0 ? null : item['SERIAL#'],
+		description: item['ASSET DESCRIPTION'],
+		purchase_price:
+			item['PURCHASE PRICE'].length == 0 ? null : item['PURCHASE PRICE'],
+		purchase_date:
+			item['PURCHASE DATE'].length == 0 ? null : item['PURCHASE DATE'],
 		purchase_order_number:
-			item.PURCH_ORDER.length == 0 ? null : item.PURCH_ORDER,
+			item['PURCHASE ORDER'].length == 0 ? null : item['PURCHASE ORDER'],
 		entry_date: new Date(),
 		asset_category_id,
 		asset_type_id: -1,
