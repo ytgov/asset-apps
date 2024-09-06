@@ -692,5 +692,6 @@ function makeFromCSV(
 		entry_date: new Date(),
 		asset_category_id,
 		asset_type_id: -1,
+		is_printed: true,
 	};
 }
